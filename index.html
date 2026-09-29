@@ -1,0 +1,2810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bright Mesh HR • Supermarket & Grocery</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%231e6b4b'/%3E%3Ctext x='50' y='68' font-size='58' font-family='Inter,Arial,sans-serif' font-weight='800' fill='white' text-anchor='middle'%3EBM%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+    :root {
+      --primary: #1e6b4b; --primary-dark: #155a3d; --primary-light: #2d9c6e;
+      --danger: #d64545; --warning: #d68b2c; --info: #3f66d0;
+      --text-dark: #0f1e40; --text-mid: #3d6652; --text-light: #6c7fa8;
+      --bg-soft: #f7fdfa; --border-soft: #d4e6dc;
+      --shadow-sm: 0 6px 14px rgba(0,0,0,0.04);
+      --shadow-md: 0 18px 30px -12px rgba(23,45,90,0.12);
+      --shadow-lg: 0 30px 50px -20px rgba(23,45,90,0.25);
+    }
+    body { background: linear-gradient(145deg, #f8faff 0%, #edf2fc 100%); min-height: 100vh; color: #1d2b4b; line-height: 1.5; }
+    #loadingOverlay { position: fixed; inset: 0; background: linear-gradient(145deg, #f8faff, #edf2fc); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; gap: 18px; }
+    #loadingOverlay .spinner { width: 60px; height: 60px; border: 5px solid #d4e6dc; border-top-color: var(--primary-light); border-radius: 50%; animation: spin 0.9s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #loadingOverlay p { font-size: 0.95rem; font-weight: 700; color: var(--primary); }
+    #landingPage { display: block; }
+    .landing-nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 48px; background: rgba(255,255,255,0.85); backdrop-filter: blur(14px); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid rgba(212,230,220,0.6); }
+    .landing-logo { display: flex; align-items: center; gap: 12px; }
+    .landing-logo-icon { background: linear-gradient(135deg, #1e6b4b, #2d9c6e); width: 46px; height: 46px; border-radius: 14px; display: flex; align-items: center; justify-content: center; }
+    .landing-logo-icon i { color: white; font-size: 24px; }
+    .landing-logo-text h1 { font-size: 22px; font-weight: 800; background: linear-gradient(145deg, #1e6b4b, #2d9c6e); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .landing-logo-text span { font-size: 11px; font-weight: 600; color: #5a7a6a; display: block; letter-spacing: 0.5px; text-transform: uppercase; }
+    .landing-nav-links { display: flex; gap: 32px; align-items: center; }
+    .landing-nav-links a { text-decoration: none; color: var(--text-mid); font-weight: 600; font-size: 0.92rem; cursor: pointer; }
+    .landing-nav-links a:hover { color: var(--primary); }
+    .landing-nav-actions { display: flex; gap: 12px; }
+    .hero { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 60px; align-items: center; padding: 72px 48px 80px; max-width: 1400px; margin: 0 auto; }
+    .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: #e6f5ee; color: var(--primary); padding: 8px 18px; border-radius: 40px; font-size: 0.82rem; font-weight: 700; margin-bottom: 24px; border: 1px solid #b8d9c8; }
+    .hero h2 { font-size: 3.4rem; font-weight: 800; line-height: 1.1; letter-spacing: -1.5px; color: var(--text-dark); margin-bottom: 22px; }
+    .hero h2 .gradient-text { background: linear-gradient(135deg, #1e6b4b, #2d9c6e); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .hero p { font-size: 1.15rem; color: #5f7194; font-weight: 500; margin-bottom: 36px; max-width: 540px; line-height: 1.7; }
+    .hero-buttons { display: flex; gap: 16px; flex-wrap: wrap; }
+    .hero-stats { display: flex; gap: 40px; margin-top: 48px; padding-top: 32px; border-top: 1px solid var(--border-soft); }
+    .hero-stat h4 { font-size: 2rem; font-weight: 800; color: var(--primary); }
+    .hero-stat p { font-size: 0.82rem; color: var(--text-light); font-weight: 600; text-transform: uppercase; margin: 0; }
+    .hero-visual { position: relative; display: flex; justify-content: center; align-items: center; }
+    .hero-card { background: white; border-radius: 32px; padding: 28px; box-shadow: var(--shadow-lg); width: 100%; max-width: 420px; border: 1px solid rgba(212,230,220,0.6); transform: rotate(2deg); }
+    .hero-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; }
+    .hero-card-header h4 { font-size: 1rem; font-weight: 700; color: var(--text-dark); }
+    .hero-card-header span { font-size: 0.75rem; background: #e6f5ee; color: var(--primary); padding: 4px 12px; border-radius: 40px; font-weight: 700; }
+    .hero-mini-row { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #eef5f1; }
+    .hero-mini-row:last-child { border-bottom: none; }
+    .hero-mini-avatar { width: 38px; height: 38px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; }
+    .hero-mini-info { flex: 1; }
+    .hero-mini-info strong { font-size: 0.88rem; color: var(--text-dark); display: block; }
+    .hero-mini-info span { font-size: 0.75rem; color: var(--text-light); font-weight: 500; }
+    .hero-mini-amount { font-size: 0.88rem; font-weight: 700; color: var(--primary); }
+    .hero-blob { position: absolute; width: 380px; height: 380px; background: linear-gradient(135deg, #a8e6c8, #6bc9a0); border-radius: 50%; filter: blur(80px); opacity: 0.35; z-index: -1; top: -40px; right: -40px; }
+    .features { padding: 80px 48px; max-width: 1400px; margin: 0 auto; }
+    .section-header { text-align: center; max-width: 680px; margin: 0 auto 56px; }
+    .section-header h3 { font-size: 2.4rem; font-weight: 800; color: var(--text-dark); letter-spacing: -1px; margin-bottom: 16px; }
+    .section-header p { font-size: 1.05rem; color: #5f7194; font-weight: 500; }
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+    .feature-card { background: white; border-radius: 28px; padding: 32px; border: 1px solid rgba(212,230,220,0.6); box-shadow: var(--shadow-sm); transition: all 0.25s; }
+    .feature-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); }
+    .feature-icon { width: 56px; height: 56px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 20px; }
+    .feature-card h4 { font-size: 1.15rem; font-weight: 700; color: var(--text-dark); margin-bottom: 10px; }
+    .feature-card p { font-size: 0.92rem; color: #6c7fa8; font-weight: 500; line-height: 1.6; }
+    .contact-section { padding: 80px 48px; background: linear-gradient(145deg, #f0f9f4, #e6f5ee); }
+    .contact-inner { max-width: 700px; margin: 0 auto; text-align: center; }
+    .contact-inner h3 { font-size: 2.2rem; font-weight: 800; color: var(--text-dark); letter-spacing: -1px; margin-bottom: 18px; }
+    .contact-inner p { font-size: 1rem; color: #5f7194; font-weight: 500; margin-bottom: 32px; line-height: 1.7; }
+    .contact-form-card { background: white; border-radius: 28px; padding: 36px; box-shadow: var(--shadow-md); border: 1px solid rgba(212,230,220,0.6); text-align: left; max-width: 560px; margin: 0 auto; }
+    .contact-form-card h4 { font-size: 1.3rem; font-weight: 700; color: var(--text-dark); margin-bottom: 24px; }
+    .form-group-landing { margin-bottom: 18px; }
+    .form-group-landing label { display: block; font-size: 0.82rem; font-weight: 700; color: var(--text-mid); margin-bottom: 8px; text-transform: uppercase; }
+    .form-group-landing input, .form-group-landing textarea { width: 100%; padding: 13px 16px; border-radius: 14px; border: 1.5px solid var(--border-soft); font-size: 0.95rem; font-weight: 500; color: var(--text-dark); background: var(--bg-soft); outline: none; font-family: inherit; }
+    .form-group-landing input:focus, .form-group-landing textarea:focus { border-color: var(--primary-light); background: white; box-shadow: 0 0 0 4px rgba(45,156,110,0.1); }
+    .form-group-landing textarea { resize: vertical; min-height: 120px; }
+    .landing-footer { background: #0f1e40; color: #a8bccf; padding: 48px; text-align: center; }
+    .landing-footer p { font-size: 0.88rem; font-weight: 500; }
+    .landing-footer p strong { color: #2d9c6e; }
+    #appDashboard { display: none; padding: 20px 32px; min-height: 100vh; }
+    .app-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; flex-wrap: wrap; gap: 16px; }
+    .logo-area { display: flex; align-items: center; gap: 12px; }
+    .logo-icon { background: linear-gradient(135deg, #1e6b4b, #2d9c6e); width: 52px; height: 52px; border-radius: 16px; display: flex; align-items: center; justify-content: center; }
+    .logo-icon i { font-size: 26px; color: white; }
+    .logo-text h1 { font-size: 26px; font-weight: 800; background: linear-gradient(145deg, #1e6b4b, #2d9c6e); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .logo-text span { font-size: 13px; font-weight: 600; color: #5a7a6a; display: block; }
+    .user-badge { display: flex; align-items: center; gap: 12px; background: white; padding: 8px 8px 8px 16px; border-radius: 40px; box-shadow: var(--shadow-sm); border: 1px solid rgba(212,230,220,0.6); }
+    .user-badge-info { text-align: right; }
+    .user-badge-info strong { font-size: 0.88rem; color: var(--text-dark); display: block; font-weight: 700; }
+    .user-badge-info span { font-size: 0.72rem; color: var(--text-light); font-weight: 600; text-transform: uppercase; }
+    .user-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #1e6b4b, #2d9c6e); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.9rem; }
+    .btn { padding: 12px 22px; border-radius: 40px; font-weight: 600; font-size: 0.92rem; display: inline-flex; align-items: center; gap: 9px; border: none; cursor: pointer; transition: all 0.2s ease; background: white; color: #1d2b4b; box-shadow: var(--shadow-sm); border: 1px solid rgba(255,255,255,0.7); text-decoration: none; }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .btn-primary { background: linear-gradient(105deg, #1e6b4b, #2d9c6e); color: white; box-shadow: 0 16px 24px -8px rgba(30,107,75,0.35); border: none; }
+    .btn-primary:hover:not(:disabled) { background: linear-gradient(105deg, #155a3d, #238a5c); transform: translateY(-2px); }
+    .btn-outline { background: white; border: 1px solid #c2d9cf; color: var(--primary); }
+    .btn-outline:hover:not(:disabled) { background: #f0f9f4; }
+    .btn-sm { padding: 8px 16px; font-size: 0.82rem; }
+    .btn-danger { background: #fff0f0; border: 1px solid #f5c2c2; color: var(--danger); }
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 18px; margin-bottom: 28px; }
+    .stat-card { background: rgba(255,255,255,0.88); backdrop-filter: blur(12px); border-radius: 26px; padding: 22px 20px; border: 1px solid rgba(255,255,255,0.9); box-shadow: var(--shadow-md); }
+    .stat-title { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; color: #5f7194; margin-bottom: 10px; display: flex; justify-content: space-between; }
+    .stat-number { font-size: 2.2rem; font-weight: 800; color: var(--text-dark); line-height: 1.2; }
+    .stat-sub { font-size: 0.82rem; color: #62759b; margin-top: 4px; font-weight: 500; }
+    .toolbar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 14px; margin-bottom: 22px; }
+    .search-box { background: white; border-radius: 40px; padding: 6px 6px 6px 20px; display: flex; align-items: center; border: 1px solid #c2d9cf; box-shadow: var(--shadow-sm); flex: 1 1 260px; }
+    .search-box i { color: #6b8f7a; font-size: 1rem; }
+    .search-box input { border: none; outline: none; padding: 12px 14px; font-size: 0.92rem; width: 100%; background: transparent; font-weight: 500; color: var(--text-dark); }
+    .table-card { background: rgba(255,255,255,0.9); backdrop-filter: blur(16px); border-radius: 30px; padding: 8px 8px 0 8px; border: 1px solid rgba(255,255,255,0.9); box-shadow: var(--shadow-lg); overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 1100px; white-space: nowrap; }
+    th { text-align: left; padding: 16px; font-size: 0.76rem; font-weight: 800; text-transform: uppercase; color: var(--text-mid); border-bottom: 1px solid var(--border-soft); }
+    td { padding: 14px 16px; border-bottom: 1px solid #ddece4; font-size: 0.9rem; color: var(--text-dark); font-weight: 500; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(240,249,244,0.7); }
+    .employee-info { display: flex; align-items: center; gap: 12px; }
+    .avatar { width: 42px; height: 42px; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1rem; text-transform: uppercase; flex-shrink: 0; }
+    .emp-name { font-weight: 700; color: var(--text-dark); font-size: 0.92rem; }
+    .emp-role { font-size: 0.78rem; color: var(--text-light); font-weight: 500; margin-top: 2px; }
+    .badge { background: #e2f0e8; color: var(--primary); font-weight: 700; font-size: 0.76rem; padding: 5px 12px; border-radius: 40px; display: inline-block; border: 1px solid #b8d9c8; }
+    .badge-green { background: #e3f6ef; color: #0b6b4e; border-color: #b2e3d2; }
+    .badge-amber { background: #fff3e2; color: #a55c00; border-color: #ffd8a8; }
+    .badge-blue { background: #e6f0ff; color: #1e4b8a; border-color: #c2d6f5; }
+    .badge-purple { background: #f0e9ff; color: #5e2e8a; border-color: #d9c2f5; }
+    .badge-red { background: #ffe8e8; color: #d64545; border-color: #f5c2c2; }
+    .salary-cell { font-weight: 800; color: #1e3e7c; font-size: 0.92rem; }
+    .allowance-badge { background: #f0f9f4; border-radius: 40px; padding: 5px 12px; font-size: 0.78rem; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; color: var(--primary); border: 1px solid #b8d9c8; }
+    .allowance-cycle { font-size: 0.7rem; color: var(--text-light); font-weight: 600; margin-left: 4px; }
+    .file-indicator { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: #62759b; }
+    .file-indicator i { color: var(--primary-light); background: #e6f5ee; padding: 6px; border-radius: 12px; }
+    .action-icons { display: flex; gap: 6px; }
+    .icon-btn { width: 34px; height: 34px; border-radius: 11px; display: flex; align-items: center; justify-content: center; background: white; border: 1px solid var(--border-soft); color: var(--text-mid); cursor: pointer; transition: all 0.2s; }
+    .icon-btn:hover { background: var(--primary); color: white; border-color: var(--primary); transform: scale(1.05); }
+    .icon-btn.danger:hover { background: var(--danger); border-color: var(--danger); }
+    .icon-btn i { font-size: 0.9rem; }
+    .empty-row td { text-align: center; padding: 48px; color: #7b8fb0; font-weight: 600; font-size: 0.95rem; }
+    .dashboard-tabs { display: flex; gap: 8px; margin-bottom: 26px; flex-wrap: wrap; }
+    .dash-tab { padding: 12px 24px; border-radius: 40px; font-weight: 700; font-size: 0.88rem; background: white; border: 1px solid var(--border-soft); color: var(--text-mid); cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 8px; }
+    .dash-tab:hover { background: #f0f9f4; }
+    .dash-tab.active { background: linear-gradient(105deg, #1e6b4b, #2d9c6e); color: white; border-color: transparent; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(15,30,64,0.5); backdrop-filter: blur(6px); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+    .modal-overlay.active { display: flex; }
+    .modal { background: white; border-radius: 28px; max-width: 620px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 40px 80px -20px rgba(15,30,64,0.4); position: relative; }
+    .modal-header { padding: 24px 30px 18px; border-bottom: 1px solid #e4efe8; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: white; border-radius: 28px 28px 0 0; z-index: 10; }
+    .modal-header h2 { font-size: 1.3rem; font-weight: 800; color: var(--text-dark); display: flex; align-items: center; gap: 12px; }
+    .modal-header h2 i { color: var(--primary-light); }
+    .modal-close { background: #f0f9f4; border: none; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-mid); font-size: 1rem; }
+    .modal-close:hover { background: #dcefe4; color: var(--primary); }
+    .modal-body { padding: 24px 30px 30px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 0.8rem; font-weight: 700; color: var(--text-mid); margin-bottom: 8px; text-transform: uppercase; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 13px 16px; border-radius: 14px; border: 1.5px solid var(--border-soft); font-size: 0.92rem; font-weight: 500; color: var(--text-dark); background: var(--bg-soft); outline: none; font-family: inherit; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--primary-light); background: white; box-shadow: 0 0 0 4px rgba(45,156,110,0.1); }
+    .form-group input:disabled, .form-group select:disabled { background: #eef5f1; color: #7b8fb0; cursor: not-allowed; }
+    /* FIX 3: Aligned allowance amount + cycle */
+    .allowance-group { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: end; margin-bottom: 16px; }
+    .allowance-group .form-group { margin-bottom: 0; }
+    .allowance-group select { min-width: 140px; }
+    .checkbox-row { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border: 1.5px solid var(--border-soft); border-radius: 14px; background: var(--bg-soft); cursor: pointer; margin-bottom: 12px; }
+    .checkbox-row:hover { background: #f0f9f4; }
+    .checkbox-row input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--primary); cursor: pointer; flex-shrink: 0; }
+    .checkbox-row label { cursor: pointer; font-weight: 600; color: var(--text-dark); font-size: 0.92rem; flex: 1; margin: 0; text-transform: none; }
+    .checkbox-row small { display: block; font-size: 0.78rem; color: var(--text-light); font-weight: 500; margin-top: 2px; }
+    .file-upload-area { border: 2px dashed #b8d9c8; border-radius: 18px; padding: 24px; text-align: center; background: var(--bg-soft); cursor: pointer; margin-bottom: 12px; }
+    .file-upload-area:hover { border-color: var(--primary-light); background: #f0f9f4; }
+    .file-upload-area i { font-size: 1.9rem; color: var(--primary-light); margin-bottom: 10px; }
+    .file-upload-area p { font-size: 0.88rem; color: var(--text-mid); font-weight: 600; }
+    .file-upload-area span { font-size: 0.78rem; color: #7b8fb0; }
+    .file-upload-area input[type="file"] { display: none; }
+    .file-list { list-style: none; margin-top: 8px; }
+    .file-list li { display: flex; align-items: center; justify-content: space-between; background: #f0f9f4; border: 1px solid var(--border-soft); border-radius: 12px; padding: 10px 14px; margin-bottom: 8px; font-size: 0.86rem; font-weight: 500; color: var(--primary); }
+    .file-list li .file-info { display: flex; align-items: center; gap: 10px; }
+    .file-list li .file-info i { color: var(--primary-light); }
+    .file-list li .remove-file { background: none; border: none; color: var(--danger); cursor: pointer; font-size: 0.95rem; padding: 4px 8px; }
+    .modal-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px; padding-top: 20px; border-top: 1px solid #e4efe8; }
+    #adminDashboard { display: none; padding: 20px 32px; min-height: 100vh; }
+    .admin-tabs { display: flex; gap: 8px; margin-bottom: 26px; flex-wrap: wrap; }
+    .admin-tab { padding: 12px 24px; border-radius: 40px; font-weight: 700; font-size: 0.88rem; background: white; border: 1px solid var(--border-soft); color: var(--text-mid); cursor: pointer; display: flex; align-items: center; gap: 8px; }
+    .admin-tab:hover { background: #f0f9f4; }
+    .admin-tab.active { background: linear-gradient(105deg, #1e6b4b, #2d9c6e); color: white; border-color: transparent; }
+    .admin-panel { display: none; }
+    .admin-panel.active { display: block; }
+    .admin-card { background: white; border-radius: 26px; padding: 28px; box-shadow: var(--shadow-md); border: 1px solid rgba(212,230,220,0.6); margin-bottom: 24px; }
+    .admin-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; flex-wrap: wrap; gap: 12px; }
+    .admin-card-header h3 { font-size: 1.15rem; font-weight: 800; color: var(--text-dark); display: flex; align-items: center; gap: 10px; }
+    .admin-card-header h3 i { color: var(--primary-light); }
+    .toast-message { position: fixed; bottom: 30px; right: 30px; background: #1e3a5f; color: white; padding: 14px 24px; border-radius: 60px; font-weight: 600; font-size: 0.9rem; box-shadow: 0 20px 30px -10px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 10px; z-index: 2000; opacity: 0; transform: translateY(20px); transition: all 0.3s ease; pointer-events: none; max-width: 90vw; }
+    .toast-message.show { opacity: 1; transform: translateY(0); }
+    .error-banner { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #d64545; color: white; padding: 14px 28px; border-radius: 40px; font-weight: 700; font-size: 0.9rem; box-shadow: 0 20px 30px -10px rgba(214,69,69,0.5); z-index: 3000; display: none; max-width: 90vw; }
+    .error-banner.show { display: block; }
+    .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; margin-bottom: 24px; }
+    .info-card { background: white; border-radius: 22px; padding: 22px; box-shadow: var(--shadow-sm); border: 1px solid var(--border-soft); }
+    .info-card h4 { font-size: 0.9rem; font-weight: 800; color: var(--text-mid); text-transform: uppercase; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+    .info-card h4 i { color: var(--primary-light); }
+    .info-card .big-number { font-size: 2rem; font-weight: 800; color: var(--primary); }
+    .info-card .big-number.warning { color: var(--warning); }
+    .info-card .big-number.danger { color: var(--danger); }
+    .status-pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 40px; font-size: 0.78rem; font-weight: 700; }
+    .status-present { background: #e3f6ef; color: #0b6b4e; }
+    .status-absent { background: #ffe8e8; color: #d64545; }
+    .status-late { background: #fff3e2; color: #a55c00; }
+    .status-leave { background: #e6f0ff; color: #1e4b8a; }
+    .clock-hero { background: linear-gradient(135deg, #1e6b4b, #2d9c6e); border-radius: 28px; padding: 36px; color: white; margin-bottom: 24px; display: flex; flex-direction: column; align-items: center; gap: 20px; box-shadow: 0 24px 50px -20px rgba(30,107,75,0.5); }
+    .clock-hero h2 { font-size: 1.5rem; font-weight: 800; text-align: center; }
+    .clock-hero .clock-status { font-size: 0.95rem; opacity: 0.9; font-weight: 500; text-align: center; }
+    .clock-buttons { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; width: 100%; }
+    .clock-btn { padding: 20px 42px; border-radius: 60px; font-size: 1.1rem; font-weight: 800; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 12px; transition: all 0.2s; text-transform: uppercase; letter-spacing: 0.5px; }
+    .clock-btn-in { background: white; color: var(--primary); box-shadow: 0 12px 24px rgba(0,0,0,0.15); }
+    .clock-btn-in:hover:not(:disabled) { transform: scale(1.05); }
+    .clock-btn-out { background: #d64545; color: white; box-shadow: 0 12px 24px rgba(214,69,69,0.4); }
+    .clock-btn-out:hover:not(:disabled) { transform: scale(1.05); background: #b83535; }
+    .clock-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .clock-time { font-size: 2.4rem; font-weight: 800; letter-spacing: -1px; }
+    .company-banner { background: linear-gradient(105deg, #e6f5ee, #f0f9f4); border: 1.5px solid #b8d9c8; border-radius: 20px; padding: 16px 22px; margin-bottom: 24px; display: flex; align-items: center; gap: 14px; }
+    .company-banner i { font-size: 1.5rem; color: var(--primary); background: white; width: 46px; height: 46px; border-radius: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .company-banner .info { flex: 1; }
+    .company-banner .info strong { font-size: 1rem; color: var(--text-dark); display: block; font-weight: 800; }
+    .company-banner .info span { font-size: 0.82rem; color: var(--text-mid); font-weight: 500; }
+    .overview-hero { background: linear-gradient(135deg, #8a4b3c, #b45a2c); border-radius: 24px; padding: 26px 32px; color: white; margin-bottom: 24px; box-shadow: 0 20px 40px -15px rgba(138,75,60,0.4); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+    .overview-hero h2 { font-size: 1.4rem; font-weight: 800; margin-bottom: 4px; }
+    .overview-hero p { font-size: 0.88rem; opacity: 0.9; font-weight: 500; }
+    .overview-hero-stats { display: flex; gap: 26px; flex-wrap: wrap; }
+    .overview-hero-stat { text-align: center; }
+    .overview-hero-stat .num { font-size: 2rem; font-weight: 800; line-height: 1; }
+    .overview-hero-stat .lbl { font-size: 0.7rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; opacity: 0.9; margin-top: 4px; }
+    .location-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; }
+    .location-card { background: white; border-radius: 22px; padding: 22px; border: 1.5px solid var(--border-soft); box-shadow: var(--shadow-sm); transition: all 0.2s; position: relative; }
+    .location-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: #b8d9c8; }
+    .location-card.assigned { border-color: #b2e3d2; background: linear-gradient(145deg, #ffffff, #f7fdfa); }
+    .location-card.unassigned { border-color: #ffd8a8; background: linear-gradient(145deg, #ffffff, #fff9ee); }
+    .location-card h4 { font-size: 1.05rem; font-weight: 800; color: var(--text-dark); margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+    .location-card h4 i { color: var(--primary-light); }
+    .location-card .addr { font-size: 0.85rem; color: var(--text-light); font-weight: 500; margin-bottom: 12px; }
+    .location-card .company-link { font-size: 0.82rem; color: var(--text-mid); font-weight: 600; margin-bottom: 10px; padding: 8px 12px; background: #f0f9f4; border-radius: 10px; display: flex; align-items: center; gap: 8px; }
+    .location-card .company-link i { color: var(--primary); }
+    .location-card .unassigned-tag { font-size: 0.78rem; font-weight: 700; color: #a55c00; background: #fff3e2; border: 1px solid #ffd8a8; padding: 6px 10px; border-radius: 10px; display: inline-block; margin-bottom: 10px; }
+    .location-card .card-actions { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+    .location-card .stats-row { display: flex; gap: 16px; padding-top: 12px; border-top: 1px solid #e4efe8; margin-top: 12px; }
+    .location-card .stats-row div { font-size: 0.78rem; color: var(--text-light); font-weight: 600; }
+    .location-card .stats-row strong { color: var(--text-dark); font-weight: 800; font-size: 1rem; display: block; }
+    .company-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 18px; }
+    .company-card { background: white; border-radius: 22px; padding: 24px; border: 1.5px solid var(--border-soft); box-shadow: var(--shadow-sm); }
+    .company-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; gap: 10px; flex-wrap: wrap; }
+    .company-card h4 { font-size: 1.1rem; font-weight: 800; color: var(--text-dark); margin-bottom: 4px; }
+    .company-card .manager-info { font-size: 0.82rem; color: var(--text-light); font-weight: 500; }
+    .company-card .manager-info code { background: #f0f9f4; color: var(--primary); padding: 2px 8px; border-radius: 6px; font-weight: 700; }
+    .company-card .branches-list { margin-top: 14px; }
+    .company-card .branches-list h5 { font-size: 0.78rem; font-weight: 800; text-transform: uppercase; color: var(--text-mid); letter-spacing: 0.4px; margin-bottom: 8px; }
+    .company-card .branch-chip { display: inline-flex; align-items: center; gap: 6px; background: #e6f5ee; color: var(--primary); border: 1px solid #b8d9c8; padding: 5px 10px; border-radius: 40px; font-size: 0.76rem; font-weight: 700; margin: 0 6px 6px 0; }
+    .company-card .branch-chip i { font-size: 0.7rem; }
+    .company-card .card-actions { display: flex; gap: 8px; margin-top: 16px; padding-top: 14px; border-top: 1px solid #e4efe8; flex-wrap: wrap; }
+    .workflow-guide { background: linear-gradient(105deg, #fff9ee, #fff3e2); border: 1.5px solid #ffd8a8; border-radius: 18px; padding: 16px 22px; margin-bottom: 22px; display: flex; align-items: center; gap: 14px; }
+    .workflow-guide i { font-size: 1.5rem; color: #a55c00; }
+    .workflow-guide .text { flex: 1; font-size: 0.88rem; color: #7a4500; font-weight: 600; line-height: 1.6; }
+    .workflow-guide .text strong { color: #a55c00; }
+    .deduction-row { display: grid; grid-template-columns: 2fr 1fr auto; gap: 10px; margin-bottom: 8px; align-items: center; }
+    .deduction-row input { padding: 10px 12px; border-radius: 10px; border: 1.5px solid var(--border-soft); font-size: 0.86rem; font-weight: 500; }
+    .deduction-row .del-btn { background: #fff0f0; border: 1px solid #f5c2c2; color: var(--danger); width: 36px; height: 36px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .deduction-row .del-btn:hover { background: #ffe0e0; }
+    .firestore-list { max-height: 600px; overflow-y: auto; }
+    .fs-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid #e4efe8; gap: 12px; flex-wrap: wrap; }
+    .fs-row:last-child { border-bottom: none; }
+    .fs-row:hover { background: rgba(240,249,244,0.5); }
+    .fs-row .info { flex: 1; min-width: 200px; }
+    .fs-row .info strong { display: block; font-size: 0.9rem; color: var(--text-dark); font-weight: 700; }
+    .fs-row .info span { font-size: 0.78rem; color: var(--text-light); font-weight: 500; }
+    .fs-row code { background: #f0f9f4; color: var(--primary); padding: 2px 8px; border-radius: 6px; font-size: 0.76rem; font-weight: 700; }
+    /* Payroll toolbar */
+    .payroll-toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; padding: 48px 24px; gap: 40px; }
+      .hero h2 { font-size: 2.4rem; }
+      .contact-section { padding: 60px 24px; }
+      .landing-nav { padding: 16px 24px; }
+      .landing-nav-links { display: none; }
+      .features { padding: 60px 24px; }
+      .landing-footer { padding: 32px 24px; }
+    }
+    @media (max-width: 700px) {
+      #appDashboard, #adminDashboard { padding: 16px; }
+      .logo-text h1 { font-size: 20px; }
+      .stat-number { font-size: 1.7rem; }
+      .form-row { grid-template-columns: 1fr; }
+      .allowance-group { grid-template-columns: 1fr; }
+      .modal-header, .modal-body { padding-left: 20px; padding-right: 20px; }
+      .hero h2 { font-size: 2rem; }
+      .hero-stats { gap: 24px; }
+      .hero-stat h4 { font-size: 1.5rem; }
+      .clock-btn { padding: 16px 28px; font-size: 1rem; }
+      .clock-time { font-size: 1.8rem; }
+      .deduction-row { grid-template-columns: 1fr 1fr auto; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="loadingOverlay">
+  <div class="spinner"></div>
+  <p>Connecting to Bright Mesh cloud...</p>
+</div>
+
+<div class="error-banner" id="errorBanner"></div>
+
+<!-- LANDING PAGE -->
+<div id="landingPage">
+  <nav class="landing-nav">
+    <div class="landing-logo">
+      <div class="landing-logo-icon"><i class="fas fa-store-alt"></i></div>
+      <div class="landing-logo-text"><h1>Bright Mesh HR</h1><span>Supermarket & Grocery</span></div>
+    </div>
+    <div class="landing-nav-links">
+      <a onclick="scrollToSection('features')">Features</a>
+      <a onclick="scrollToSection('contact')">Contact</a>
+    </div>
+    <div class="landing-nav-actions">
+      <button class="btn btn-outline" onclick="showLoginModal()"><i class="fas fa-sign-in-alt"></i> Sign In</button>
+      <button class="btn btn-primary" onclick="showLoginModal()"><i class="fas fa-rocket"></i> Get Started</button>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div>
+      <div class="hero-badge"><i class="fas fa-check-circle"></i> Trusted by supermarkets across Uganda</div>
+      <h2>Manage your <span class="gradient-text">entire team</span> in one bright place.</h2>
+      <p>Bright Mesh HR helps supermarkets and grocery stores manage employees, salaries, allowances, and documents — all from a single, beautifully simple dashboard.</p>
+      <div class="hero-buttons">
+        <button class="btn btn-primary" onclick="showLoginModal()"><i class="fas fa-arrow-right"></i> Open Dashboard</button>
+        <button class="btn btn-outline" onclick="scrollToSection('contact')"><i class="fas fa-envelope"></i> Contact Us</button>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><h4>100%</h4><p>Cloud Ready</p></div>
+        <div class="hero-stat"><h4>UGX</h4><p>Local Currency</p></div>
+        <div class="hero-stat"><h4>24/7</h4><p>Access</p></div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-blob"></div>
+      <div class="hero-card">
+        <div class="hero-card-header"><h4>Team Payroll</h4><span>This Month</span></div>
+        <div class="hero-mini-row"><div class="hero-mini-avatar" style="background:#e6f5ee;color:#1e6b4b;">MS</div><div class="hero-mini-info"><strong>Maria Santos</strong><span>Produce Manager</span></div><div class="hero-mini-amount">UGX 5.8M</div></div>
+        <div class="hero-mini-row"><div class="hero-mini-avatar" style="background:#fff3e2;color:#a55c00;">JT</div><div class="hero-mini-info"><strong>James Thompson</strong><span>Meat & Seafood</span></div><div class="hero-mini-amount">UGX 6.5M</div></div>
+        <div class="hero-mini-row"><div class="hero-mini-avatar" style="background:#e6f0ff;color:#1e4b8a;">AP</div><div class="hero-mini-info"><strong>Aisha Patel</strong><span>Bakery Manager</span></div><div class="hero-mini-amount">UGX 5.4M</div></div>
+        <div class="hero-mini-row"><div class="hero-mini-avatar" style="background:#f0e9ff;color:#5e2e8a;">RC</div><div class="hero-mini-info"><strong>Robert Chen</strong><span>Store Manager</span></div><div class="hero-mini-amount">UGX 9.7M</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="features" id="features">
+    <div class="section-header"><h3>Everything your store needs</h3><p>Built specifically for supermarkets and grocery retailers — from produce to front end.</p></div>
+    <div class="features-grid">
+      <div class="feature-card"><div class="feature-icon" style="background:#e6f5ee;color:#1e6b4b;"><i class="fas fa-users"></i></div><h4>Employee Management</h4><p>Add, edit, and organize all your staff across every department with full profile details.</p></div>
+      <div class="feature-card"><div class="feature-icon" style="background:#fff3e2;color:#a55c00;"><i class="fas fa-money-bill-wave"></i></div><h4>Salary & Allowances</h4><p>Track base salaries plus daily, weekly, or monthly allowances in Ugandan Shillings (UGX).</p></div>
+      <div class="feature-card"><div class="feature-icon" style="background:#e6f0ff;color:#1e4b8a;"><i class="fas fa-fingerprint"></i></div><h4>Attendance & Shifts</h4><p>Clock-in / clock-out tracking with shift history and monthly attendance reports.</p></div>
+      <div class="feature-card"><div class="feature-icon" style="background:#f0e9ff;color:#5e2e8a;"><i class="fas fa-file-invoice-dollar"></i></div><h4>Payroll & Payslips</h4><p>Generate monthly payslips with automatic NSSF, PAYE, and absence deductions.</p></div>
+      <div class="feature-card"><div class="feature-icon" style="background:#ffe8e8;color:#d64545;"><i class="fas fa-umbrella-beach"></i></div><h4>Leave Management</h4><p>Employees request leave, managers approve or reject, with automatic balance tracking.</p></div>
+      <div class="feature-card"><div class="feature-icon" style="background:#e8f4ff;color:#2d7ab3;"><i class="fas fa-building"></i></div><h4>Multi-Location Companies</h4><p>Admins manage locations and companies; managers run day-to-day operations per branch.</p></div>
+    </div>
+  </section>
+
+  <section class="contact-section" id="contact">
+    <div class="contact-inner">
+      <h3>Send us a message</h3>
+      <p>Have questions about Bright Mesh HR? Need a custom plan for your supermarket chain? Send us a message and we'll respond within 24 hours.</p>
+      <div class="contact-form-card">
+        <form action="https://formsubmit.co/brightmesh.app@gmail.com" method="POST">
+          <input type="hidden" name="_subject" value="New inquiry from Bright Mesh HR website">
+          <input type="hidden" name="_captcha" value="false">
+          <input type="hidden" name="_template" value="table">
+          <div class="form-group-landing"><label>Your Name</label><input type="text" name="name" placeholder="e.g. John Ssentamu" required></div>
+          <div class="form-group-landing"><label>Email Address</label><input type="email" name="email" placeholder="you@example.com" required></div>
+          <div class="form-group-landing"><label>Subject</label><input type="text" name="subject" placeholder="e.g. Inquiry about Bright Mesh HR" required></div>
+          <div class="form-group-landing"><label>Message</label><textarea name="message" placeholder="Tell us how we can help..." required></textarea></div>
+          <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;"><i class="fas fa-paper-plane"></i> Send Message</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <footer class="landing-footer">
+    <p>© 2025 <strong>Bright Mesh HR</strong> · Supermarket & Grocery Employee Management · Made with ❤️ in Uganda</p>
+  </footer>
+</div>
+
+<!-- LOGIN MODAL -->
+<div class="modal-overlay" id="loginModal" data-closeable="true">
+  <div class="modal" style="max-width: 440px;">
+    <div class="modal-header">
+      <h2><i class="fas fa-sign-in-alt"></i> Sign In</h2>
+      <button class="modal-close" onclick="closeModal('loginModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:0.88rem;color:#62759b;margin-bottom:22px;text-align:center;font-weight:500;">Enter your credentials to continue.</p>
+      <form id="loginForm">
+        <div class="form-group"><label>Username</label><input type="text" id="loginUsername" placeholder="Enter username" required autocomplete="username"></div>
+        <div class="form-group"><label>Password</label><input type="password" id="loginPassword" placeholder="Enter password" required autocomplete="current-password"></div>
+        <p id="loginError" style="color:#d64545;font-size:0.85rem;font-weight:600;margin-bottom:14px;display:none;"></p>
+        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;"><i class="fas fa-arrow-right"></i> Sign In</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- USER DASHBOARD -->
+<div id="appDashboard">
+  <header class="app-header">
+    <div class="logo-area">
+      <div class="logo-icon"><i class="fas fa-store-alt"></i></div>
+      <div class="logo-text"><h1>Bright Mesh HR</h1><span id="appSubtitle">supermarket & grocery · employee management</span></div>
+    </div>
+    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+      <div class="user-badge">
+        <div class="user-badge-info"><strong id="currentUserName">User</strong><span id="currentUserRole">Employee</span></div>
+        <div class="user-avatar" id="currentUserAvatar">U</div>
+      </div>
+      <button class="btn btn-outline btn-sm" onclick="showChangePasswordModal()"><i class="fas fa-key"></i> Password</button>
+      <button class="btn btn-outline btn-sm" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    </div>
+  </header>
+
+  <div class="company-banner" id="companyBanner" style="display:none;">
+    <i class="fas fa-building"></i>
+    <div class="info"><strong id="companyName">Company</strong><span id="companyLocations">0 branches assigned</span></div>
+  </div>
+
+  <div class="dashboard-tabs" id="dashboardTabs">
+    <button class="dash-tab active" data-role="all" data-tab="clock"><i class="fas fa-fingerprint"></i> My Clock</button>
+    <button class="dash-tab" data-role="manager" data-tab="employees"><i class="fas fa-users"></i> Employees</button>
+    <button class="dash-tab" data-role="manager" data-tab="locations"><i class="fas fa-map-marker-alt"></i> My Branches</button>
+    <button class="dash-tab" data-role="manager" data-tab="users"><i class="fas fa-user-plus"></i> Manage Users</button>
+    <button class="dash-tab" data-role="manager" data-tab="attendance"><i class="fas fa-clock"></i> Attendance</button>
+    <button class="dash-tab" data-role="manager" data-tab="payroll"><i class="fas fa-file-invoice-dollar"></i> Payroll</button>
+    <button class="dash-tab" data-role="manager" data-tab="leave"><i class="fas fa-umbrella-beach"></i> Leave Approvals</button>
+    <button class="dash-tab" data-role="all" data-tab="myleave"><i class="fas fa-calendar-plus"></i> My Leave</button>
+    <button class="dash-tab" data-role="all" data-tab="mypayslips"><i class="fas fa-receipt"></i> My Payslips</button>
+  </div>
+
+  <!-- CLOCK -->
+  <div class="tab-panel active" id="panel-clock">
+    <div class="clock-hero">
+      <div class="clock-time" id="liveClock">--:--:--</div>
+      <h2 id="clockGreeting">Hello!</h2>
+      <div class="clock-status" id="clockStatusText">Ready to start your shift?</div>
+      <div class="clock-buttons">
+        <button class="clock-btn clock-btn-in" id="bigClockInBtn" onclick="selfClockIn()"><i class="fas fa-sign-in-alt"></i> Clock In</button>
+        <button class="clock-btn clock-btn-out" id="bigClockOutBtn" onclick="selfClockOut()"><i class="fas fa-sign-out-alt"></i> Clock Out</button>
+      </div>
+    </div>
+    <div class="admin-card">
+      <div class="admin-card-header"><h3><i class="fas fa-history"></i> My Recent Attendance</h3></div>
+      <div style="overflow-x:auto;">
+        <table style="min-width:600px;">
+          <thead><tr><th>Date</th><th>Clock In</th><th>Clock Out</th><th>Hours</th><th>Status</th></tr></thead>
+          <tbody id="myAttendanceBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- EMPLOYEES -->
+  <div class="tab-panel" id="panel-employees">
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-title">Total employees <i class="fas fa-users" style="color:#2d9c6e;"></i></div><div class="stat-number" id="totalEmployees">0</div><div class="stat-sub">active team members</div></div>
+      <div class="stat-card"><div class="stat-title">Monthly base payroll <i class="fas fa-coins" style="color:#d68b2c;"></i></div><div class="stat-number" id="totalPayroll">UGX 0</div><div class="stat-sub">base salaries only</div></div>
+      <div class="stat-card"><div class="stat-title">Avg. allowance <i class="fas fa-gift" style="color:#1e6b4b;"></i></div><div class="stat-number" id="avgAllowance">UGX 0</div><div class="stat-sub">paid separately</div></div>
+      <div class="stat-card"><div class="stat-title">Branches <i class="fas fa-map-marker-alt" style="color:#b24b8b;"></i></div><div class="stat-number" id="totalLocations">0</div><div class="stat-sub">assigned to you</div></div>
+    </div>
+    <div class="toolbar">
+      <div class="search-box"><i class="fas fa-search"></i><input type="text" id="searchInput" placeholder="Search by name, role or department..."></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-outline" id="exportBtn"><i class="fas fa-download"></i> Export</button>
+        <button class="btn btn-primary" id="addEmployeeBtn"><i class="fas fa-plus-circle"></i> Add Employee</button>
+      </div>
+    </div>
+    <div class="table-card">
+      <table>
+        <thead><tr><th>Employee</th><th>Department</th><th>Branch</th><th>Base Salary</th><th>Allowance</th><th>Statutory</th><th>Files</th><th style="text-align:center;">Actions</th></tr></thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- MY BRANCHES -->
+  <div class="tab-panel" id="panel-locations">
+    <div class="admin-card">
+      <div class="admin-card-header">
+        <h3><i class="fas fa-map-marker-alt"></i> My Assigned Branches</h3>
+        <span class="badge badge-blue"><i class="fas fa-lock"></i> Managed by admin</span>
+      </div>
+      <p style="font-size:0.85rem;color:#62759b;margin-bottom:18px;">These branches were assigned to your company by the administrator.</p>
+      <div class="location-grid" id="managerLocationsGrid"></div>
+    </div>
+  </div>
+
+  <!-- MANAGER USERS -->
+  <div class="tab-panel" id="panel-users">
+    <div class="admin-card">
+      <div class="admin-card-header">
+        <h3><i class="fas fa-user-plus"></i> Employee Login Accounts</h3>
+        <button class="btn btn-primary btn-sm" onclick="showManagerCreateUserModal()"><i class="fas fa-plus"></i> Create User</button>
+      </div>
+      <div style="overflow-x:auto;">
+        <table style="min-width:800px;">
+          <thead><tr><th>Username</th><th>Full Name</th><th>Role</th><th>Linked Employee</th><th>Branch</th><th style="text-align:center;">Actions</th></tr></thead>
+          <tbody id="managerUsersTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ATTENDANCE -->
+  <div class="tab-panel" id="panel-attendance">
+    <div class="info-grid">
+      <div class="info-card"><h4><i class="fas fa-check-circle"></i> Present Today</h4><div class="big-number" id="presentToday">0</div></div>
+      <div class="info-card"><h4><i class="fas fa-clock"></i> Late Arrivals</h4><div class="big-number warning" id="lateToday">0</div></div>
+      <div class="info-card"><h4><i class="fas fa-user-slash"></i> Absent Today</h4><div class="big-number danger" id="absentToday">0</div></div>
+      <div class="info-card"><h4><i class="fas fa-calendar-alt"></i> On Leave</h4><div class="big-number" id="onLeaveToday">0</div></div>
+    </div>
+    <div class="admin-card">
+      <div class="admin-card-header">
+        <h3><i class="fas fa-history"></i> All Attendance Records</h3>
+        <button class="btn btn-outline btn-sm" onclick="exportAttendance()"><i class="fas fa-download"></i> Export CSV</button>
+      </div>
+      <div style="overflow-x:auto;">
+        <table style="min-width:700px;">
+          <thead><tr><th>Date</th><th>Employee</th><th>Clock In</th><th>Clock Out</th><th>Hours</th><th>Status</th></tr></thead>
+          <tbody id="attendanceTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAYROLL -->
+  <div class="tab-panel" id="panel-payroll">
+    <div class="admin-card">
+      <div class="admin-card-header">
+        <h3><i class="fas fa-file-invoice-dollar"></i> Monthly Payroll</h3>
+        <div class="payroll-toolbar">
+          <select id="payrollMonth" style="padding:10px 16px;border-radius:40px;border:1.5px solid var(--border-soft);font-weight:600;font-size:0.88rem;">
+            <option value="10">October 2025</option>
+            <option value="11">November 2025</option>
+            <option value="12">December 2025</option>
+          </select>
+          <button class="btn btn-primary btn-sm" onclick="generatePayroll()"><i class="fas fa-calculator"></i> Generate Payroll</button>
+          <button class="btn btn-danger btn-sm" onclick="clearPayrollMonth()"><i class="fas fa-trash-alt"></i> Clear Month</button>
+        </div>
+      </div>
+      <div style="background:#e6f0ff;border:1.5px solid #c2d6f5;border-radius:14px;padding:14px 18px;margin-bottom:18px;font-size:0.85rem;color:#1e4b8a;font-weight:600;">
+        <i class="fas fa-info-circle" style="margin-right:8px;"></i>
+        <strong>Gross Pay = Base Salary only.</strong> Allowances are paid separately (daily/weekly) and NOT included in the monthly payroll calculation.
+      </div>
+      <div style="overflow-x:auto;">
+        <table style="min-width:1100px;">
+          <thead>
+            <tr>
+              <th>Employee</th><th>Base</th><th>Allowance</th><th>Gross</th>
+              <th>NSSF</th><th>PAYE</th><th>Custom</th><th>Absent Deduction</th>
+              <th>Net Pay</th><th style="text-align:center;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="payrollTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEAVE APPROVALS -->
+  <div class="tab-panel" id="panel-leave">
+    <div class="info-grid">
+      <div class="info-card"><h4><i class="fas fa-hourglass-half"></i> Pending</h4><div class="big-number warning" id="pendingLeaves">0</div></div>
+      <div class="info-card"><h4><i class="fas fa-check-circle"></i> Approved</h4><div class="big-number" id="approvedLeaves">0</div></div>
+      <div class="info-card"><h4><i class="fas fa-times-circle"></i> Rejected</h4><div class="big-number danger" id="rejectedLeaves">0</div></div>
+      <div class="info-card"><h4><i class="fas fa-users"></i> On Leave Today</h4><div class="big-number" id="onLeaveTodayLeaveTab">0</div></div>
+    </div>
+    <div class="admin-card">
+      <div class="admin-card-header"><h3><i class="fas fa-list"></i> All Leave Requests</h3></div>
+      <div style="overflow-x:auto;">
+        <table style="min-width:900px;">
+          <thead><tr><th>Employee</th><th>Type</th><th>From</th><th>To</th><th>Days</th><th>Reason</th><th>Status</th><th style="text-align:center;">Actions</th></tr></thead>
+          <tbody id="leaveTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- MY LEAVE -->
+  <div class="tab-panel" id="panel-myleave">
+    <div class="admin-card">
+      <div class="admin-card-header"><h3><i class="fas fa-plus-circle"></i> Request Leave</h3></div>
+      <form id="leaveForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Leave Type</label>
+            <select id="leaveType" required>
+              <option value="annual">Annual Leave</option>
+              <option value="sick">Sick Leave</option>
+              <option value="maternity">Maternity Leave</option>
+              <option value="compassionate">Compassionate Leave</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Number of Days</label><input type="number" id="leaveDays" min="1" value="1" required></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Start Date</label><input type="date" id="leaveStart" required></div>
+          <div class="form-group"><label>End Date</label><input type="date" id="leaveEnd" required></div>
+        </div>
+        <div class="form-group"><label>Reason</label><textarea id="leaveReason" placeholder="Brief reason for leave..." required style="min-height:80px;"></textarea></div>
+        <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Submit Request</button>
+      </form>
+    </div>
+    <div class="admin-card">
+      <div class="admin-card-header"><h3><i class="fas fa-history"></i> My Leave Requests</h3></div>
+      <div style="overflow-x:auto;">
+        <table style="min-width:700px;">
+          <thead><tr><th>Type</th><th>From</th><th>To</th><th>Days</th><th>Reason</th><th>Status</th></tr></thead>
+          <tbody id="myLeaveTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- MY PAYSLIPS -->
+  <div class="tab-panel" id="panel-mypayslips">
+    <div class="admin-card">
+      <div class="admin-card-header"><h3><i class="fas fa-receipt"></i> My Payslips & Deductions</h3></div>
+      <div style="overflow-x:auto;">
+        <table style="min-width:800px;">
+          <thead><tr><th>Month</th><th>Gross Pay</th><th>NSSF</th><th>PAYE</th><th>Other Deductions</th><th>Net Pay</th><th style="text-align:center;">View</th></tr></thead>
+          <tbody id="myPayslipsBody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="admin-card" id="mySalaryDetailsCard" style="display:none;">
+      <div class="admin-card-header"><h3><i class="fas fa-info-circle"></i> My Salary Details</h3></div>
+      <div id="mySalaryDetails"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN DASHBOARD -->
+<div id="adminDashboard">
+  <header class="app-header">
+    <div class="logo-area">
+      <div class="logo-icon" style="background:linear-gradient(135deg,#8a4b3c,#b45a2c);"><i class="fas fa-crown"></i></div>
+      <div class="logo-text">
+        <h1 style="background:linear-gradient(145deg,#8a4b3c,#b45a2c);-webkit-background-clip:text;background-clip:text;">Admin Control</h1>
+        <span>master dashboard · locations, companies & branches</span>
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+      <div class="user-badge">
+        <div class="user-badge-info"><strong>Administrator</strong><span>Super Admin</span></div>
+        <div class="user-avatar" style="background:linear-gradient(135deg,#8a4b3c,#b45a2c);">A</div>
+      </div>
+      <button class="btn btn-outline btn-sm" onclick="showChangePasswordModal()"><i class="fas fa-key"></i> Password</button>
+      <button class="btn btn-outline btn-sm" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    </div>
+  </header>
+
+  <div class="overview-hero">
+    <div>
+      <h2><i class="fas fa-crown" style="margin-right:10px;"></i> Platform Overview</h2>
+      <p>Locations first, then companies, then branches.</p>
+    </div>
+    <div class="overview-hero-stats">
+      <div class="overview-hero-stat"><div class="num" id="overviewLocations">0</div><div class="lbl">Locations</div></div>
+      <div class="overview-hero-stat"><div class="num" id="overviewCompanies">0</div><div class="lbl">Companies</div></div>
+      <div class="overview-hero-stat"><div class="num" id="overviewBranches">0</div><div class="lbl">Assigned Branches</div></div>
+      <div class="overview-hero-stat"><div class="num" id="overviewUsers">0</div><div class="lbl">Users</div></div>
+    </div>
+  </div>
+
+  <div class="workflow-guide">
+    <i class="fas fa-lightbulb"></i>
+    <div class="text">
+      <strong>Recommended workflow:</strong> 1️⃣ Create a Location → 2️⃣ Create a Company/Manager and link it to that location → 3️⃣ Add more Branches to the company anytime.
+    </div>
+  </div>
+
+  <div class="admin-tabs">
+    <button class="admin-tab active" data-atab="locations" onclick="switchAdminTab('locations', this)"><i class="fas fa-map-marker-alt"></i> 1. Locations</button>
+    <button class="admin-tab" data-atab="companies" onclick="switchAdminTab('companies', this)"><i class="fas fa-building"></i> 2. Companies & Managers</button>
+    <button class="admin-tab" data-atab="users" onclick="switchAdminTab('users', this)"><i class="fas fa-users-cog"></i> All Users</button>
+    <button class="admin-tab" data-atab="firestore" onclick="switchAdminTab('firestore', this)"><i class="fas fa-database"></i> All Firestore Data</button>
+    <button class="admin-tab" data-atab="billing" onclick="switchAdminTab('billing', this)"><i class="fas fa-file-invoice"></i> Billing Preview</button>
+  </div>
+
+  <div class="admin-panel active" id="panel-locations">
+    <div class="admin-card">
+      <div class="admin-card-header">
+        <h3><i class="fas fa-map-marker-alt"></i> All Locations</h3>
+        <button class="btn btn-primary btn-sm" onclick="showCreateLocationModal()"><i class="fas fa-plus"></i> Create New Location</button>
+      </div>
+      <p style="font-size:0.85rem;color:#62759b;margin-bottom:18px;"><strong>Step 1:</strong> Create all physical locations first.</p>
+      <div class="location-grid" id="locationsGrid"></div>
+    </div>
+  </div>
+
+  <div class="admin-panel" id="panel-companies">
+    <div class="admin-card">
+      <div class="admin-card-header">
+        <h3><i class="fas fa-building"></i> Companies & Managers</h3>
+        <button class="btn btn-primary btn-sm" onclick="showCreateCompanyModal()"><i class="fas fa-plus"></i> Create New Company</button>
+      </div>
+      <p style="font-size:0.85rem;color:#62759b;margin-bottom:18px;"><strong>Step 2:</strong> Create companies, then assign them to locations.</p>
+      <div class="company-grid" id="companiesGrid"></div>
+    </div>
+  </div>
+
+  <div class="admin-panel" id="panel-users">
+    <div class="admin-card">
+      <div class="admin-card-header"><h3><i class="fas fa-users-cog"></i> All Users</h3></div>
+      <div style="overflow-x:auto;">
+        <table style="min-width:1000px;">
+          <thead><tr><th>Username</th><th>Full Name</th><th>Role</th><th>Company</th><th>Linked Employee</th><th>Branch</th><th style="text-align:center;">Actions</th></tr></thead>
+          <tbody id="usersTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-panel" id="panel-firestore">
+    <div class="admin-card">
+      <div class="admin-card-header"><h3><i class="fas fa-map-marker-alt"></i> Raw Firestore: Locations (<span id="fsLocCount">0</span>)</h3></div>
+      <div class="firestore-list" id="fsLocationsList"></div>
+    </div>
+    <div class="admin-card">
+      <div class="admin-card-header"><h3><i class="fas fa-users-cog"></i> Raw Firestore: Users (<span id="fsUserCount">0</span>)</h3></div>
+      <div class="firestore-list" id="fsUsersList"></div>
+    </div>
+    <div class="admin-card">
+      <div class="admin-card-header"><h3><i class="fas fa-building"></i> Raw Firestore: Companies (<span id="fsCompanyCount">0</span>)</h3></div>
+      <div class="firestore-list" id="fsCompaniesList"></div>
+    </div>
+  </div>
+
+  <div class="admin-panel" id="panel-billing">
+    <div class="admin-card">
+      <div class="admin-card-header"><h3><i class="fas fa-file-invoice"></i> Billing Preview</h3></div>
+      <p style="font-size:0.85rem;color:#62759b;margin-bottom:18px;">Each <strong>assigned branch</strong> counts as a billable unit.</p>
+      <div class="form-group" style="max-width:300px;">
+        <label>Rate per Branch (UGX / month)</label>
+        <input type="number" id="billingRate" value="100000" min="0" step="1000" onchange="renderBilling()">
+      </div>
+      <div style="overflow-x:auto;">
+        <table style="min-width:700px;">
+          <thead><tr><th>Company / Manager</th><th>Assigned Branches</th><th>Rate (UGX)</th><th>Monthly Total (UGX)</th></tr></thead>
+          <tbody id="billingTableBody"></tbody>
+        </table>
+      </div>
+      <div style="margin-top:20px;padding:18px;background:linear-gradient(105deg,#1e6b4b,#2d9c6e);border-radius:18px;color:white;display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-weight:700;">TOTAL MONTHLY REVENUE</span>
+        <strong style="font-size:1.6rem;" id="billingTotal">UGX 0</strong>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EMPLOYEE MODAL -->
+<div class="modal-overlay" id="employeeModal" data-closeable="true">
+  <div class="modal">
+    <div class="modal-header"><h2><i class="fas fa-user-plus"></i> Add New Employee</h2><button class="modal-close" onclick="closeModal('employeeModal')"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body">
+      <form id="employeeForm">
+        <div class="form-row">
+          <div class="form-group"><label>Full Name <span style="color:#d64545;">*</span></label><input type="text" id="empName" placeholder="e.g. Maria Santos" required></div>
+          <div class="form-group"><label>Job Role <span style="color:#d64545;">*</span></label><input type="text" id="empRole" placeholder="e.g. Produce Manager" required></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Department <span style="color:#d64545;">*</span></label>
+            <select id="empDepartment" required>
+              <option value="">Select department</option>
+              <option>Produce</option><option>Meat & Seafood</option><option>Bakery</option>
+              <option>Deli</option><option>Dairy & Frozen</option><option>Grocery</option>
+              <option>Front End</option><option>Customer Service</option><option>Inventory</option>
+              <option>Floral</option><option>Security</option><option>Management</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Branch <span style="color:#d64545;">*</span></label>
+            <select id="empLocation" required><option value="">Select branch</option></select>
+          </div>
+        </div>
+        <div class="form-group"><label>Base Salary (UGX) <span style="color:#d64545;">*</span></label><input type="number" id="empSalary" placeholder="e.g. 500000" min="0" step="1" required></div>
+
+        <!-- FIX 3: Aligned allowance amount + cycle -->
+        <div class="allowance-group">
+          <div class="form-group">
+            <label>Allowance Amount (UGX) — paid separately</label>
+            <input type="number" id="empAllowance" placeholder="e.g. 4000" min="0" step="1" value="0">
+          </div>
+          <div class="form-group">
+            <label>Cycle</label>
+            <select id="empAllowanceCycle">
+              <option value="daily">Per Day</option>
+              <option value="weekly">Per Week</option>
+              <option value="monthly">Per Month</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="background:#f0f9f4;border-radius:16px;padding:16px;margin-bottom:16px;">
+          <h4 style="font-size:0.82rem;font-weight:800;color:#3d6652;text-transform:uppercase;margin-bottom:12px;"><i class="fas fa-shield-alt" style="margin-right:6px;color:#2d9c6e;"></i> Statutory Contributions</h4>
+          <div class="checkbox-row">
+            <input type="checkbox" id="empNssfApplicable" checked onchange="toggleStatutory('empNssf')">
+            <label for="empNssfApplicable">NSSF Applicable<small>National Social Security Fund</small></label>
+          </div>
+          <div class="form-group" id="empNssfPercentGroup" style="margin-top:0;"><label>NSSF Rate (%)</label><input type="number" id="empNssfPercent" value="5" min="0" max="100" step="0.1"></div>
+          <div class="checkbox-row">
+            <input type="checkbox" id="empPayeApplicable" checked onchange="toggleStatutory('empPaye')">
+            <label for="empPayeApplicable">PAYE Applicable<small>Pay As You Earn income tax</small></label>
+          </div>
+          <div class="form-group" id="empPayePercentGroup" style="margin-top:0;"><label>PAYE Rate (% — 0 = auto Uganda brackets)</label><input type="number" id="empPayePercent" value="0" min="0" max="100" step="0.1"></div>
+        </div>
+        <div class="form-group"><label>Other Monthly Deductions (UGX)</label><input type="number" id="empOtherDeductions" placeholder="e.g. loan repayment" min="0" step="1" value="0"></div>
+        <div class="form-group">
+          <label>Upload Documents</label>
+          <div class="file-upload-area" id="fileUploadArea">
+            <i class="fas fa-cloud-upload-alt"></i><p>Click to upload or drag & drop files</p><span>PDF, DOC, JPG, PNG — multiple files allowed</span>
+            <input type="file" id="fileInput" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+          </div>
+          <ul class="file-list" id="fileList"></ul>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-outline" onclick="closeModal('employeeModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="saveEmployeeBtn"><i class="fas fa-save"></i> Save Employee</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="viewModal" data-closeable="true">
+  <div class="modal">
+    <div class="modal-header"><h2><i class="fas fa-id-card"></i> Employee Details</h2><button class="modal-close" onclick="closeModal('viewModal')"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body" id="viewModalBody"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="editModal" data-closeable="true">
+  <div class="modal">
+    <div class="modal-header"><h2><i class="fas fa-pen"></i> Edit Employee</h2><button class="modal-close" onclick="closeModal('editModal')"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body">
+      <form id="editForm">
+        <input type="hidden" id="editId">
+        <div class="form-row">
+          <div class="form-group"><label>Full Name <span style="color:#d64545;">*</span></label><input type="text" id="editName" required></div>
+          <div class="form-group"><label>Job Role <span style="color:#d64545;">*</span></label><input type="text" id="editRole" required></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Department <span style="color:#d64545;">*</span></label>
+            <select id="editDepartment" required>
+              <option value="">Select department</option>
+              <option>Produce</option><option>Meat & Seafood</option><option>Bakery</option>
+              <option>Deli</option><option>Dairy & Frozen</option><option>Grocery</option>
+              <option>Front End</option><option>Customer Service</option><option>Inventory</option>
+              <option>Floral</option><option>Security</option><option>Management</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Branch <span style="color:#d64545;">*</span></label><select id="editLocation" required><option value="">Select branch</option></select></div>
+        </div>
+        <div class="form-group"><label>Base Salary (UGX) <span style="color:#d64545;">*</span></label><input type="number" id="editSalary" min="0" step="1" required></div>
+
+        <div class="allowance-group">
+          <div class="form-group">
+            <label>Allowance Amount (UGX) — paid separately</label>
+            <input type="number" id="editAllowance" min="0" step="1" value="0">
+          </div>
+          <div class="form-group">
+            <label>Cycle</label>
+            <select id="editAllowanceCycle">
+              <option value="daily">Per Day</option>
+              <option value="weekly">Per Week</option>
+              <option value="monthly">Per Month</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="background:#f0f9f4;border-radius:16px;padding:16px;margin-bottom:16px;">
+          <h4 style="font-size:0.82rem;font-weight:800;color:#3d6652;text-transform:uppercase;margin-bottom:12px;"><i class="fas fa-shield-alt" style="margin-right:6px;color:#2d9c6e;"></i> Statutory Contributions</h4>
+          <div class="checkbox-row">
+            <input type="checkbox" id="editNssfApplicable" onchange="toggleStatutory('editNssf')">
+            <label for="editNssfApplicable">NSSF Applicable</label>
+          </div>
+          <div class="form-group" id="editNssfPercentGroup"><label>NSSF Rate (%)</label><input type="number" id="editNssfPercent" min="0" max="100" step="0.1" value="5"></div>
+          <div class="checkbox-row">
+            <input type="checkbox" id="editPayeApplicable" onchange="toggleStatutory('editPaye')">
+            <label for="editPayeApplicable">PAYE Applicable</label>
+          </div>
+          <div class="form-group" id="editPayePercentGroup"><label>PAYE Rate (% — 0 = auto)</label><input type="number" id="editPayePercent" min="0" max="100" step="0.1" value="0"></div>
+        </div>
+        <div class="form-group"><label>Other Monthly Deductions (UGX)</label><input type="number" id="editOtherDeductions" min="0" step="1" value="0"></div>
+        <div class="form-group">
+          <label>Add More Documents</label>
+          <div class="file-upload-area" id="editFileUploadArea">
+            <i class="fas fa-cloud-upload-alt"></i><p>Click to upload files</p>
+            <input type="file" id="editFileInput" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+          </div>
+          <ul class="file-list" id="editFileList"></ul>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-outline" onclick="closeModal('editModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="updateEmployeeBtn"><i class="fas fa-save"></i> Update</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="payslipModal" data-closeable="true">
+  <div class="modal" style="max-width: 560px;">
+    <div class="modal-header"><h2><i class="fas fa-file-invoice"></i> Payslip</h2><button class="modal-close" onclick="closeModal('payslipModal')"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body" id="payslipBody"></div>
+  </div>
+</div>
+
+<!-- DEDUCTIONS MODAL -->
+<div class="modal-overlay" id="deductionsModal" data-closeable="true">
+  <div class="modal" style="max-width: 640px;">
+    <div class="modal-header"><h2><i class="fas fa-sliders-h"></i> Edit Deductions</h2><button class="modal-close" onclick="closeModal('deductionsModal')"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body">
+      <input type="hidden" id="dedEmpId">
+      <input type="hidden" id="dedMonth">
+      <div style="background:#f0f9f4;border-radius:14px;padding:14px 18px;margin-bottom:18px;">
+        <div style="font-size:0.78rem;font-weight:800;color:#3d6652;text-transform:uppercase;">Employee</div>
+        <div style="font-size:1.05rem;font-weight:800;color:var(--text-dark);" id="dedEmpName">—</div>
+        <div style="font-size:0.82rem;color:var(--text-light);font-weight:600;margin-top:2px;" id="dedMonthLabel">—</div>
+      </div>
+      <h4 style="font-size:0.82rem;font-weight:800;color:var(--text-mid);text-transform:uppercase;margin-bottom:12px;"><i class="fas fa-minus-circle" style="color:#d64545;margin-right:6px;"></i> Custom Deductions</h4>
+      <div id="deductionRowsContainer"></div>
+      <button type="button" class="btn btn-outline btn-sm" onclick="addDeductionRow()" style="margin-top:10px;"><i class="fas fa-plus"></i> Add Deduction Line</button>
+
+      <h4 style="font-size:0.82rem;font-weight:800;color:var(--text-mid);text-transform:uppercase;margin:22px 0 12px;"><i class="fas fa-user-slash" style="color:#d68b2c;margin-right:6px;"></i> Absence Summary</h4>
+      <div style="background:#fff9ee;border:1.5px solid #ffd8a8;border-radius:14px;padding:14px 18px;">
+        <div style="display:flex;justify-content:space-between;padding:5px 0;font-size:0.88rem;"><span>Absent days (not clocked in)</span><strong id="dedAbsentDays">0</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:5px 0;font-size:0.88rem;"><span>Allowed off-days (monthly)</span><strong>4</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:5px 0;font-size:0.88rem;"><span>Chargeable days</span><strong id="dedChargeableDays">0</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:5px 0;font-size:0.88rem;"><span>Daily rate (base ÷ 30)</span><strong id="dedDailyRate">UGX 0</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid #ffd8a8;margin-top:6px;font-size:0.95rem;"><span style="font-weight:800;">Absence deduction</span><strong style="color:#d64545;" id="dedAbsenceAmount">UGX 0</strong></div>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" onclick="closeModal('deductionsModal')">Cancel</button>
+        <button type="button" class="btn btn-primary" onclick="saveDeductions()"><i class="fas fa-save"></i> Save Deductions</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="passwordModal" data-closeable="true">
+  <div class="modal" style="max-width: 460px;">
+    <div class="modal-header"><h2><i class="fas fa-key"></i> Change Password</h2><button class="modal-close" onclick="closeModal('passwordModal')"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body">
+      <form id="passwordForm">
+        <div class="form-group"><label>Current Password <span style="color:#d64545;">*</span></label><input type="password" id="currentPassword" required></div>
+        <div class="form-group"><label>New Password <span style="color:#d64545;">*</span></label><input type="password" id="newPassword" required minlength="6"></div>
+        <div class="form-group"><label>Confirm New Password <span style="color:#d64545;">*</span></label><input type="password" id="confirmPassword" required minlength="6"></div>
+        <p id="passwordError" style="color:#d64545;font-size:0.85rem;font-weight:600;margin-bottom:14px;display:none;"></p>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-outline" onclick="closeModal('passwordModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Update</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="createLocationModal" data-closeable="true">
+  <div class="modal" style="max-width: 520px;">
+    <div class="modal-header"><h2><i class="fas fa-map-marker-alt"></i> Create Location</h2><button class="modal-close" onclick="closeModal('createLocationModal')"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body">
+      <p style="font-size:0.85rem;color:#62759b;margin-bottom:16px;">A location is a physical store/warehouse. Create all your locations first.</p>
+      <form id="createLocationForm">
+        <div class="form-group"><label>Location Name <span style="color:#d64545;">*</span></label><input type="text" id="newLocationName" placeholder="e.g. Kampala Main Branch" required></div>
+        <div class="form-group"><label>Address</label><input type="text" id="newLocationAddress" placeholder="e.g. Plot 12, Kampala Road"></div>
+        <div class="form-group"><label>City / Region</label><input type="text" id="newLocationCity" placeholder="e.g. Kampala"></div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-outline" onclick="closeModal('createLocationModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Create Location</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="createCompanyModal" data-closeable="true">
+  <div class="modal" style="max-width: 580px;">
+    <div class="modal-header"><h2><i class="fas fa-building"></i> Create Company & Manager</h2><button class="modal-close" onclick="closeModal('createCompanyModal')"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body">
+      <form id="createCompanyForm">
+        <div class="form-group"><label>Company Name <span style="color:#d64545;">*</span></label><input type="text" id="newCompanyName" placeholder="e.g. Quality Supermarket Ltd" required></div>
+        <div class="form-row">
+          <div class="form-group"><label>Manager Username <span style="color:#d64545;">*</span></label><input type="text" id="newCompanyUsername" placeholder="e.g. quality.manager" required></div>
+          <div class="form-group"><label>Manager Full Name <span style="color:#d64545;">*</span></label><input type="text" id="newCompanyManagerName" placeholder="e.g. John Ssentamu" required></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Password <span style="color:#d64545;">*</span></label><input type="password" id="newCompanyPassword" required minlength="6" placeholder="Min 6 characters"></div>
+          <div class="form-group"><label>Confirm Password <span style="color:#d64545;">*</span></label><input type="password" id="newCompanyPasswordConfirm" required minlength="6"></div>
+        </div>
+        <div class="form-group"><label>Company Phone / Contact</label><input type="text" id="newCompanyPhone" placeholder="e.g. +256 700 000 000"></div>
+        <div class="form-group">
+          <label>Assign Locations (branches) <span style="color:#d64545;">*</span></label>
+          <div id="companyLocationCheckboxes" style="max-height:220px;overflow-y:auto;border:1.5px solid var(--border-soft);border-radius:14px;padding:12px;background:var(--bg-soft);">
+            <p style="font-size:0.82rem;color:#7b8fb0;text-align:center;padding:12px;">Loading locations...</p>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-outline" onclick="closeModal('createCompanyModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Create Company</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="addBranchModal" data-closeable="true">
+  <div class="modal" style="max-width: 520px;">
+    <div class="modal-header"><h2><i class="fas fa-plus-circle"></i> Add Branch to Company</h2><button class="modal-close" onclick="closeModal('addBranchModal')"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body">
+      <p style="font-size:0.85rem;color:#62759b;margin-bottom:16px;">Adding a branch to <strong id="addBranchCompanyName">this company</strong>.</p>
+      <form id="addBranchForm">
+        <input type="hidden" id="addBranchCompanyId">
+        <div class="form-group">
+          <label>Select existing location <span style="color:#d64545;">*</span></label>
+          <select id="addBranchLocationId" required><option value="">-- Choose a location --</option></select>
+          <small style="font-size:0.75rem;color:#7b8fb0;display:block;margin-top:6px;">Only unassigned locations are shown.</small>
+        </div>
+        <p style="font-size:0.78rem;color:#7b8fb0;text-align:center;margin:8px 0;">— OR create a brand new location —</p>
+        <div class="form-group"><label>New Location Name (optional)</label><input type="text" id="addBranchNewName" placeholder="e.g. Ntinda Plaza Branch"></div>
+        <div class="form-group"><label>New Location Address (optional)</label><input type="text" id="addBranchNewAddress" placeholder="e.g. Ntinda Shopping Centre"></div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-outline" onclick="closeModal('addBranchModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Add Branch</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="editLocationModal" data-closeable="true">
+  <div class="modal" style="max-width: 520px;">
+    <div class="modal-header"><h2><i class="fas fa-pen"></i> Edit Location</h2><button class="modal-close" onclick="closeModal('editLocationModal')"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body">
+      <form id="editLocationForm">
+        <input type="hidden" id="editLocId">
+        <div class="form-group"><label>Location Name <span style="color:#d64545;">*</span></label><input type="text" id="editLocName" required></div>
+        <div class="form-group"><label>Address</label><input type="text" id="editLocAddress"></div>
+        <div class="form-group"><label>City / Region</label><input type="text" id="editLocCity"></div>
+        <div class="form-group">
+          <label>Assigned Company</label>
+          <select id="editLocCompany"><option value="">-- Unassigned --</option></select>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-outline" onclick="closeModal('editLocationModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="editUserModal" data-closeable="true">
+  <div class="modal" style="max-width: 520px;">
+    <div class="modal-header"><h2><i class="fas fa-user-edit"></i> Edit User</h2><button class="modal-close" onclick="closeModal('editUserModal')"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body">
+      <form id="editUserForm">
+        <input type="hidden" id="editUserId">
+        <div class="form-group"><label>Username <span style="color:#d64545;">*</span></label><input type="text" id="editUserName" required></div>
+        <div class="form-group"><label>Full Name <span style="color:#d64545;">*</span></label><input type="text" id="editUserFullName" required></div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Role</label>
+            <select id="editUserRole">
+              <option value="employee">Employee</option>
+              <option value="manager">Manager</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+          <div class="form-group"><label>New Password (leave blank to keep)</label><input type="password" id="editUserPassword" placeholder="Optional"></div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-outline" onclick="closeModal('editUserModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save User</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="managerCreateUserModal" data-closeable="true">
+  <div class="modal" style="max-width: 540px;">
+    <div class="modal-header"><h2><i class="fas fa-user-plus"></i> Create Employee Login</h2><button class="modal-close" onclick="closeModal('managerCreateUserModal')"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body">
+      <form id="managerCreateUserForm">
+        <div class="form-row">
+          <div class="form-group"><label>Username <span style="color:#d64545;">*</span></label><input type="text" id="mgrNewUserName" placeholder="e.g. maria.santos" required></div>
+          <div class="form-group"><label>Password <span style="color:#d64545;">*</span></label><input type="password" id="mgrNewUserPassword" required minlength="6" placeholder="Min 6 characters"></div>
+        </div>
+        <div class="form-group">
+          <label>Link to Employee <span style="color:#d64545;">*</span></label>
+          <select id="mgrNewUserEmployeeLink" required><option value="">-- Select employee --</option></select>
+        </div>
+        <div class="form-group">
+          <label>Branch <span style="color:#d64545;">*</span></label>
+          <select id="mgrNewUserLocation" required><option value="">Select branch</option></select>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-outline" onclick="closeModal('managerCreateUserModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Create Login</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="toast-message" id="toast">
+  <i class="fas fa-check-circle"></i> <span id="toastText">Action completed</span>
+</div>
+
+<!-- FIREBASE MODULE -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-analytics.js";
+  import { getFirestore, collection, getDocs, addDoc, doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCwzxVaapurlh2hlUqwE53cI72QWZgTeg0",
+    authDomain: "brightmesh-hr.firebaseapp.com",
+    projectId: "brightmesh-hr",
+    storageBucket: "brightmesh-hr.firebasestorage.app",
+    messagingSenderId: "777420427869",
+    appId: "1:777420427869:web:3c6941f2c97aee7ebcb3b4",
+    measurementId: "G-Y1VST57817"
+  };
+
+  let app, analytics, db;
+  try {
+    app = initializeApp(firebaseConfig);
+    analytics = getAnalytics(app);
+    db = getFirestore(app);
+    console.log('🔥 Firebase initialized');
+  } catch (err) {
+    console.error('❌ Firebase init failed:', err);
+    window.showErrorBanner('Firebase initialization failed: ' + err.message);
+  }
+
+  const SESSION_KEY = 'brightMeshHR_session';
+  const OFF_DAYS_PER_MONTH = 4;
+
+  const state = {
+    employees: [], users: [], locations: [], companies: [],
+    attendance: [], leaves: [], payrolls: [], currentUser: null
+  };
+
+  // ---------- HELPERS ----------
+  window.formatUGX = a => 'UGX ' + (Number(a) || 0).toLocaleString('en-UG', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+  window.getInitials = n => (n || '?').split(' ').map(x => x[0]).join('').slice(0, 2).toUpperCase();
+  window.getAvatarColor = n => {
+    const c = ['#1e6b4b','#8a4b3c','#b45a2c','#2f7a6b','#3f66d0','#9c4b8a','#1e5a7a','#6b4b2c','#4b6b8a','#b24b8b'];
+    let h = 0; for (let i = 0; i < (n || '').length; i++) h = n.charCodeAt(i) + ((h << 5) - h);
+    return c[Math.abs(h) % c.length];
+  };
+  window.getDeptBadgeClass = d => {
+    if (['Produce','Meat & Seafood','Bakery','Deli','Dairy & Frozen','Grocery'].includes(d)) return 'badge badge-green';
+    if (['Front End','Customer Service','Floral'].includes(d)) return 'badge badge-amber';
+    if (['Inventory','Management'].includes(d)) return 'badge badge-blue';
+    if (['Security'].includes(d)) return 'badge badge-purple';
+    return 'badge';
+  };
+  window.escapeHtml = s => !s ? '' : String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  window.showToast = (msg, type = 'success') => {
+    const t = document.getElementById('toast'), tt = document.getElementById('toastText');
+    if (!t) return; tt.textContent = msg; t.classList.add('show');
+    t.style.background = type === 'info' ? '#1e3a5f' : type === 'error' ? '#d64545' : '#1e6b4b';
+    clearTimeout(window.showToast._timer); window.showToast._timer = setTimeout(() => t.classList.remove('show'), 3200);
+  };
+  window.showErrorBanner = msg => {
+    const b = document.getElementById('errorBanner'); if (!b) return;
+    b.textContent = '⚠️ ' + msg; b.classList.add('show'); setTimeout(() => b.classList.remove('show'), 8000);
+  };
+  window.scrollToSection = id => { const el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: 'smooth' }); };
+  window.closeModal = id => { const el = document.getElementById(id); if (el) el.classList.remove('active'); document.body.style.overflow = ''; };
+  window.openModal = id => { const el = document.getElementById(id); if (el) el.classList.add('active'); document.body.style.overflow = 'hidden'; };
+
+  function isAdmin() { return state.currentUser && state.currentUser.role === 'admin'; }
+  function isManager() { return state.currentUser && (state.currentUser.role === 'manager' || state.currentUser.role === 'admin'); }
+  function myEmployeeRecord() { return (!state.currentUser || !state.currentUser.employeeId) ? null : state.employees.find(e => e.id === state.currentUser.employeeId); }
+  function myCompanyId() { if (!state.currentUser || state.currentUser.role === 'admin') return null; return state.currentUser.companyId || null; }
+
+  function myLocations() {
+    if (isAdmin()) return state.locations;
+    const cid = myCompanyId();
+    if (!cid) return [];
+    return state.locations.filter(l => l.companyId === cid);
+  }
+  function myEmployees() {
+    if (isAdmin()) return state.employees;
+    const cid = myCompanyId();
+    if (!cid) return [];
+    return state.employees.filter(e => e.companyId === cid);
+  }
+  function myUsers() {
+    if (isAdmin()) return state.users;
+    const cid = myCompanyId();
+    if (!cid) return [];
+    return state.users.filter(u => u.companyId === cid);
+  }
+
+  function getLocationName(id) { const l = state.locations.find(x => x.id === id); return l ? l.name : '—'; }
+  function getCompanyName(id) { const c = state.companies.find(x => x.id === id); return c ? c.name : '—'; }
+
+  // ---------- SESSION ----------
+  function saveSession(user) { try { localStorage.setItem(SESSION_KEY, JSON.stringify({ userId: user.id, username: user.username })); } catch (e) {} }
+  function clearSession() { try { localStorage.removeItem(SESSION_KEY); } catch (e) {} }
+  function getStoredSession() { try { const raw = localStorage.getItem(SESSION_KEY); return raw ? JSON.parse(raw) : null; } catch (e) { return null; } }
+
+  // ---------- FIRESTORE ----------
+  async function fsGetAll(col) {
+    try { const s = await getDocs(collection(db, col)); return s.docs.map(d => ({ id: d.id, ...d.data() })); }
+    catch (err) { console.error(`❌ Failed to load "${col}":`, err.message); return []; }
+  }
+  async function fsAdd(col, data) { const ref = await addDoc(collection(db, col), data); return ref.id; }
+  async function fsUpdate(col, id, data) { await setDoc(doc(db, col, id), data, { merge: true }); }
+  async function fsDelete(col, id) { await deleteDoc(doc(db, col, id)); }
+
+  async function seedDefaultAdmin() {
+    try {
+      const s = await getDocs(collection(db, 'users'));
+      if (s.empty) {
+        await addDoc(collection(db, 'users'), { username: 'admin', password: 'admin', fullName: 'Administrator', role: 'admin', location: '', employeeId: '', companyId: '' });
+        console.log('✅ Default admin seeded');
+      }
+    } catch (err) { console.warn('Seed skipped:', err.message); }
+  }
+
+  async function loadState() {
+    console.log('📥 Loading all collections...');
+    const [emps, users, locs, comps, att, leaves, pays] = await Promise.all([
+      fsGetAll('employees'), fsGetAll('users'), fsGetAll('locations'), fsGetAll('companies'),
+      fsGetAll('attendance'), fsGetAll('leaves'), fsGetAll('payrolls')
+    ]);
+    state.employees = emps; state.users = users; state.locations = locs; state.companies = comps;
+    state.attendance = att; state.leaves = leaves; state.payrolls = pays;
+    if (!state.users.find(u => u.username === 'admin')) {
+      state.users.unshift({ id: 'seed-admin', username: 'admin', password: 'admin', fullName: 'Administrator', role: 'admin', location: '', employeeId: '', companyId: '' });
+    }
+    console.log('✅ Loaded:', {
+      employees: state.employees.length, users: state.users.length,
+      locations: state.locations.length, companies: state.companies.length,
+      attendance: state.attendance.length, leaves: state.leaves.length, payrolls: state.payrolls.length
+    });
+  }
+
+  // ---------- LOGIN ----------
+  window.showLoginModal = () => {
+    openModal('loginModal');
+    document.getElementById('loginError').style.display = 'none';
+    document.getElementById('loginForm').reset();
+  };
+
+  document.getElementById('loginForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const username = document.getElementById('loginUsername').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    const errorEl = document.getElementById('loginError');
+    const user = state.users.find(u => u.username === username && u.password === password);
+    if (!user) { errorEl.textContent = 'Invalid username or password.'; errorEl.style.display = 'block'; return; }
+    state.currentUser = user;
+    saveSession(user);
+    closeModal('loginModal');
+    if (user.role === 'admin') showAdminDashboard();
+    else showUserDashboard();
+    showToast(`👋 Welcome, ${user.fullName || user.username}!`, 'success');
+  });
+
+  // ---------- VIEWS ----------
+  window.showUserDashboard = function() {
+    document.getElementById('landingPage').style.display = 'none';
+    document.getElementById('adminDashboard').style.display = 'none';
+    document.getElementById('appDashboard').style.display = 'block';
+    const user = state.currentUser || { fullName: 'User', username: 'user', role: 'employee' };
+    document.getElementById('currentUserName').textContent = user.fullName || user.username;
+    document.getElementById('currentUserRole').textContent = user.role || 'employee';
+    document.getElementById('currentUserAvatar').textContent = getInitials(user.fullName || user.username);
+
+    const banner = document.getElementById('companyBanner');
+    if (user.role === 'manager' && user.companyId) {
+      const comp = state.companies.find(c => c.id === user.companyId);
+      const locs = myLocations();
+      banner.style.display = 'flex';
+      document.getElementById('companyName').textContent = comp ? comp.name : 'Your Company';
+      document.getElementById('companyLocations').textContent = `${locs.length} branch${locs.length === 1 ? '' : 'es'} assigned`;
+    } else { banner.style.display = 'none'; }
+
+    const role = user.role || 'employee';
+    document.querySelectorAll('#dashboardTabs .dash-tab').forEach(tab => {
+      const r = tab.dataset.role;
+      if (r === 'all') tab.style.display = 'flex';
+      else if (r === 'manager') tab.style.display = (role === 'manager' || role === 'admin') ? 'flex' : 'none';
+    });
+
+    const firstVisible = [...document.querySelectorAll('#dashboardTabs .dash-tab')].find(t => t.style.display !== 'none');
+    if (firstVisible) {
+      document.querySelectorAll('.dash-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      firstVisible.classList.add('active');
+      document.getElementById('panel-' + firstVisible.dataset.tab).classList.add('active');
+    }
+
+    startLiveClock(); refreshMyClockStatus(); renderMyAttendance(); renderMyLeave(); renderMyPayslips();
+    if (isManager()) {
+      renderTable(); updateStats(); renderAttendance(); renderLeave(); renderPayrollTable();
+      renderManagerLocations(); renderManagerUsers();
+      populateEmployeeLocationDropdown('empLocation', '');
+      populateEmployeeLinkDropdown();
+    }
+  };
+
+  window.showAdminDashboard = function() {
+    document.getElementById('landingPage').style.display = 'none';
+    document.getElementById('appDashboard').style.display = 'none';
+    document.getElementById('adminDashboard').style.display = 'block';
+    document.querySelectorAll('.admin-tab').forEach((t, i) => t.classList.toggle('active', i === 0));
+    document.querySelectorAll('.admin-panel').forEach((p, i) => p.classList.toggle('active', i === 0));
+    updateOverviewCounters();
+    renderLocationsGrid();
+    renderCompaniesGrid();
+    renderUsersTable();
+    renderFirestoreRaw();
+    renderBilling();
+  };
+
+  function updateOverviewCounters() {
+    document.getElementById('overviewLocations').textContent = state.locations.length;
+    document.getElementById('overviewCompanies').textContent = state.companies.length;
+    document.getElementById('overviewBranches').textContent = state.locations.filter(l => l.companyId).length;
+    document.getElementById('overviewUsers').textContent = state.users.length;
+  }
+
+  window.logout = function() {
+    state.currentUser = null;
+    clearSession();
+    stopLiveClock();
+    document.body.style.overflow = '';
+    document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
+    document.getElementById('appDashboard').style.display = 'none';
+    document.getElementById('adminDashboard').style.display = 'none';
+    document.getElementById('landingPage').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    showToast('👋 Logged out', 'info');
+  };
+
+  window.switchDashTab = function(tab, btn) {
+    document.querySelectorAll('.dash-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-' + tab).classList.add('active');
+    if (tab === 'attendance' && isManager()) renderAttendance();
+    if (tab === 'payroll' && isManager()) renderPayrollTable();
+    if (tab === 'leave' && isManager()) renderLeave();
+    if (tab === 'locations' && isManager()) renderManagerLocations();
+    if (tab === 'users' && isManager()) renderManagerUsers();
+    if (tab === 'myleave') renderMyLeave();
+    if (tab === 'mypayslips') renderMyPayslips();
+    if (tab === 'clock') { refreshMyClockStatus(); renderMyAttendance(); }
+  };
+
+  document.querySelectorAll('#dashboardTabs .dash-tab').forEach(btn => {
+    btn.addEventListener('click', function() { window.switchDashTab(this.dataset.tab, this); });
+  });
+
+  window.switchAdminTab = function(tab, btn) {
+    document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.admin-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    const panel = document.getElementById('panel-' + tab);
+    if (panel) panel.classList.add('active');
+    if (tab === 'locations') renderLocationsGrid();
+    if (tab === 'companies') renderCompaniesGrid();
+    if (tab === 'users') renderUsersTable();
+    if (tab === 'firestore') renderFirestoreRaw();
+    if (tab === 'billing') renderBilling();
+  };
+
+  // Modals only close on true outside-click
+  document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    let mousedownOnOverlay = false;
+    overlay.addEventListener('mousedown', e => { mousedownOnOverlay = (e.target === overlay); });
+    overlay.addEventListener('mouseup', e => {
+      if (mousedownOnOverlay && e.target === overlay) {
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+      mousedownOnOverlay = false;
+    });
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
+      document.body.style.overflow = '';
+    }
+  });
+
+  // ---------- LIVE CLOCK ----------
+  let clockInterval = null;
+  function startLiveClock() {
+    stopLiveClock();
+    const update = () => {
+      const now = new Date();
+      const el = document.getElementById('liveClock');
+      if (el) el.textContent = now.toTimeString().slice(0, 8);
+      const greeting = document.getElementById('clockGreeting');
+      if (greeting && state.currentUser) {
+        const h = now.getHours();
+        const g = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+        greeting.textContent = `${g}, ${(state.currentUser.fullName || state.currentUser.username).split(' ')[0]}!`;
+      }
+    };
+    update();
+    clockInterval = setInterval(update, 1000);
+  }
+  function stopLiveClock() { if (clockInterval) { clearInterval(clockInterval); clockInterval = null; } }
+
+  function refreshMyClockStatus() {
+    const emp = myEmployeeRecord();
+    const statusEl = document.getElementById('clockStatusText');
+    const inBtn = document.getElementById('bigClockInBtn');
+    const outBtn = document.getElementById('bigClockOutBtn');
+    if (!statusEl) return;
+    if (!emp) { statusEl.textContent = 'Your account is not linked to an employee record.'; if (inBtn) inBtn.disabled = true; if (outBtn) outBtn.disabled = true; return; }
+    const today = new Date().toISOString().slice(0, 10);
+    const record = state.attendance.find(a => a.employeeId === emp.id && a.date === today);
+    if (!record || !record.clockIn) { statusEl.textContent = 'You haven\'t clocked in today yet.'; if (inBtn) inBtn.disabled = false; if (outBtn) outBtn.disabled = true; }
+    else if (!record.clockOut) { statusEl.textContent = `Clocked in at ${record.clockIn}. Don't forget to clock out.`; if (inBtn) inBtn.disabled = true; if (outBtn) outBtn.disabled = false; }
+    else { statusEl.textContent = `Completed today: ${record.clockIn} → ${record.clockOut} (${record.hours}h)`; if (inBtn) inBtn.disabled = true; if (outBtn) outBtn.disabled = true; }
+  }
+
+  window.selfClockIn = async function() {
+    const emp = myEmployeeRecord();
+    if (!emp) { showToast('⚠️ No employee record linked', 'info'); return; }
+    const today = new Date().toISOString().slice(0, 10);
+    const now = new Date().toTimeString().slice(0, 5);
+    const existing = state.attendance.find(a => a.employeeId === emp.id && a.date === today);
+    if (existing && existing.clockIn) { showToast('⚠️ Already clocked in', 'info'); return; }
+    const isLate = now > '08:00';
+    try {
+      if (existing) { await fsUpdate('attendance', existing.id, { clockIn: now, status: isLate ? 'late' : 'present' }); existing.clockIn = now; existing.status = isLate ? 'late' : 'present'; }
+      else { const data = { employeeId: emp.id, employeeName: emp.name, date: today, clockIn: now, clockOut: null, status: isLate ? 'late' : 'present', hours: 0 }; const newId = await fsAdd('attendance', data); state.attendance.push({ id: newId, ...data }); }
+      refreshMyClockStatus(); renderMyAttendance(); if (isManager()) renderAttendance();
+      showToast(`✅ Clocked in at ${now}${isLate ? ' (late)' : ''}`, 'success');
+    } catch (err) { showToast('❌ ' + err.message, 'error'); }
+  };
+
+  window.selfClockOut = async function() {
+    const emp = myEmployeeRecord();
+    if (!emp) { showToast('⚠️ No employee record linked', 'info'); return; }
+    const today = new Date().toISOString().slice(0, 10);
+    const now = new Date().toTimeString().slice(0, 5);
+    const record = state.attendance.find(a => a.employeeId === emp.id && a.date === today);
+    if (!record || !record.clockIn) { showToast('⚠️ Clock in first', 'info'); return; }
+    if (record.clockOut) { showToast('⚠️ Already clocked out', 'info'); return; }
+    const [h1, m1] = record.clockIn.split(':').map(Number);
+    const [h2, m2] = now.split(':').map(Number);
+    const hours = Math.max(0, ((h2 * 60 + m2) - (h1 * 60 + m1)) / 60);
+    try {
+      await fsUpdate('attendance', record.id, { clockOut: now, hours: Math.round(hours * 100) / 100 });
+      record.clockOut = now; record.hours = Math.round(hours * 100) / 100;
+      refreshMyClockStatus(); renderMyAttendance(); if (isManager()) renderAttendance();
+      showToast(`✅ Clocked out at ${now} (${hours.toFixed(1)}h)`, 'success');
+    } catch (err) { showToast('❌ ' + err.message, 'error'); }
+  };
+
+  function renderMyAttendance() {
+    const emp = myEmployeeRecord();
+    const tbody = document.getElementById('myAttendanceBody'); if (!tbody) return;
+    if (!emp) { tbody.innerHTML = '<tr class="empty-row"><td colspan="5">No employee record linked.</td></tr>'; return; }
+    const records = state.attendance.filter(a => a.employeeId === emp.id).sort((a, b) => b.date.localeCompare(a.date)).slice(0, 30);
+    if (records.length === 0) { tbody.innerHTML = '<tr class="empty-row"><td colspan="5">No attendance yet.</td></tr>'; return; }
+    tbody.innerHTML = records.map(a => {
+      const sc = a.status === 'late' ? 'status-late' : 'status-present';
+      return `<tr><td>${a.date}</td><td>${a.clockIn || '—'}</td><td>${a.clockOut || '—'}</td><td>${a.hours ? a.hours.toFixed(1) + 'h' : '—'}</td><td><span class="status-pill ${sc}">${a.status}</span></td></tr>`;
+    }).join('');
+  }
+
+  // ---------- MY LEAVE ----------
+  document.getElementById('leaveForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const emp = myEmployeeRecord();
+    if (!emp) { showToast('⚠️ No employee record linked', 'info'); return; }
+    const type = document.getElementById('leaveType').value;
+    const start = document.getElementById('leaveStart').value;
+    const end = document.getElementById('leaveEnd').value;
+    const reason = document.getElementById('leaveReason').value.trim();
+    if (start > end) { showToast('⚠️ End date must be after start', 'info'); return; }
+    const days = Math.ceil((new Date(end) - new Date(start)) / 86400000) + 1;
+    const data = { employeeId: emp.id, employeeName: emp.name, companyId: emp.companyId || '', type, startDate: start, endDate: end, days, reason, status: 'pending', createdAt: new Date().toISOString() };
+    try {
+      const newId = await fsAdd('leaves', data);
+      state.leaves.push({ id: newId, ...data });
+      document.getElementById('leaveForm').reset(); renderMyLeave(); if (isManager()) renderLeave();
+      showToast('📋 Leave request submitted', 'success');
+    } catch (err) { showToast('❌ ' + err.message, 'error'); }
+  });
+
+  function renderMyLeave() {
+    const emp = myEmployeeRecord();
+    const tbody = document.getElementById('myLeaveTableBody'); if (!tbody) return;
+    if (!emp) { tbody.innerHTML = '<tr class="empty-row"><td colspan="6">No employee record linked.</td></tr>'; return; }
+    const records = state.leaves.filter(l => l.employeeId === emp.id).sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+    if (records.length === 0) { tbody.innerHTML = '<tr class="empty-row"><td colspan="6">No leave requests yet.</td></tr>'; return; }
+    tbody.innerHTML = records.map(l => {
+      const sc = l.status === 'approved' ? 'status-present' : l.status === 'rejected' ? 'status-absent' : 'status-late';
+      return `<tr><td><span class="badge badge-blue">${escapeHtml(l.type)}</span></td><td>${l.startDate}</td><td>${l.endDate}</td><td>${l.days}</td><td>${escapeHtml(l.reason)}</td><td><span class="status-pill ${sc}">${l.status}</span></td></tr>`;
+    }).join('');
+  }
+
+  // ============================================================
+  //  PAYROLL CALCULATIONS
+  //  FIX 2: Allowances are NOT included in Gross Pay
+  // ============================================================
+  function calcAbsenceDays(empId, month, year) {
+    const daysInMonth = new Date(year, month, 0).getDate();
+    let absentCount = 0;
+    for (let d = 1; d <= daysInMonth; d++) {
+      const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+      const today = new Date().toISOString().slice(0, 10);
+      if (dateStr > today) continue;
+      const hasRecord = state.attendance.some(a => a.employeeId === empId && a.date === dateStr && a.clockIn);
+      const onApprovedLeave = state.leaves.some(l => l.employeeId === empId && l.status === 'approved' && l.startDate <= dateStr && l.endDate >= dateStr);
+      if (!hasRecord && !onApprovedLeave) absentCount++;
+    }
+    return absentCount;
+  }
+
+  function calcAbsenceDeduction(emp, month, year) {
+    const m = Number(month);
+    const y = year || 2025;
+    const absent = calcAbsenceDays(emp.id, m, y);
+    const chargeable = Math.max(0, absent - OFF_DAYS_PER_MONTH);
+    const dailyRate = (Number(emp.baseSalary) || 0) / 30;
+    const amount = Math.round(dailyRate * chargeable);
+    return { absent, chargeable, dailyRate: Math.round(dailyRate), amount };
+  }
+
+  // Allowance is paid separately — this is just for display
+  function calcAllowanceDisplay(emp) {
+    let amount = Number(emp.allowances) || 0;
+    let cycle = emp.allowanceCycle || 'monthly';
+    let monthlyEquivalent = amount;
+    if (cycle === 'daily') monthlyEquivalent = amount * 30;
+    else if (cycle === 'weekly') monthlyEquivalent = amount * 4;
+    return { amount, cycle, monthlyEquivalent };
+  }
+
+  function calcNssf(emp, gross) {
+    if (emp.nssfApplicable === false) return 0;
+    const pct = emp.nssfPercent !== undefined ? Number(emp.nssfPercent) : 5;
+    return Math.round(gross * pct / 100);
+  }
+  function calcPaye(emp, taxable) {
+    if (emp.payeApplicable === false) return 0;
+    const customPct = Number(emp.payePercent) || 0;
+    if (customPct > 0) return Math.round(taxable * customPct / 100);
+    if (taxable <= 235000) return 0;
+    if (taxable <= 335000) return (taxable - 235000) * 0.10;
+    if (taxable <= 410000) return 10000 + (taxable - 335000) * 0.20;
+    if (taxable <= 10000000) return 25000 + (taxable - 410000) * 0.30;
+    return 25000 + (10000000 - 410000) * 0.30 + (taxable - 10000000) * 0.10;
+  }
+
+  // ---------- MY PAYSLIPS ----------
+  function renderMyPayslips() {
+    const emp = myEmployeeRecord();
+    const tbody = document.getElementById('myPayslipsBody');
+    const detailsCard = document.getElementById('mySalaryDetailsCard');
+    const details = document.getElementById('mySalaryDetails');
+    if (!tbody) return;
+    if (!emp) {
+      tbody.innerHTML = '<tr class="empty-row"><td colspan="7">No employee record linked.</td></tr>';
+      if (detailsCard) detailsCard.style.display = 'none';
+      return;
+    }
+    if (detailsCard) {
+      detailsCard.style.display = 'block';
+      const gross = Number(emp.baseSalary) || 0; // FIX 2: Gross = Base only
+      const nssf = calcNssf(emp, gross);
+      const paye = calcPaye(emp, gross - nssf);
+      const other = Number(emp.otherDeductions) || 0;
+      const net = gross - nssf - paye - other;
+      const allow = calcAllowanceDisplay(emp);
+      details.innerHTML = `
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;">
+          <div style="background:#f7fdfa;border-radius:16px;padding:16px;"><div style="font-size:0.72rem;font-weight:800;color:#5f7194;text-transform:uppercase;margin-bottom:4px;">Base Salary</div><div style="font-size:1.15rem;font-weight:800;color:#1e3e7c;">${formatUGX(emp.baseSalary)}</div></div>
+          <div style="background:#f0f9f4;border-radius:16px;padding:16px;"><div style="font-size:0.72rem;font-weight:800;color:#5f7194;text-transform:uppercase;margin-bottom:4px;">Allowance (separate)</div><div style="font-size:1.15rem;font-weight:800;color:#1e6b4b;">${formatUGX(allow.amount)}</div><div style="font-size:0.72rem;color:#7b8fb0;">per ${allow.cycle.replace('ly','')} — paid out-of-band</div></div>
+          <div style="background:#f7fdfa;border-radius:16px;padding:16px;"><div style="font-size:0.72rem;font-weight:800;color:#5f7194;text-transform:uppercase;margin-bottom:4px;">NSSF</div><div style="font-size:1.15rem;font-weight:800;color:#d64545;">-${formatUGX(nssf)}</div></div>
+          <div style="background:#f7fdfa;border-radius:16px;padding:16px;"><div style="font-size:0.72rem;font-weight:800;color:#5f7194;text-transform:uppercase;margin-bottom:4px;">PAYE</div><div style="font-size:1.15rem;font-weight:800;color:#d64545;">-${formatUGX(paye)}</div></div>
+          <div style="background:#f7fdfa;border-radius:16px;padding:16px;"><div style="font-size:0.72rem;font-weight:800;color:#5f7194;text-transform:uppercase;margin-bottom:4px;">Other</div><div style="font-size:1.15rem;font-weight:800;color:#d64545;">-${formatUGX(other)}</div></div>
+          <div style="background:linear-gradient(105deg,#1e6b4b,#2d9c6e);border-radius:16px;padding:16px;color:white;"><div style="font-size:0.72rem;font-weight:800;text-transform:uppercase;margin-bottom:4px;opacity:0.9;">Net Base Pay</div><div style="font-size:1.25rem;font-weight:800;">${formatUGX(net)}</div></div>
+        </div>`;
+    }
+    const myPays = state.payrolls.filter(p => p.employeeId === emp.id).sort((a, b) => b.month.localeCompare(a.month));
+    if (myPays.length === 0) { tbody.innerHTML = '<tr class="empty-row"><td colspan="7">No payslips generated yet.</td></tr>'; return; }
+    const m = { '1':'January','2':'February','3':'March','4':'April','5':'May','6':'June','7':'July','8':'August','9':'September','10':'October','11':'November','12':'December' };
+    tbody.innerHTML = myPays.map(p => {
+      const custom = (p.customDeductions || []).reduce((s, d) => s + (Number(d.amount) || 0), 0);
+      const absence = Number(p.absenceDeduction) || 0;
+      return `<tr>
+        <td><strong>${m[p.month] || p.month}</strong></td>
+        <td>${formatUGX(p.gross)}</td>
+        <td style="color:#d64545;">-${formatUGX(p.nssf)}</td>
+        <td style="color:#d64545;">-${formatUGX(p.paye)}</td>
+        <td style="color:#d64545;">-${formatUGX(custom + absence)}</td>
+        <td class="salary-cell" style="color:#1e6b4b;">${formatUGX(p.net)}</td>
+        <td style="text-align:center;"><button class="icon-btn" onclick="viewMyPayslip('${p.month}')" title="View"><i class="fas fa-eye"></i></button></td>
+      </tr>`;
+    }).join('');
+  }
+
+  window.viewMyPayslip = function(month) {
+    const emp = myEmployeeRecord(); if (!emp) return;
+    const p = state.payrolls.find(x => x.employeeId === emp.id && x.month === month); if (!p) return;
+    const m = { '10': 'October 2025', '11': 'November 2025', '12': 'December 2025' };
+    const compName = emp.companyId ? getCompanyName(emp.companyId) : 'Bright Mesh HR';
+    const custom = p.customDeductions || [];
+    const absence = Number(p.absenceDeduction) || 0;
+    const allow = calcAllowanceDisplay(emp);
+    document.getElementById('payslipBody').innerHTML = `
+      <div style="text-align:center;margin-bottom:24px;padding-bottom:20px;border-bottom:2px solid #d4e6dc;">
+        <h2 style="font-size:1.5rem;font-weight:800;color:#1e6b4b;margin-bottom:4px;">${escapeHtml(compName)}</h2>
+        <p style="font-size:0.85rem;color:#62759b;font-weight:600;">Payslip · ${m[month] || month}</p>
+      </div>
+      <div style="margin-bottom:20px;">
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #e4efe8;"><span style="color:#62759b;font-weight:600;">Employee</span><strong>${escapeHtml(emp.name)}</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #e4efe8;"><span style="color:#62759b;font-weight:600;">Role</span><span>${escapeHtml(emp.role)}</span></div>
+        ${emp.locationId ? `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #e4efe8;"><span style="color:#62759b;font-weight:600;">Branch</span><span>${escapeHtml(getLocationName(emp.locationId))}</span></div>` : ''}
+      </div>
+      <div style="background:#f7fdfa;border-radius:16px;padding:18px;margin-bottom:14px;">
+        <div style="display:flex;justify-content:space-between;padding:6px 0;"><span>Base Salary</span><strong>${formatUGX(p.baseSalary)}</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:10px 0;border-top:2px solid #b8d9c8;margin-top:6px;"><span style="font-weight:800;">Gross Pay (Base only)</span><strong style="color:#1e3e7c;">${formatUGX(p.gross)}</strong></div>
+      </div>
+      <div style="background:#f0f9f4;border:1px solid #b8d9c8;border-radius:16px;padding:14px 18px;margin-bottom:14px;font-size:0.85rem;color:#3d6652;">
+        <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Allowance (paid separately)</span><strong>${formatUGX(allow.amount)} / ${allow.cycle.replace('ly','')}</strong></div>
+        <div style="font-size:0.75rem;opacity:0.8;margin-top:4px;">Not included in the monthly net below.</div>
+      </div>
+      <div style="background:#fff5f5;border-radius:16px;padding:18px;margin-bottom:14px;">
+        <div style="display:flex;justify-content:space-between;padding:6px 0;"><span>NSSF</span><strong style="color:#d64545;">-${formatUGX(p.nssf)}</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:6px 0;"><span>PAYE</span><strong style="color:#d64545;">-${formatUGX(p.paye)}</strong></div>
+        ${custom.length > 0 ? custom.map(d => `<div style="display:flex;justify-content:space-between;padding:6px 0;"><span>${escapeHtml(d.reason || 'Custom')}</span><strong style="color:#d64545;">-${formatUGX(d.amount)}</strong></div>`).join('') : ''}
+        ${absence > 0 ? `<div style="display:flex;justify-content:space-between;padding:6px 0;"><span>Absence (${p.absenceDays || 0} chargeable days)</span><strong style="color:#d64545;">-${formatUGX(absence)}</strong></div>` : ''}
+      </div>
+      <div style="background:linear-gradient(105deg,#1e6b4b,#2d9c6e);border-radius:16px;padding:20px;color:white;display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-weight:700;">NET BASE PAY</span><strong style="font-size:1.6rem;">${formatUGX(p.net)}</strong>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" onclick="closeModal('payslipModal')">Close</button>
+        <button type="button" class="btn btn-primary" onclick="window.print()"><i class="fas fa-print"></i> Print</button>
+      </div>`;
+    openModal('payslipModal');
+  };
+
+  // ============================================================
+  //  MANAGER: EMPLOYEES
+  // ============================================================
+  function updateStats() {
+    const emps = myEmployees(); const total = emps.length;
+    // FIX 2: Stats now reflect BASE only
+    const totalPayroll = emps.reduce((sum, e) => sum + (Number(e.baseSalary) || 0), 0);
+    const totalAllowances = emps.reduce((sum, e) => {
+      const a = calcAllowanceDisplay(e);
+      return sum + a.monthlyEquivalent;
+    }, 0);
+    const avg = total > 0 ? Math.round(totalAllowances / total) : 0;
+    const te = document.getElementById('totalEmployees'); if (te) te.textContent = total;
+    const tp = document.getElementById('totalPayroll'); if (tp) tp.textContent = formatUGX(totalPayroll);
+    const aa = document.getElementById('avgAllowance'); if (aa) aa.textContent = formatUGX(avg);
+    const tl = document.getElementById('totalLocations'); if (tl) tl.textContent = myLocations().length;
+  }
+
+  function renderTable(filterText = '') {
+    const emps = myEmployees();
+    const q = (filterText || '').trim().toLowerCase();
+    const filtered = emps.filter(emp => {
+      if (!q) return true;
+      return (emp.name || '').toLowerCase().includes(q) || (emp.role || '').toLowerCase().includes(q) || (emp.department || '').toLowerCase().includes(q);
+    });
+    const tbody = document.getElementById('tableBody'); if (!tbody) return;
+    if (filtered.length === 0) { tbody.innerHTML = `<tr class="empty-row"><td colspan="8">${emps.length === 0 ? 'No employees yet.' : 'No matches.'}</td></tr>`; return; }
+    tbody.innerHTML = filtered.map(emp => {
+      const initials = getInitials(emp.name);
+      const color = emp.avatarColor || getAvatarColor(emp.name);
+      const fc = emp.files ? emp.files.length : 0;
+      const cl = emp.allowanceCycle === 'daily' ? '/day' : emp.allowanceCycle === 'weekly' ? '/week' : '/month';
+      const statutory = [];
+      if (emp.nssfApplicable !== false) statutory.push(`NSSF ${emp.nssfPercent || 5}%`);
+      if (emp.payeApplicable !== false) statutory.push(emp.payePercent > 0 ? `PAYE ${emp.payePercent}%` : 'PAYE auto');
+      if (statutory.length === 0) statutory.push('None');
+      const locName = emp.locationId ? getLocationName(emp.locationId) : '—';
+      const locBadge = emp.locationId ? `<span class="badge badge-blue" style="font-size:0.72rem;"><i class="fas fa-map-marker-alt" style="margin-right:4px;"></i>${escapeHtml(locName)}</span>` : `<span style="font-size:0.78rem;color:#a8bccf;">Not assigned</span>`;
+      return `<tr>
+        <td><div class="employee-info"><div class="avatar" style="background:${color}20;color:${color};">${initials}</div><div><div class="emp-name">${escapeHtml(emp.name)}</div><div class="emp-role">${escapeHtml(emp.role)}</div></div></div></td>
+        <td><span class="${getDeptBadgeClass(emp.department)}">${escapeHtml(emp.department)}</span></td>
+        <td>${locBadge}</td>
+        <td class="salary-cell">${formatUGX(emp.baseSalary)}</td>
+        <td><span class="allowance-badge"><i class="fas fa-plus-circle" style="font-size:10px;"></i> ${formatUGX(emp.allowances)}<span class="allowance-cycle">${cl}</span></span></td>
+        <td><span class="badge badge-blue" style="font-size:0.7rem;">${statutory.join(' · ')}</span></td>
+        <td><div class="file-indicator"><i class="fas fa-paperclip"></i> ${fc} files</div></td>
+        <td style="text-align:center;"><div class="action-icons" style="justify-content:center;">
+          <button class="icon-btn" onclick="viewEmployee('${emp.id}')" title="View"><i class="fas fa-eye"></i></button>
+          <button class="icon-btn" onclick="editEmployee('${emp.id}')" title="Edit"><i class="fas fa-pen"></i></button>
+          <button class="icon-btn danger" onclick="deleteEmployee('${emp.id}')" title="Delete"><i class="fas fa-trash-alt"></i></button>
+        </div></td>
+      </tr>`;
+    }).join('');
+  }
+
+  window.toggleStatutory = function(prefix) {
+    const cb = document.getElementById(prefix + 'Applicable');
+    const grp = document.getElementById(prefix + 'PercentGroup');
+    if (grp) grp.style.display = cb.checked ? 'block' : 'none';
+  };
+
+  function populateEmployeeLocationDropdown(selectId = 'empLocation', selectedId = '') {
+    const sel = document.getElementById(selectId); if (!sel) return;
+    const locs = myLocations();
+    sel.innerHTML = '<option value="">Select branch</option>' +
+      locs.map(l => `<option value="${l.id}" ${l.id === selectedId ? 'selected' : ''}>${escapeHtml(l.name)}</option>`).join('');
+  }
+
+  let pendingFiles = [], pendingEditFiles = [];
+  document.getElementById('addEmployeeBtn').addEventListener('click', () => {
+    document.getElementById('employeeForm').reset();
+    pendingFiles = [];
+    renderFileList('fileList', pendingFiles);
+    document.getElementById('empNssfApplicable').checked = true;
+    document.getElementById('empPayeApplicable').checked = true;
+    document.getElementById('empNssfPercent').value = 5;
+    document.getElementById('empPayePercent').value = 0;
+    toggleStatutory('empNssf'); toggleStatutory('empPaye');
+    populateEmployeeLocationDropdown('empLocation', '');
+    openModal('employeeModal');
+  });
+  document.getElementById('fileUploadArea').addEventListener('click', () => document.getElementById('fileInput').click());
+  document.getElementById('fileInput').addEventListener('change', e => {
+    Array.from(e.target.files).forEach(f => pendingFiles.push(f));
+    renderFileList('fileList', pendingFiles); e.target.value = '';
+  });
+  document.getElementById('employeeForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const btn = document.getElementById('saveEmployeeBtn');
+    btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+    try {
+      const name = document.getElementById('empName').value.trim();
+      const role = document.getElementById('empRole').value.trim();
+      const department = document.getElementById('empDepartment').value;
+      const locationId = document.getElementById('empLocation').value;
+      const baseSalary = Number(document.getElementById('empSalary').value) || 0;
+      const allowances = Number(document.getElementById('empAllowance').value) || 0;
+      const allowanceCycle = document.getElementById('empAllowanceCycle').value;
+      const nssfApplicable = document.getElementById('empNssfApplicable').checked;
+      const nssfPercent = Number(document.getElementById('empNssfPercent').value) || 5;
+      const payeApplicable = document.getElementById('empPayeApplicable').checked;
+      const payePercent = Number(document.getElementById('empPayePercent').value) || 0;
+      const otherDeductions = Number(document.getElementById('empOtherDeductions').value) || 0;
+      if (!name || !role || !department || !locationId || baseSalary <= 0) { showToast('⚠️ Fill required fields', 'info'); btn.disabled = false; btn.innerHTML = '<i class="fas fa-save"></i> Save Employee'; return; }
+      const cid = myCompanyId();
+      const empData = { name, role, department, locationId, companyId: cid, baseSalary, allowances, allowanceCycle, nssfApplicable, nssfPercent, payeApplicable, payePercent, otherDeductions, files: pendingFiles.map(f => f.name), avatarColor: getAvatarColor(name), createdAt: new Date().toISOString() };
+      const newId = await fsAdd('employees', empData);
+      state.employees.push({ id: newId, ...empData });
+      renderTable(document.getElementById('searchInput').value); updateStats();
+      populateEmployeeLinkDropdown(); renderManagerLocations();
+      closeModal('employeeModal'); pendingFiles = [];
+      showToast(`✨ ${name} saved`, 'success');
+    } catch (err) { showToast('❌ ' + err.message, 'error'); }
+    finally { btn.disabled = false; btn.innerHTML = '<i class="fas fa-save"></i> Save Employee'; }
+  });
+
+  function renderFileList(cid, files) {
+    const c = document.getElementById(cid);
+    if (!files || files.length === 0) { c.innerHTML = ''; return; }
+    c.innerHTML = files.map((f, i) => `<li><div class="file-info"><i class="fas fa-file"></i><span>${escapeHtml(f.name)}</span></div><button type="button" class="remove-file" onclick="removePendingFile('${cid}', ${i})"><i class="fas fa-times"></i></button></li>`).join('');
+  }
+  window.removePendingFile = function(cid, i) {
+    if (cid === 'fileList') { pendingFiles.splice(i, 1); renderFileList('fileList', pendingFiles); }
+    else if (cid === 'editFileList') { pendingEditFiles.splice(i, 1); const empId = document.getElementById('editId').value; const emp = state.employees.find(e => e.id === empId); renderEditFileList(emp ? emp.files : []); }
+  };
+
+  window.viewEmployee = function(id) {
+    const emp = state.employees.find(e => e.id === id); if (!emp) return;
+    const initials = getInitials(emp.name); const color = emp.avatarColor || getAvatarColor(emp.name);
+    const files = emp.files || [];
+    const cl = emp.allowanceCycle === 'daily' ? 'per day' : emp.allowanceCycle === 'weekly' ? 'per week' : 'per month';
+    const locName = emp.locationId ? getLocationName(emp.locationId) : 'Not assigned';
+    const filesHtml = files.length === 0 ? '<p style="color:#7b8fb0;">No files.</p>' : '<ul style="list-style:none;margin-top:6px;">' + files.map(f => `<li style="padding:10px 14px;background:#f0f9f4;border:1px solid #d4e6dc;border-radius:12px;margin-bottom:8px;font-size:0.86rem;font-weight:500;color:#1e6b4b;"><i class="fas fa-file-pdf" style="color:#2d9c6e;margin-right:8px;"></i>${escapeHtml(f)}</li>`).join('') + '</ul>';
+    document.getElementById('viewModalBody').innerHTML = `
+      <div style="display:flex;align-items:center;gap:18px;margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid #e4efe8;">
+        <div class="avatar" style="width:68px;height:68px;border-radius:20px;font-size:1.6rem;background:${color}20;color:${color};">${initials}</div>
+        <div><h3 style="font-size:1.35rem;font-weight:800;color:#0f1e40;">${escapeHtml(emp.name)}</h3><p style="color:#6c7fa8;font-weight:600;">${escapeHtml(emp.role)}</p><span class="${getDeptBadgeClass(emp.department)}" style="margin-top:8px;display:inline-block;">${escapeHtml(emp.department)}</span></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:22px;">
+        <div style="background:#f7fdfa;border-radius:16px;padding:16px;grid-column:span 2;"><div style="font-size:0.72rem;font-weight:800;color:#5f7194;">BRANCH</div><div style="font-size:1.05rem;font-weight:700;color:#1e4b8a;">${escapeHtml(locName)}</div></div>
+        <div style="background:#f7fdfa;border-radius:16px;padding:16px;"><div style="font-size:0.72rem;font-weight:800;color:#5f7194;">BASE SALARY</div><div style="font-size:1.15rem;font-weight:800;color:#1e3e7c;">${formatUGX(emp.baseSalary)}</div></div>
+        <div style="background:#f0f9f4;border-radius:16px;padding:16px;"><div style="font-size:0.72rem;font-weight:800;color:#5f7194;">ALLOWANCE (separate)</div><div style="font-size:1.15rem;font-weight:800;color:#1e6b4b;">${formatUGX(emp.allowances)}</div><div style="font-size:0.72rem;color:#7b8fb0;">${cl}</div></div>
+        <div style="background:#f7fdfa;border-radius:16px;padding:16px;"><div style="font-size:0.72rem;font-weight:800;color:#5f7194;">NSSF</div><div style="font-size:1.05rem;font-weight:700;color:#3d6652;">${emp.nssfApplicable === false ? 'Not applicable' : (emp.nssfPercent || 5) + '%'}</div></div>
+        <div style="background:#f7fdfa;border-radius:16px;padding:16px;"><div style="font-size:0.72rem;font-weight:800;color:#5f7194;">PAYE</div><div style="font-size:1.05rem;font-weight:700;color:#3d6652;">${emp.payeApplicable === false ? 'Not applicable' : (emp.payePercent > 0 ? emp.payePercent + '%' : 'Auto')}</div></div>
+        <div style="background:#f7fdfa;border-radius:16px;padding:16px;grid-column:span 2;"><div style="font-size:0.72rem;font-weight:800;color:#5f7194;">OTHER DEDUCTIONS</div><div style="font-size:1.05rem;font-weight:700;color:#d64545;">${formatUGX(emp.otherDeductions || 0)}</div></div>
+      </div>
+      <h4 style="font-size:0.88rem;font-weight:800;color:#3d6652;text-transform:uppercase;margin-bottom:10px;"><i class="fas fa-paperclip" style="margin-right:6px;"></i> Documents</h4>${filesHtml}
+      <div class="modal-actions"><button type="button" class="btn btn-outline" onclick="closeModal('viewModal')">Close</button></div>`;
+    openModal('viewModal');
+  };
+
+  window.editEmployee = function(id) {
+    const emp = state.employees.find(e => e.id === id); if (!emp) return;
+    document.getElementById('editId').value = emp.id;
+    document.getElementById('editName').value = emp.name;
+    document.getElementById('editRole').value = emp.role;
+    document.getElementById('editDepartment').value = emp.department;
+    populateEmployeeLocationDropdown('editLocation', emp.locationId || '');
+    document.getElementById('editSalary').value = emp.baseSalary;
+    document.getElementById('editAllowance').value = emp.allowances;
+    document.getElementById('editAllowanceCycle').value = emp.allowanceCycle || 'monthly';
+    document.getElementById('editNssfApplicable').checked = emp.nssfApplicable !== false;
+    document.getElementById('editNssfPercent').value = emp.nssfPercent || 5;
+    document.getElementById('editPayeApplicable').checked = emp.payeApplicable !== false;
+    document.getElementById('editPayePercent').value = emp.payePercent || 0;
+    document.getElementById('editOtherDeductions').value = emp.otherDeductions || 0;
+    toggleStatutory('editNssf'); toggleStatutory('editPaye');
+    pendingEditFiles = []; renderEditFileList(emp.files || []);
+    openModal('editModal');
+  };
+  function renderEditFileList(existing) {
+    const c = document.getElementById('editFileList'); let h = '';
+    if (existing.length === 0 && pendingEditFiles.length === 0) { c.innerHTML = '<li style="background:none;border:none;color:#7b8fb0;font-size:0.82rem;justify-content:center;">No files.</li>'; return; }
+    h += existing.map(f => `<li><div class="file-info"><i class="fas fa-file-pdf"></i><span>${escapeHtml(f)}</span></div><span style="font-size:0.72rem;color:#7b8fb0;">saved</span></li>`).join('');
+    h += pendingEditFiles.map((f, i) => `<li><div class="file-info"><i class="fas fa-file"></i><span>${escapeHtml(f.name)}</span></div><button type="button" class="remove-file" onclick="removePendingFile('editFileList', ${i})"><i class="fas fa-times"></i></button></li>`).join('');
+    c.innerHTML = h;
+  }
+  document.getElementById('editFileUploadArea').addEventListener('click', () => document.getElementById('editFileInput').click());
+  document.getElementById('editFileInput').addEventListener('change', e => {
+    Array.from(e.target.files).forEach(f => pendingEditFiles.push(f));
+    const empId = document.getElementById('editId').value; const emp = state.employees.find(x => x.id === empId);
+    renderEditFileList(emp ? emp.files : []); e.target.value = '';
+  });
+  document.getElementById('editForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const btn = document.getElementById('updateEmployeeBtn');
+    btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Updating...';
+    try {
+      const id = document.getElementById('editId').value; const emp = state.employees.find(x => x.id === id);
+      if (!emp) return;
+      const locationId = document.getElementById('editLocation').value;
+      if (!locationId) { showToast('⚠️ Branch is required', 'info'); btn.disabled = false; btn.innerHTML = '<i class="fas fa-save"></i> Update'; return; }
+      const updates = {
+        name: document.getElementById('editName').value.trim(),
+        role: document.getElementById('editRole').value.trim(),
+        department: document.getElementById('editDepartment').value,
+        locationId,
+        baseSalary: Number(document.getElementById('editSalary').value) || 0,
+        allowances: Number(document.getElementById('editAllowance').value) || 0,
+        allowanceCycle: document.getElementById('editAllowanceCycle').value,
+        nssfApplicable: document.getElementById('editNssfApplicable').checked,
+        nssfPercent: Number(document.getElementById('editNssfPercent').value) || 5,
+        payeApplicable: document.getElementById('editPayeApplicable').checked,
+        payePercent: Number(document.getElementById('editPayePercent').value) || 0,
+        otherDeductions: Number(document.getElementById('editOtherDeductions').value) || 0
+      };
+      if (pendingEditFiles.length > 0) updates.files = [...(emp.files || []), ...pendingEditFiles.map(f => f.name)];
+      await fsUpdate('employees', id, updates);
+      Object.assign(emp, updates);
+      renderTable(document.getElementById('searchInput').value); updateStats(); renderManagerLocations();
+      closeModal('editModal'); pendingEditFiles = [];
+      showToast(`✏️ ${emp.name} updated`, 'success');
+    } catch (err) { showToast('❌ ' + err.message, 'error'); }
+    finally { btn.disabled = false; btn.innerHTML = '<i class="fas fa-save"></i> Update'; }
+  });
+  window.deleteEmployee = async function(id) {
+    const emp = state.employees.find(e => e.id === id); if (!emp) return;
+    if (confirm(`Delete ${emp.name}?`)) {
+      try { await fsDelete('employees', id); state.employees = state.employees.filter(e => e.id !== id); renderTable(document.getElementById('searchInput').value); updateStats(); populateEmployeeLinkDropdown(); renderManagerLocations(); showToast('🗑️ Removed', 'info'); }
+      catch (err) { showToast('❌ ' + err.message, 'error'); }
+    }
+  };
+
+  // ============================================================
+  //  MANAGER: LOCATIONS
+  // ============================================================
+  function renderManagerLocations() {
+    const grid = document.getElementById('managerLocationsGrid'); if (!grid) return;
+    const locs = myLocations();
+    if (locs.length === 0) {
+      grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:48px;background:#fff9ee;border:2px dashed #ffd8a8;border-radius:22px;">
+        <i class="fas fa-map-marker-alt" style="font-size:3rem;color:#d68b2c;margin-bottom:14px;"></i>
+        <h3 style="font-size:1.2rem;font-weight:800;color:#a55c00;margin-bottom:8px;">No branches assigned yet</h3>
+        <p style="color:#7a4500;font-weight:500;">Contact your administrator.</p>
+      </div>`;
+      return;
+    }
+    grid.innerHTML = locs.map(l => {
+      const empCount = state.employees.filter(e => e.locationId === l.id).length;
+      return `<div class="location-card assigned">
+        <h4><i class="fas fa-store"></i> ${escapeHtml(l.name)}</h4>
+        <div class="addr"><i class="fas fa-map-pin" style="margin-right:6px;color:#b8d9c8;"></i>${escapeHtml(l.address || 'No address')}${l.city ? ' · ' + escapeHtml(l.city) : ''}</div>
+        <div class="stats-row"><div><strong>${empCount}</strong>Employees</div><div><strong>✅</strong>Active</div></div>
+      </div>`;
+    }).join('');
+  }
+
+  // ============================================================
+  //  MANAGER: USERS
+  // ============================================================
+  function renderManagerUsers() {
+    const tbody = document.getElementById('managerUsersTableBody'); if (!tbody) return;
+    const users = myUsers().filter(u => u.role === 'employee');
+    if (users.length === 0) { tbody.innerHTML = '<tr class="empty-row"><td colspan="6">No employee logins yet.</td></tr>'; return; }
+    tbody.innerHTML = users.map(u => {
+      const emp = u.employeeId ? state.employees.find(e => e.id === u.employeeId) : null;
+      const loc = u.location ? state.locations.find(l => l.id === u.location) : null;
+      return `<tr>
+        <td><strong>${escapeHtml(u.username)}</strong></td>
+        <td>${escapeHtml(u.fullName || '—')}</td>
+        <td><span class="badge badge-green">${escapeHtml(u.role)}</span></td>
+        <td>${emp ? escapeHtml(emp.name) : '—'}</td>
+        <td>${loc ? escapeHtml(loc.name) : '—'}</td>
+        <td style="text-align:center;"><div class="action-icons" style="justify-content:center;">
+          <button class="icon-btn" onclick="resetUserPassword('${u.id}')" title="Reset Password"><i class="fas fa-key"></i></button>
+          <button class="icon-btn danger" onclick="deleteUser('${u.id}')" title="Delete"><i class="fas fa-trash-alt"></i></button>
+        </div></td>
+      </tr>`;
+    }).join('');
+  }
+
+  window.showManagerCreateUserModal = function() {
+    document.getElementById('managerCreateUserForm').reset();
+    populateEmployeeLinkDropdown();
+    populateManagerLocationDropdown();
+    openModal('managerCreateUserModal');
+  };
+  function populateEmployeeLinkDropdown() {
+    const sel = document.getElementById('mgrNewUserEmployeeLink'); if (!sel) return;
+    sel.innerHTML = '<option value="">-- Select employee --</option>' + myEmployees().map(e => `<option value="${e.id}">${escapeHtml(e.name)} — ${escapeHtml(e.role)}</option>`).join('');
+  }
+  function populateManagerLocationDropdown() {
+    const sel = document.getElementById('mgrNewUserLocation'); if (!sel) return;
+    sel.innerHTML = '<option value="">Select branch</option>' + myLocations().map(l => `<option value="${l.id}">${escapeHtml(l.name)}</option>`).join('');
+  }
+  document.getElementById('managerCreateUserForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const username = document.getElementById('mgrNewUserName').value.trim();
+    const password = document.getElementById('mgrNewUserPassword').value;
+    const employeeId = document.getElementById('mgrNewUserEmployeeLink').value;
+    const location = document.getElementById('mgrNewUserLocation').value;
+    if (!username || !password || !employeeId || !location) { showToast('⚠️ All fields required', 'info'); return; }
+    if (password.length < 6) { showToast('⚠️ Password min 6 characters', 'info'); return; }
+    if (state.users.find(u => u.username === username)) { showToast('⚠️ Username exists', 'info'); return; }
+    const emp = state.employees.find(x => x.id === employeeId);
+    const userData = { username, password, fullName: emp ? emp.name : username, role: 'employee', employeeId, location, companyId: myCompanyId() };
+    try {
+      const newId = await fsAdd('users', userData);
+      state.users.push({ id: newId, ...userData });
+      renderManagerUsers(); closeModal('managerCreateUserModal');
+      showToast(`✨ Login created for ${emp ? emp.name : username}`, 'success');
+    } catch (err) { showToast('❌ ' + err.message, 'error'); }
+  });
+
+  // ============================================================
+  //  ATTENDANCE
+  // ============================================================
+  function renderAttendance() {
+    const emps = myEmployees();
+    const empIds = emps.map(e => e.id);
+    const myAtt = state.attendance.filter(a => empIds.includes(a.employeeId));
+    const today = new Date().toISOString().slice(0, 10);
+    const tr = myAtt.filter(a => a.date === today);
+    const present = tr.filter(a => a.clockIn).length;
+    const late = tr.filter(a => a.status === 'late').length;
+    const myLeaves = state.leaves.filter(l => empIds.includes(l.employeeId));
+    const onLeave = myLeaves.filter(l => l.status === 'approved' && l.startDate <= today && l.endDate >= today).length;
+    const absent = Math.max(0, emps.length - present - onLeave);
+    const p = document.getElementById('presentToday'); if (p) p.textContent = present;
+    const l = document.getElementById('lateToday'); if (l) l.textContent = late;
+    const a = document.getElementById('absentToday'); if (a) a.textContent = absent;
+    const o = document.getElementById('onLeaveToday'); if (o) o.textContent = onLeave;
+    const o2 = document.getElementById('onLeaveTodayLeaveTab'); if (o2) o2.textContent = onLeave;
+    const recent = [...myAtt].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 100);
+    const tbody = document.getElementById('attendanceTableBody'); if (!tbody) return;
+    if (recent.length === 0) { tbody.innerHTML = '<tr class="empty-row"><td colspan="6">No attendance records yet.</td></tr>'; return; }
+    tbody.innerHTML = recent.map(a => {
+      const sc = a.status === 'late' ? 'status-late' : 'status-present';
+      return `<tr><td>${a.date}</td><td>${escapeHtml(a.employeeName || '—')}</td><td>${a.clockIn || '—'}</td><td>${a.clockOut || '—'}</td><td>${a.hours ? a.hours.toFixed(1) + 'h' : '—'}</td><td><span class="status-pill ${sc}">${a.status || 'present'}</span></td></tr>`;
+    }).join('');
+  }
+  window.exportAttendance = function() {
+    const emps = myEmployees(); const empIds = emps.map(e => e.id);
+    const myAtt = state.attendance.filter(a => empIds.includes(a.employeeId));
+    if (myAtt.length === 0) { showToast('⚠️ No data', 'info'); return; }
+    const csv = ['Date,Employee,Clock In,Clock Out,Hours,Status'].concat(myAtt.map(a => `${a.date},${a.employeeName},${a.clockIn || ''},${a.clockOut || ''},${a.hours || ''},${a.status}`)).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a'); link.href = url; link.download = `attendance-${new Date().toISOString().slice(0,10)}.csv`; link.click();
+    URL.revokeObjectURL(url); showToast('📥 Exported', 'success');
+  };
+
+  // ============================================================
+  //  PAYROLL
+  // ============================================================
+  window.generatePayroll = function() {
+    const month = document.getElementById('payrollMonth').value;
+    const tbody = document.getElementById('payrollTableBody');
+    const emps = myEmployees();
+    if (emps.length === 0) { tbody.innerHTML = '<tr class="empty-row"><td colspan="10">No employees.</td></tr>'; return; }
+
+    const oldPayrolls = state.payrolls.filter(p => p.month !== month || !emps.find(e => e.id === p.employeeId));
+
+    tbody.innerHTML = emps.map(emp => {
+      // FIX 2: Gross = Base only (allowances excluded)
+      const gross = Number(emp.baseSalary) || 0;
+      const allow = calcAllowanceDisplay(emp);
+      const nssf = calcNssf(emp, gross);
+      const paye = calcPaye(emp, gross - nssf);
+      const other = Number(emp.otherDeductions) || 0;
+
+      const existingPay = state.payrolls.find(p => p.employeeId === emp.id && p.month === month);
+      const customDeductions = existingPay && existingPay.customDeductions ? existingPay.customDeductions : [];
+      const customTotal = customDeductions.reduce((s, d) => s + (Number(d.amount) || 0), 0);
+
+      const absenceInfo = calcAbsenceDeduction(emp, month, 2025);
+      const absenceAmt = absenceInfo.amount;
+
+      const net = gross - nssf - paye - other - customTotal - absenceAmt;
+
+      const newPay = {
+        employeeId: emp.id, employeeName: emp.name, month,
+        baseSalary: emp.baseSalary, allowances: 0, // FIX 2: not part of payroll
+        allowanceInfo: allow, // Just for display
+        gross, nssf, paye,
+        otherDeductions: other, customDeductions,
+        absenceDays: absenceInfo.chargeable,
+        absenceDeduction: absenceAmt,
+        net, companyId: myCompanyId()
+      };
+      oldPayrolls.push(newPay);
+
+      return `<tr>
+        <td><strong>${escapeHtml(emp.name)}</strong></td>
+        <td>${formatUGX(emp.baseSalary)}</td>
+        <td style="color:#7b8fb0;font-weight:600;" title="Paid separately, not in net">${formatUGX(allow.amount)} / ${allow.cycle.replace('ly','')}</td>
+        <td class="salary-cell">${formatUGX(gross)}</td>
+        <td style="color:#d64545;">-${formatUGX(nssf)}</td>
+        <td style="color:#d64545;">-${formatUGX(paye)}</td>
+        <td style="color:#d64545;">-${formatUGX(other + customTotal)}</td>
+        <td style="color:#d64545;" title="${absenceInfo.chargeable} chargeable day(s) × ${formatUGX(absenceInfo.dailyRate)}/day">-${formatUGX(absenceAmt)}</td>
+        <td class="salary-cell" style="color:#1e6b4b;">${formatUGX(net)}</td>
+        <td style="text-align:center;">
+          <button class="icon-btn" onclick="showEditDeductions('${emp.id}', '${month}')" title="Edit Deductions"><i class="fas fa-sliders-h"></i></button>
+          <button class="icon-btn" onclick="viewPayslipFor('${emp.id}', '${month}')" title="View Payslip"><i class="fas fa-file-invoice"></i></button>
+          <button class="icon-btn danger" onclick="deletePayrollEntry('${emp.id}', '${month}')" title="Delete Entry"><i class="fas fa-trash-alt"></i></button>
+        </td>
+      </tr>`;
+    }).join('');
+    state.payrolls = oldPayrolls;
+    showToast(`💰 Payroll generated for ${emps.length} employees`, 'success');
+  };
+
+  function renderPayrollTable() {
+    const month = document.getElementById('payrollMonth').value;
+    const emps = myEmployees(); const empIds = emps.map(e => e.id);
+    const existing = state.payrolls.filter(p => p.month === month && empIds.includes(p.employeeId));
+    const tbody = document.getElementById('payrollTableBody'); if (!tbody) return;
+    if (existing.length === 0) { tbody.innerHTML = '<tr class="empty-row"><td colspan="10">Click "Generate Payroll" for this month.</td></tr>'; return; }
+    tbody.innerHTML = existing.map(p => {
+      const emp = state.employees.find(e => e.id === p.employeeId);
+      const custom = (p.customDeductions || []).reduce((s, d) => s + (Number(d.amount) || 0), 0);
+      const absence = Number(p.absenceDeduction) || 0;
+      const allow = emp ? calcAllowanceDisplay(emp) : { amount: 0, cycle: 'monthly' };
+      return `<tr>
+        <td><strong>${escapeHtml(p.employeeName)}</strong></td>
+        <td>${formatUGX(p.baseSalary)}</td>
+        <td style="color:#7b8fb0;font-weight:600;" title="Paid separately, not in net">${formatUGX(allow.amount)} / ${allow.cycle.replace('ly','')}</td>
+        <td class="salary-cell">${formatUGX(p.gross)}</td>
+        <td style="color:#d64545;">-${formatUGX(p.nssf)}</td>
+        <td style="color:#d64545;">-${formatUGX(p.paye)}</td>
+        <td style="color:#d64545;">-${formatUGX((p.otherDeductions || 0) + custom)}</td>
+        <td style="color:#d64545;">-${formatUGX(absence)}</td>
+        <td class="salary-cell" style="color:#1e6b4b;">${formatUGX(p.net)}</td>
+        <td style="text-align:center;">
+          <button class="icon-btn" onclick="showEditDeductions('${p.employeeId}', '${month}')" title="Edit Deductions"><i class="fas fa-sliders-h"></i></button>
+          <button class="icon-btn" onclick="viewPayslipFor('${p.employeeId}', '${month}')" title="View Payslip"><i class="fas fa-file-invoice"></i></button>
+          <button class="icon-btn danger" onclick="deletePayrollEntry('${p.employeeId}', '${month}')" title="Delete Entry"><i class="fas fa-trash-alt"></i></button>
+        </td>
+      </tr>`;
+    }).join('');
+  }
+
+  // FIX 1: Delete individual payroll entry
+  window.deletePayrollEntry = function(empId, month) {
+    const p = state.payrolls.find(x => x.employeeId === empId && x.month === month);
+    if (!p) return;
+    if (!confirm(`Delete payroll entry for ${p.employeeName} (${month})?`)) return;
+    state.payrolls = state.payrolls.filter(x => !(x.employeeId === empId && x.month === month));
+    renderPayrollTable();
+    showToast('🗑️ Payroll entry removed', 'info');
+  };
+
+  // FIX 1: Clear all payrolls for a month
+  window.clearPayrollMonth = function() {
+    const month = document.getElementById('payrollMonth').value;
+    const emps = myEmployees(); const empIds = emps.map(e => e.id);
+    const existing = state.payrolls.filter(p => p.month === month && empIds.includes(p.employeeId));
+    if (existing.length === 0) { showToast('⚠️ No payroll entries to clear', 'info'); return; }
+    if (!confirm(`Clear ALL ${existing.length} payroll entries for this month?\n\nThis cannot be undone.`)) return;
+    state.payrolls = state.payrolls.filter(p => !(p.month === month && empIds.includes(p.employeeId)));
+    renderPayrollTable();
+    showToast(`🗑️ Cleared ${existing.length} entries`, 'info');
+  };
+
+  // ---------- EDIT DEDUCTIONS ----------
+  window.showEditDeductions = function(empId, month) {
+    const emp = state.employees.find(e => e.id === empId); if (!emp) return;
+    document.getElementById('dedEmpId').value = empId;
+    document.getElementById('dedMonth').value = month;
+    document.getElementById('dedEmpName').textContent = emp.name;
+    const monthNames = { '10': 'October 2025', '11': 'November 2025', '12': 'December 2025' };
+    document.getElementById('dedMonthLabel').textContent = monthNames[month] || month;
+
+    const existing = state.payrolls.find(p => p.employeeId === empId && p.month === month);
+    const customDeductions = existing && existing.customDeductions ? existing.customDeductions : [];
+
+    const container = document.getElementById('deductionRowsContainer');
+    container.innerHTML = '';
+    if (customDeductions.length === 0) addDeductionRow();
+    else customDeductions.forEach(d => addDeductionRow(d.reason, d.amount));
+
+    const info = calcAbsenceDeduction(emp, month, 2025);
+    document.getElementById('dedAbsentDays').textContent = info.absent + ' days';
+    document.getElementById('dedChargeableDays').textContent = info.chargeable + ' days';
+    document.getElementById('dedDailyRate').textContent = formatUGX(info.dailyRate);
+    document.getElementById('dedAbsenceAmount').textContent = formatUGX(info.amount);
+
+    openModal('deductionsModal');
+  };
+
+  window.addDeductionRow = function(reason = '', amount = '') {
+    const container = document.getElementById('deductionRowsContainer');
+    const row = document.createElement('div');
+    row.className = 'deduction-row';
+    row.innerHTML = `
+      <input type="text" class="ded-reason" placeholder="Description (e.g. Loan repayment)" value="${escapeHtml(reason)}">
+      <input type="number" class="ded-amount" placeholder="Amount (UGX)" min="0" step="1" value="${amount}">
+      <button type="button" class="del-btn" onclick="this.parentElement.remove()"><i class="fas fa-trash-alt"></i></button>
+    `;
+    container.appendChild(row);
+  };
+
+  window.saveDeductions = async function() {
+    const empId = document.getElementById('dedEmpId').value;
+    const month = document.getElementById('dedMonth').value;
+    const rows = document.querySelectorAll('#deductionRowsContainer .deduction-row');
+    const newDeductions = [];
+    rows.forEach(r => {
+      const reason = r.querySelector('.ded-reason').value.trim();
+      const amount = Number(r.querySelector('.ded-amount').value) || 0;
+      if (reason && amount > 0) newDeductions.push({ reason, amount });
+    });
+
+    try {
+      let existing = state.payrolls.find(p => p.employeeId === empId && p.month === month);
+      if (!existing) {
+        const emp = state.employees.find(e => e.id === empId);
+        const gross = Number(emp.baseSalary) || 0; // FIX 2
+        const nssf = calcNssf(emp, gross);
+        const paye = calcPaye(emp, gross - nssf);
+        const other = Number(emp.otherDeductions) || 0;
+        const absenceInfo = calcAbsenceDeduction(emp, month, 2025);
+        const customTotal = newDeductions.reduce((s, d) => s + d.amount, 0);
+        const net = gross - nssf - paye - other - customTotal - absenceInfo.amount;
+        existing = {
+          id: 'temp_' + Date.now(),
+          employeeId: empId, employeeName: emp.name, month,
+          baseSalary: emp.baseSalary, allowances: 0,
+          allowanceInfo: calcAllowanceDisplay(emp),
+          gross, nssf, paye,
+          otherDeductions: other,
+          customDeductions: newDeductions,
+          absenceDays: absenceInfo.chargeable,
+          absenceDeduction: absenceInfo.amount,
+          net, companyId: myCompanyId()
+        };
+        state.payrolls.push(existing);
+      } else {
+        const customTotal = newDeductions.reduce((s, d) => s + d.amount, 0);
+        const absence = Number(existing.absenceDeduction) || 0;
+        existing.customDeductions = newDeductions;
+        existing.net = existing.gross - existing.nssf - existing.paye - (existing.otherDeductions || 0) - customTotal - absence;
+      }
+      renderPayrollTable();
+      closeModal('deductionsModal');
+      showToast('✅ Deductions saved', 'success');
+    } catch (err) { showToast('❌ ' + err.message, 'error'); }
+  };
+
+  window.viewPayslipFor = function(empId, month) {
+    const emp = state.employees.find(e => e.id === empId);
+    const p = state.payrolls.find(x => x.employeeId === empId && x.month === month);
+    if (!emp || !p) return;
+    const m = { '10': 'October 2025', '11': 'November 2025', '12': 'December 2025' };
+    const compName = emp.companyId ? getCompanyName(emp.companyId) : 'Bright Mesh HR';
+    const custom = p.customDeductions || [];
+    const absence = Number(p.absenceDeduction) || 0;
+    const allow = calcAllowanceDisplay(emp);
+    document.getElementById('payslipBody').innerHTML = `
+      <div style="text-align:center;margin-bottom:24px;padding-bottom:20px;border-bottom:2px solid #d4e6dc;">
+        <h2 style="font-size:1.5rem;font-weight:800;color:#1e6b4b;margin-bottom:4px;">${escapeHtml(compName)}</h2>
+        <p style="font-size:0.85rem;color:#62759b;font-weight:600;">Payslip · ${m[month] || month}</p>
+      </div>
+      <div style="margin-bottom:20px;">
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #e4efe8;"><span style="color:#62759b;font-weight:600;">Employee</span><strong>${escapeHtml(emp.name)}</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #e4efe8;"><span style="color:#62759b;font-weight:600;">Role</span><span>${escapeHtml(emp.role)}</span></div>
+        ${emp.locationId ? `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #e4efe8;"><span style="color:#62759b;font-weight:600;">Branch</span><span>${escapeHtml(getLocationName(emp.locationId))}</span></div>` : ''}
+      </div>
+      <div style="background:#f7fdfa;border-radius:16px;padding:18px;margin-bottom:14px;">
+        <div style="display:flex;justify-content:space-between;padding:6px 0;"><span>Base Salary</span><strong>${formatUGX(p.baseSalary)}</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:10px 0;border-top:2px solid #b8d9c8;margin-top:6px;"><span style="font-weight:800;">Gross Pay (Base only)</span><strong style="color:#1e3e7c;">${formatUGX(p.gross)}</strong></div>
+      </div>
+      <div style="background:#f0f9f4;border:1px solid #b8d9c8;border-radius:16px;padding:14px 18px;margin-bottom:14px;font-size:0.85rem;color:#3d6652;">
+        <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Allowance (paid separately)</span><strong>${formatUGX(allow.amount)} / ${allow.cycle.replace('ly','')}</strong></div>
+        <div style="font-size:0.75rem;opacity:0.8;margin-top:4px;">Not included in the net below.</div>
+      </div>
+      <div style="background:#fff5f5;border-radius:16px;padding:18px;margin-bottom:14px;">
+        <div style="display:flex;justify-content:space-between;padding:6px 0;"><span>NSSF</span><strong style="color:#d64545;">-${formatUGX(p.nssf)}</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:6px 0;"><span>PAYE</span><strong style="color:#d64545;">-${formatUGX(p.paye)}</strong></div>
+        ${custom.length > 0 ? custom.map(d => `<div style="display:flex;justify-content:space-between;padding:6px 0;"><span>${escapeHtml(d.reason)}</span><strong style="color:#d64545;">-${formatUGX(d.amount)}</strong></div>`).join('') : ''}
+        ${absence > 0 ? `<div style="display:flex;justify-content:space-between;padding:6px 0;"><span>Absence (${p.absenceDays || 0} chargeable days)</span><strong style="color:#d64545;">-${formatUGX(absence)}</strong></div>` : ''}
+      </div>
+      <div style="background:linear-gradient(105deg,#1e6b4b,#2d9c6e);border-radius:16px;padding:20px;color:white;display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-weight:700;">NET BASE PAY</span><strong style="font-size:1.6rem;">${formatUGX(p.net)}</strong>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" onclick="closeModal('payslipModal')">Close</button>
+        <button type="button" class="btn btn-primary" onclick="window.print()"><i class="fas fa-print"></i> Print</button>
+      </div>`;
+    openModal('payslipModal');
+  };
+
+  // ============================================================
+  //  LEAVE
+  // ============================================================
+  function renderLeave() {
+    const emps = myEmployees(); const empIds = emps.map(e => e.id);
+    const myLeaves = state.leaves.filter(l => empIds.includes(l.employeeId));
+    const pending = myLeaves.filter(l => l.status === 'pending').length;
+    const approved = myLeaves.filter(l => l.status === 'approved').length;
+    const rejected = myLeaves.filter(l => l.status === 'rejected').length;
+    const pl = document.getElementById('pendingLeaves'); if (pl) pl.textContent = pending;
+    const al = document.getElementById('approvedLeaves'); if (al) al.textContent = approved;
+    const rl = document.getElementById('rejectedLeaves'); if (rl) rl.textContent = rejected;
+    const sorted = [...myLeaves].sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+    const tbody = document.getElementById('leaveTableBody'); if (!tbody) return;
+    if (sorted.length === 0) { tbody.innerHTML = '<tr class="empty-row"><td colspan="8">No leave requests.</td></tr>'; return; }
+    tbody.innerHTML = sorted.map(l => {
+      const sc = l.status === 'approved' ? 'status-present' : l.status === 'rejected' ? 'status-absent' : 'status-late';
+      let actions = '';
+      if (l.status === 'pending') {
+        actions = `<button class="icon-btn" onclick="approveLeave('${l.id}')" title="Approve" style="color:#0b6b4e;border-color:#b2e3d2;"><i class="fas fa-check"></i></button>
+                   <button class="icon-btn danger" onclick="rejectLeave('${l.id}')" title="Reject"><i class="fas fa-times"></i></button>`;
+      } else { actions = `<span style="font-size:0.75rem;color:#7b8fb0;">${l.status}</span>`; }
+      return `<tr><td><strong>${escapeHtml(l.employeeName)}</strong></td><td><span class="badge badge-blue">${escapeHtml(l.type)}</span></td><td>${l.startDate}</td><td>${l.endDate}</td><td>${l.days}</td><td style="font-size:0.8rem;color:#62759b;">${escapeHtml(l.reason)}</td><td><span class="status-pill ${sc}">${l.status}</span></td><td style="text-align:center;"><div class="action-icons" style="justify-content:center;">${actions}</div></td></tr>`;
+    }).join('');
+  }
+  window.approveLeave = async function(id) {
+    const leave = state.leaves.find(l => l.id === id); if (!leave) return;
+    try { await fsUpdate('leaves', id, { status: 'approved' }); leave.status = 'approved'; renderLeave(); renderMyLeave(); showToast('✅ Approved', 'success'); }
+    catch (err) { showToast('❌ ' + err.message, 'error'); }
+  };
+  window.rejectLeave = async function(id) {
+    const leave = state.leaves.find(l => l.id === id); if (!leave) return;
+    try { await fsUpdate('leaves', id, { status: 'rejected' }); leave.status = 'rejected'; renderLeave(); renderMyLeave(); showToast('❌ Rejected', 'info'); }
+    catch (err) { showToast('❌ ' + err.message, 'error'); }
+  };
+
+  // ============================================================
+  //  ADMIN: LOCATIONS
+  // ============================================================
+  function renderLocationsGrid() {
+    const grid = document.getElementById('locationsGrid'); if (!grid) return;
+    updateOverviewCounters();
+    if (state.locations.length === 0) {
+      grid.innerHTML = `
+        <div style="grid-column:1/-1;text-align:center;padding:48px;background:#fff9ee;border:2px dashed #ffd8a8;border-radius:22px;">
+          <i class="fas fa-map-marker-alt" style="font-size:3rem;color:#d68b2c;margin-bottom:14px;"></i>
+          <h3 style="font-size:1.2rem;font-weight:800;color:#a55c00;margin-bottom:8px;">No locations yet</h3>
+          <p style="color:#7a4500;font-weight:500;margin-bottom:16px;">Start by creating your first location.</p>
+          <button class="btn btn-primary" onclick="showCreateLocationModal()"><i class="fas fa-plus"></i> Create First Location</button>
+        </div>`;
+      return;
+    }
+    grid.innerHTML = state.locations.map(loc => {
+      const comp = loc.companyId ? state.companies.find(c => c.id === loc.companyId) : null;
+      const empCount = state.employees.filter(e => e.locationId === loc.id).length;
+      const isAssigned = !!comp;
+      return `
+        <div class="location-card ${isAssigned ? 'assigned' : 'unassigned'}">
+          <h4><i class="fas fa-store"></i> ${escapeHtml(loc.name)}</h4>
+          <div class="addr"><i class="fas fa-map-pin" style="margin-right:6px;color:#b8d9c8;"></i>${escapeHtml(loc.address || 'No address')}${loc.city ? ' · ' + escapeHtml(loc.city) : ''}</div>
+          ${comp
+            ? `<div class="company-link"><i class="fas fa-building"></i> Assigned to: <strong>${escapeHtml(comp.name)}</strong></div>`
+            : `<div class="unassigned-tag"><i class="fas fa-exclamation-circle" style="margin-right:6px;"></i>Not yet assigned</div>`}
+          <div class="stats-row">
+            <div><strong>${empCount}</strong>Employees</div>
+            <div><strong>${comp ? '✅' : '⏳'}</strong>Status</div>
+          </div>
+          <div class="card-actions">
+            <button class="btn btn-outline btn-sm" onclick="showEditLocationModal('${loc.id}')"><i class="fas fa-pen"></i> Edit</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteLocation('${loc.id}')"><i class="fas fa-trash-alt"></i> Delete</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  window.showCreateLocationModal = function() {
+    document.getElementById('createLocationForm').reset();
+    openModal('createLocationModal');
+  };
+
+  document.getElementById('createLocationForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const name = document.getElementById('newLocationName').value.trim();
+    const address = document.getElementById('newLocationAddress').value.trim();
+    const city = document.getElementById('newLocationCity').value.trim();
+    if (!name) { showToast('⚠️ Location name required', 'info'); return; }
+    const locData = { name, address, city, companyId: '', createdAt: new Date().toISOString() };
+    try {
+      const newId = await fsAdd('locations', locData);
+      state.locations.push({ id: newId, ...locData });
+      renderLocationsGrid(); renderFirestoreRaw();
+      closeModal('createLocationModal');
+      showToast(`✨ Location "${name}" created`, 'success');
+    } catch (err) { showToast('❌ ' + err.message, 'error'); }
+  });
+
+  window.showEditLocationModal = function(id) {
+    const loc = state.locations.find(l => l.id === id); if (!loc) return;
+    document.getElementById('editLocId').value = id;
+    document.getElementById('editLocName').value = loc.name || '';
+    document.getElementById('editLocAddress').value = loc.address || '';
+    document.getElementById('editLocCity').value = loc.city || '';
+    const sel = document.getElementById('editLocCompany');
+    sel.innerHTML = '<option value="">-- Unassigned --</option>' +
+      state.companies.map(c => `<option value="${c.id}" ${c.id === loc.companyId ? 'selected' : ''}>${escapeHtml(c.name)}</option>`).join('');
+    openModal('editLocationModal');
+  };
+
+  document.getElementById('editLocationForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const id = document.getElementById('editLocId').value;
+    const loc = state.locations.find(l => l.id === id); if (!loc) return;
+    const updates = {
+      name: document.getElementById('editLocName').value.trim(),
+      address: document.getElementById('editLocAddress').value.trim(),
+      city: document.getElementById('editLocCity').value.trim(),
+      companyId: document.getElementById('editLocCompany').value
+    };
+    if (!updates.name) { showToast('⚠️ Name required', 'info'); return; }
+    try {
+      await fsUpdate('locations', id, updates);
+      Object.assign(loc, updates);
+      renderLocationsGrid(); renderCompaniesGrid(); renderFirestoreRaw();
+      closeModal('editLocationModal');
+      showToast('✏️ Location updated', 'success');
+    } catch (err) { showToast('❌ ' + err.message, 'error'); }
+  });
+
+  window.deleteLocation = async function(id) {
+    const loc = state.locations.find(l => l.id === id); if (!loc) return;
+    if (confirm(`Delete location "${loc.name}"?`)) {
+      try {
+        await fsDelete('locations', id);
+        state.locations = state.locations.filter(l => l.id !== id);
+        renderLocationsGrid(); renderCompaniesGrid(); renderFirestoreRaw(); renderBilling();
+        showToast('🗑️ Removed', 'info');
+      } catch (err) { showToast('❌ ' + err.message, 'error'); }
+    }
+  };
+
+  // ============================================================
+  //  ADMIN: COMPANIES
+  // ============================================================
+  function renderCompaniesGrid() {
+    const grid = document.getElementById('companiesGrid'); if (!grid) return;
+    updateOverviewCounters();
+    if (state.companies.length === 0) {
+      grid.innerHTML = `
+        <div style="grid-column:1/-1;text-align:center;padding:48px;background:#e6f0ff;border:2px dashed #c2d6f5;border-radius:22px;">
+          <i class="fas fa-building" style="font-size:3rem;color:#3f66d0;margin-bottom:14px;"></i>
+          <h3 style="font-size:1.2rem;font-weight:800;color:#1e4b8a;margin-bottom:8px;">No companies yet</h3>
+          <p style="color:#3f5588;font-weight:500;margin-bottom:16px;">${state.locations.length === 0 ? 'First create a location in Step 1.' : 'Now create a company and assign it to your locations.'}</p>
+          <button class="btn btn-primary" onclick="${state.locations.length === 0 ? `document.querySelector('[data-atab=locations]').click()` : 'showCreateCompanyModal()'}"><i class="fas fa-plus"></i> ${state.locations.length === 0 ? 'Go to Step 1: Locations' : 'Create First Company'}</button>
+        </div>`;
+      return;
+    }
+    grid.innerHTML = state.companies.map(c => {
+      const mgr = state.users.find(u => u.id === c.managerId);
+      const branches = state.locations.filter(l => l.companyId === c.id);
+      const emps = state.employees.filter(e => e.companyId === c.id);
+      return `
+        <div class="company-card">
+          <div class="company-card-header">
+            <div>
+              <h4><i class="fas fa-building" style="color:#8a4b3c;margin-right:6px;"></i>${escapeHtml(c.name)}</h4>
+              <div class="manager-info">
+                ${mgr ? `Manager: <strong>${escapeHtml(mgr.fullName || mgr.username)}</strong> · <code>${escapeHtml(mgr.username)}</code>` : '⚠️ No manager account'}
+              </div>
+              ${c.phone ? `<div style="font-size:0.78rem;color:#7b8fb0;margin-top:4px;"><i class="fas fa-phone"></i> ${escapeHtml(c.phone)}</div>` : ''}
+            </div>
+          </div>
+          <div class="branches-list">
+            <h5><i class="fas fa-map-marker-alt"></i> Branches (${branches.length})</h5>
+            ${branches.length === 0
+              ? '<p style="font-size:0.82rem;color:#a8bccf;">No branches assigned yet.</p>'
+              : branches.map(b => `<span class="branch-chip"><i class="fas fa-store"></i>${escapeHtml(b.name)}</span>`).join('')}
+          </div>
+          <div class="stats-row" style="display:flex;gap:16px;padding-top:12px;border-top:1px solid #e4efe8;margin-top:14px;">
+            <div style="font-size:0.78rem;color:var(--text-light);font-weight:600;"><strong style="color:var(--text-dark);font-weight:800;font-size:1rem;display:block;">${branches.length}</strong>Branches</div>
+            <div style="font-size:0.78rem;color:var(--text-light);font-weight:600;"><strong style="color:var(--text-dark);font-weight:800;font-size:1rem;display:block;">${emps.length}</strong>Employees</div>
+          </div>
+          <div class="card-actions">
+            <button class="btn btn-primary btn-sm" onclick="showAddBranchModal('${c.id}')"><i class="fas fa-plus-circle"></i> Add Branch</button>
+            ${mgr ? `<button class="btn btn-outline btn-sm" onclick="resetUserPassword('${mgr.id}')"><i class="fas fa-key"></i> Reset Password</button>` : ''}
+            <button class="btn btn-danger btn-sm" onclick="deleteCompany('${c.id}')"><i class="fas fa-trash-alt"></i> Delete</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  window.showCreateCompanyModal = function() {
+    if (state.locations.length === 0) { showToast('⚠️ Create at least one location first', 'info'); return; }
+    document.getElementById('createCompanyForm').reset();
+    populateCompanyLocationCheckboxes();
+    openModal('createCompanyModal');
+  };
+
+  function populateCompanyLocationCheckboxes() {
+    const container = document.getElementById('companyLocationCheckboxes'); if (!container) return;
+    if (state.locations.length === 0) { container.innerHTML = '<p style="text-align:center;color:#a8bccf;padding:12px;">No locations available.</p>'; return; }
+    container.innerHTML = state.locations.map(l => {
+      const owner = l.companyId ? state.companies.find(c => c.id === l.companyId) : null;
+      const disabled = !!owner;
+      return `
+        <label class="checkbox-row" style="cursor:${disabled ? 'not-allowed' : 'pointer'};opacity:${disabled ? '0.55' : '1'};margin-bottom:8px;">
+          <input type="checkbox" class="company-location-cb" value="${l.id}" ${disabled ? 'disabled' : ''}>
+          <div style="flex:1;">
+            <div style="font-weight:700;color:var(--text-dark);font-size:0.9rem;">
+              ${escapeHtml(l.name)}
+              ${disabled ? `<span style="font-size:0.72rem;color:#a55c00;font-weight:700;margin-left:6px;">(assigned to ${escapeHtml(owner.name)})</span>` : ''}
+            </div>
+            ${l.address ? `<div style="font-size:0.76rem;color:var(--text-light);font-weight:500;">${escapeHtml(l.address)}</div>` : ''}
+          </div>
+        </label>
+      `;
+    }).join('');
+  }
+
+  document.getElementById('createCompanyForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const name = document.getElementById('newCompanyName').value.trim();
+    const username = document.getElementById('newCompanyUsername').value.trim();
+    const managerName = document.getElementById('newCompanyManagerName').value.trim();
+    const password = document.getElementById('newCompanyPassword').value;
+    const passwordConfirm = document.getElementById('newCompanyPasswordConfirm').value;
+    const phone = document.getElementById('newCompanyPhone').value.trim();
+    const selectedLocations = Array.from(document.querySelectorAll('.company-location-cb:checked')).map(cb => cb.value);
+
+    if (!name || !username || !managerName || !password) { showToast('⚠️ All required fields', 'info'); return; }
+    if (password !== passwordConfirm) { showToast('⚠️ Passwords do not match', 'info'); return; }
+    if (password.length < 6) { showToast('⚠️ Password min 6 characters', 'info'); return; }
+    if (selectedLocations.length === 0) { showToast('⚠️ Assign at least one location', 'info'); return; }
+    if (state.users.find(u => u.username === username)) { showToast('⚠️ Username already exists', 'info'); return; }
+
+    try {
+      const companyData = { name, phone, createdAt: new Date().toISOString() };
+      const companyId = await fsAdd('companies', companyData);
+      const managerData = { username, password, fullName: managerName, role: 'manager', companyId, employeeId: '', location: '' };
+      const managerId = await fsAdd('users', managerData);
+      await fsUpdate('companies', companyId, { managerId });
+      for (const locId of selectedLocations) {
+        const loc = state.locations.find(l => l.id === locId);
+        if (loc) { await fsUpdate('locations', locId, { companyId }); loc.companyId = companyId; }
+      }
+      state.companies.push({ id: companyId, ...companyData, managerId });
+      state.users.push({ id: managerId, ...managerData });
+
+      renderCompaniesGrid(); renderLocationsGrid(); renderUsersTable(); renderFirestoreRaw();
+      closeModal('createCompanyModal');
+      showToast(`✨ Company "${name}" created`, 'success');
+    } catch (err) { showToast('❌ ' + err.message, 'error'); }
+  });
+
+  window.deleteCompany = async function(id) {
+    const comp = state.companies.find(c => c.id === id); if (!comp) return;
+    const branches = state.locations.filter(l => l.companyId === id);
+    const emps = state.employees.filter(e => e.companyId === id);
+    if (confirm(`Delete company "${comp.name}"?\n\n• Unlink ${branches.length} branches\n• Delete ${emps.length} employees\n• Delete manager account`)) {
+      try {
+        for (const loc of branches) { await fsUpdate('locations', loc.id, { companyId: '' }); loc.companyId = ''; }
+        for (const e of emps) await fsDelete('employees', e.id);
+        const mgr = state.users.find(u => u.id === comp.managerId);
+        if (mgr) await fsDelete('users', mgr.id);
+        await fsDelete('companies', id);
+        state.companies = state.companies.filter(c => c.id !== id);
+        state.employees = state.employees.filter(e => e.companyId !== id);
+        state.users = state.users.filter(u => u.id !== comp.managerId);
+        renderCompaniesGrid(); renderLocationsGrid(); renderUsersTable(); renderFirestoreRaw(); renderBilling();
+        showToast('🗑️ Company removed', 'info');
+      } catch (err) { showToast('❌ ' + err.message, 'error'); }
+    }
+  };
+
+  // ============================================================
+  //  ADMIN: ADD BRANCH
+  // ============================================================
+  window.showAddBranchModal = function(companyId) {
+    const comp = state.companies.find(c => c.id === companyId); if (!comp) return;
+    document.getElementById('addBranchForm').reset();
+    document.getElementById('addBranchCompanyId').value = companyId;
+    document.getElementById('addBranchCompanyName').textContent = comp.name;
+    const sel = document.getElementById('addBranchLocationId');
+    const unassigned = state.locations.filter(l => !l.companyId);
+    if (unassigned.length === 0) sel.innerHTML = '<option value="">-- No unassigned locations --</option>';
+    else sel.innerHTML = '<option value="">-- Choose a location --</option>' +
+      unassigned.map(l => `<option value="${l.id}">${escapeHtml(l.name)}${l.address ? ' — ' + escapeHtml(l.address) : ''}</option>`).join('');
+    openModal('addBranchModal');
+  };
+
+  document.getElementById('addBranchForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const companyId = document.getElementById('addBranchCompanyId').value;
+    const existingLocId = document.getElementById('addBranchLocationId').value;
+    const newName = document.getElementById('addBranchNewName').value.trim();
+    const newAddress = document.getElementById('addBranchNewAddress').value.trim();
+
+    if (!existingLocId && !newName) { showToast('⚠️ Select existing OR enter new location', 'info'); return; }
+    if (existingLocId && newName) { showToast('⚠️ Use either existing OR new — not both', 'info'); return; }
+
+    try {
+      let locationId = existingLocId;
+      if (newName) {
+        const locData = { name: newName, address: newAddress, city: '', companyId, createdAt: new Date().toISOString() };
+        locationId = await fsAdd('locations', locData);
+        state.locations.push({ id: locationId, ...locData });
+      } else {
+        const loc = state.locations.find(l => l.id === existingLocId);
+        if (loc) { await fsUpdate('locations', existingLocId, { companyId }); loc.companyId = companyId; }
+      }
+      renderCompaniesGrid(); renderLocationsGrid(); renderFirestoreRaw();
+      closeModal('addBranchModal');
+      showToast('✅ Branch added', 'success');
+    } catch (err) { showToast('❌ ' + err.message, 'error'); }
+  });
+
+  // ============================================================
+  //  ADMIN: USERS
+  // ============================================================
+  function renderUsersTable() {
+    const tbody = document.getElementById('usersTableBody'); if (!tbody) return;
+    if (state.users.length === 0) { tbody.innerHTML = '<tr class="empty-row"><td colspan="7">No users yet.</td></tr>'; return; }
+    tbody.innerHTML = state.users.map(u => {
+      const loc = state.locations.find(l => l.id === u.location);
+      const emp = u.employeeId ? state.employees.find(e => e.id === u.employeeId) : null;
+      const comp = u.companyId ? state.companies.find(c => c.id === u.companyId) : null;
+      return `<tr>
+        <td><strong>${escapeHtml(u.username)}</strong></td>
+        <td>${escapeHtml(u.fullName || '—')}</td>
+        <td><span class="badge ${u.role === 'admin' ? 'badge-amber' : u.role === 'manager' ? 'badge-blue' : 'badge-green'}">${escapeHtml(u.role)}</span></td>
+        <td>${comp ? escapeHtml(comp.name) : '—'}</td>
+        <td>${emp ? escapeHtml(emp.name) : '—'}</td>
+        <td>${loc ? escapeHtml(loc.name) : '—'}</td>
+        <td style="text-align:center;"><div class="action-icons" style="justify-content:center;">
+          <button class="icon-btn" onclick="showEditUserModal('${u.id}')" title="Edit User"><i class="fas fa-pen"></i></button>
+          <button class="icon-btn" onclick="resetUserPassword('${u.id}')" title="Reset Password"><i class="fas fa-key"></i></button>
+          ${u.username !== 'admin' ? `<button class="icon-btn danger" onclick="deleteUser('${u.id}')" title="Delete"><i class="fas fa-trash-alt"></i></button>` : ''}
+        </div></td>
+      </tr>`;
+    }).join('');
+  }
+
+  window.showEditUserModal = function(id) {
+    const user = state.users.find(u => u.id === id); if (!user) return;
+    document.getElementById('editUserId').value = id;
+    document.getElementById('editUserName').value = user.username || '';
+    document.getElementById('editUserFullName').value = user.fullName || '';
+    document.getElementById('editUserRole').value = user.role || 'employee';
+    document.getElementById('editUserPassword').value = '';
+    openModal('editUserModal');
+  };
+
+  document.getElementById('editUserForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const id = document.getElementById('editUserId').value;
+    const user = state.users.find(u => u.id === id); if (!user) return;
+    const updates = {
+      username: document.getElementById('editUserName').value.trim(),
+      fullName: document.getElementById('editUserFullName').value.trim(),
+      role: document.getElementById('editUserRole').value
+    };
+    const newPw = document.getElementById('editUserPassword').value;
+    if (newPw && newPw.length >= 6) updates.password = newPw;
+    else if (newPw) { showToast('⚠️ Password min 6 characters', 'info'); return; }
+    if (!updates.username || !updates.fullName) { showToast('⚠️ Username and name required', 'info'); return; }
+    try {
+      if (user.id !== 'seed-admin') await fsUpdate('users', id, updates);
+      Object.assign(user, updates);
+      renderUsersTable(); renderFirestoreRaw();
+      closeModal('editUserModal');
+      showToast('✏️ User updated', 'success');
+    } catch (err) { showToast('❌ ' + err.message, 'error'); }
+  });
+
+  window.resetUserPassword = async function(id) {
+    const user = state.users.find(u => u.id === id); if (!user) return;
+    const newPw = prompt(`New password for "${user.username}":`, 'password123');
+    if (newPw && newPw.length >= 6) {
+      try { if (user.id !== 'seed-admin') await fsUpdate('users', user.id, { password: newPw }); user.password = newPw; showToast('🔐 Reset', 'success'); }
+      catch (err) { showToast('❌ ' + err.message, 'error'); }
+    } else if (newPw !== null) { showToast('⚠️ Min 6 characters', 'info'); }
+  };
+  window.deleteUser = async function(id) {
+    const user = state.users.find(u => u.id === id); if (!user) return;
+    if (user.username === 'admin') { showToast('⚠️ Cannot delete master admin', 'info'); return; }
+    if (confirm(`Delete user "${user.username}"?`)) {
+      try { await fsDelete('users', id); state.users = state.users.filter(u => u.id !== id); renderUsersTable(); renderFirestoreRaw(); renderManagerUsers(); showToast('🗑️ Removed', 'info'); }
+      catch (err) { showToast('❌ ' + err.message, 'error'); }
+    }
+  };
+
+  // ============================================================
+  //  FIRESTORE RAW VIEW
+  // ============================================================
+  function renderFirestoreRaw() {
+    const locList = document.getElementById('fsLocationsList');
+    const locCount = document.getElementById('fsLocCount');
+    if (locCount) locCount.textContent = state.locations.length;
+    if (locList) {
+      if (state.locations.length === 0) locList.innerHTML = '<div class="empty-row" style="padding:32px;">No locations in Firestore.</div>';
+      else locList.innerHTML = state.locations.map(l => {
+        const comp = l.companyId ? state.companies.find(c => c.id === l.companyId) : null;
+        return `<div class="fs-row">
+          <div class="info">
+            <strong><i class="fas fa-store" style="color:#2d9c6e;margin-right:6px;"></i>${escapeHtml(l.name)}</strong>
+            <span>${escapeHtml(l.address || 'No address')}${l.city ? ' · ' + escapeHtml(l.city) : ''}</span>
+            <span style="margin-left:8px;">${comp ? `<i class="fas fa-building" style="color:#3f66d0;"></i> ${escapeHtml(comp.name)}` : '<em style="color:#a55c00;">Unassigned</em>'}</span>
+            <span style="margin-left:8px;"><code>${escapeHtml(l.id)}</code></span>
+          </div>
+          <div style="display:flex;gap:6px;">
+            <button class="icon-btn" onclick="showEditLocationModal('${l.id}')" title="Edit"><i class="fas fa-pen"></i></button>
+            <button class="icon-btn danger" onclick="deleteLocation('${l.id}')" title="Delete"><i class="fas fa-trash-alt"></i></button>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    const userList = document.getElementById('fsUsersList');
+    const userCount = document.getElementById('fsUserCount');
+    if (userCount) userCount.textContent = state.users.length;
+    if (userList) {
+      if (state.users.length === 0) userList.innerHTML = '<div class="empty-row" style="padding:32px;">No users in Firestore.</div>';
+      else userList.innerHTML = state.users.map(u => {
+        const comp = u.companyId ? state.companies.find(c => c.id === u.companyId) : null;
+        return `<div class="fs-row">
+          <div class="info">
+            <strong><i class="fas fa-user" style="color:#1e6b4b;margin-right:6px;"></i>${escapeHtml(u.username)}</strong>
+            <span>${escapeHtml(u.fullName || '—')}</span>
+            <span style="margin-left:8px;"><span class="badge ${u.role === 'admin' ? 'badge-amber' : u.role === 'manager' ? 'badge-blue' : 'badge-green'}" style="font-size:0.7rem;">${escapeHtml(u.role)}</span></span>
+            ${comp ? `<span style="margin-left:8px;"><i class="fas fa-building" style="color:#3f66d0;"></i> ${escapeHtml(comp.name)}</span>` : ''}
+            <span style="margin-left:8px;"><code>${escapeHtml(u.id)}</code></span>
+          </div>
+          <div style="display:flex;gap:6px;">
+            <button class="icon-btn" onclick="showEditUserModal('${u.id}')" title="Edit"><i class="fas fa-pen"></i></button>
+            <button class="icon-btn" onclick="resetUserPassword('${u.id}')" title="Reset Password"><i class="fas fa-key"></i></button>
+            ${u.username !== 'admin' ? `<button class="icon-btn danger" onclick="deleteUser('${u.id}')" title="Delete"><i class="fas fa-trash-alt"></i></button>` : ''}
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    const compList = document.getElementById('fsCompaniesList');
+    const compCount = document.getElementById('fsCompanyCount');
+    if (compCount) compCount.textContent = state.companies.length;
+    if (compList) {
+      if (state.companies.length === 0) compList.innerHTML = '<div class="empty-row" style="padding:32px;">No companies in Firestore.</div>';
+      else compList.innerHTML = state.companies.map(c => {
+        const branchCount = state.locations.filter(l => l.companyId === c.id).length;
+        return `<div class="fs-row">
+          <div class="info">
+            <strong><i class="fas fa-building" style="color:#8a4b3c;margin-right:6px;"></i>${escapeHtml(c.name)}</strong>
+            <span>${branchCount} branch${branchCount === 1 ? '' : 'es'} · ${c.phone ? escapeHtml(c.phone) : 'No phone'}</span>
+            <span style="margin-left:8px;"><code>${escapeHtml(c.id)}</code></span>
+          </div>
+          <div style="display:flex;gap:6px;">
+            <button class="icon-btn danger" onclick="deleteCompany('${c.id}')" title="Delete"><i class="fas fa-trash-alt"></i></button>
+          </div>
+        </div>`;
+      }).join('');
+    }
+  }
+
+  // ============================================================
+  //  BILLING
+  // ============================================================
+  function renderBilling() {
+    const tbody = document.getElementById('billingTableBody'); if (!tbody) return;
+    const rateEl = document.getElementById('billingRate');
+    const rate = rateEl ? Number(rateEl.value) || 100000 : 100000;
+    const totalEl = document.getElementById('billingTotal');
+    if (state.companies.length === 0) {
+      tbody.innerHTML = '<tr class="empty-row"><td colspan="4">No companies yet.</td></tr>';
+      if (totalEl) totalEl.textContent = formatUGX(0);
+      return;
+    }
+    let total = 0;
+    tbody.innerHTML = state.companies.map(c => {
+      const branchCount = state.locations.filter(l => l.companyId === c.id).length;
+      const subtotal = branchCount * rate;
+      total += subtotal;
+      return `<tr>
+        <td><strong>${escapeHtml(c.name)}</strong></td>
+        <td><span class="badge badge-blue">${branchCount}</span></td>
+        <td>${formatUGX(rate)}</td>
+        <td class="salary-cell">${formatUGX(subtotal)}</td>
+      </tr>`;
+    }).join('');
+    if (totalEl) totalEl.textContent = formatUGX(total);
+  }
+
+  // ============================================================
+  //  PASSWORD / EXPORT
+  // ============================================================
+  window.showChangePasswordModal = function() {
+    document.getElementById('passwordForm').reset();
+    document.getElementById('passwordError').style.display = 'none';
+    openModal('passwordModal');
+  };
+  document.getElementById('passwordForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const current = document.getElementById('currentPassword').value;
+    const newPw = document.getElementById('newPassword').value;
+    const confirm = document.getElementById('confirmPassword').value;
+    const errorEl = document.getElementById('passwordError');
+    if (!state.currentUser) { errorEl.textContent = 'Not logged in.'; errorEl.style.display = 'block'; return; }
+    if (current !== state.currentUser.password) { errorEl.textContent = 'Current password incorrect.'; errorEl.style.display = 'block'; return; }
+    if (newPw.length < 6) { errorEl.textContent = 'Min 6 characters.'; errorEl.style.display = 'block'; return; }
+    if (newPw !== confirm) { errorEl.textContent = 'Passwords do not match.'; errorEl.style.display = 'block'; return; }
+    try {
+      if (state.currentUser.id !== 'seed-admin') await fsUpdate('users', state.currentUser.id, { password: newPw });
+      state.currentUser.password = newPw;
+      const idx = state.users.findIndex(u => u.id === state.currentUser.id);
+      if (idx >= 0) state.users[idx].password = newPw;
+      closeModal('passwordModal'); showToast('🔐 Password updated', 'success');
+    } catch (err) { showToast('❌ ' + err.message, 'error'); }
+  });
+
+  document.getElementById('searchInput')?.addEventListener('input', e => renderTable(e.target.value));
+  document.getElementById('exportBtn')?.addEventListener('click', () => {
+    const emps = myEmployees();
+    if (emps.length === 0) { showToast('⚠️ No data', 'info'); return; }
+    const blob = new Blob([JSON.stringify(emps, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob); const a = document.createElement('a');
+    a.href = url; a.download = `brightmesh-${new Date().toISOString().slice(0,10)}.json`; a.click(); URL.revokeObjectURL(url);
+    showToast('📥 Exported', 'success');
+  });
+
+  // ============================================================
+  //  INIT
+  // ============================================================
+  async function init() {
+    console.log('🚀 Bright Mesh HR starting...');
+    try {
+      if (!db) { showErrorBanner('Firebase not initialized.'); document.getElementById('loadingOverlay').style.display = 'none'; return; }
+      await seedDefaultAdmin();
+      await loadState();
+
+      const session = getStoredSession();
+      if (session && session.userId) {
+        const user = state.users.find(u => u.id === session.userId);
+        if (user) {
+          state.currentUser = user;
+          console.log('🔐 Session restored:', user.username, '(' + user.role + ')');
+          if (user.role === 'admin') showAdminDashboard();
+          else showUserDashboard();
+        } else { clearSession(); }
+      }
+      console.log('✅ App ready');
+    } catch (err) {
+      console.error('❌ Init error:', err);
+      showErrorBanner('Startup error: ' + err.message);
+    } finally {
+      document.getElementById('loadingOverlay').style.display = 'none';
+    }
+  }
+  init();
+</script>
+</body>
+</html>
