@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bright Mesh HR • Supermarket & Grocery</title>
+  <title>Bright Mesh HR • Supermarket &amp; Grocery</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%231e6b4b'/%3E%3Ctext x='50' y='68' font-size='58' font-family='Inter,Arial,sans-serif' font-weight='800' fill='white' text-anchor='middle'%3EBM%3C/text%3E%3C/svg%3E">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
@@ -17,6 +17,7 @@
       --shadow-sm: 0 6px 14px rgba(0,0,0,0.04);
       --shadow-md: 0 18px 30px -12px rgba(23,45,90,0.12);
       --shadow-lg: 0 30px 50px -20px rgba(23,45,90,0.25);
+      --absent-bright: #ff0000;
     }
     body { background: linear-gradient(145deg, #f8faff 0%, #edf2fc 100%); min-height: 100vh; color: #1d2b4b; line-height: 1.5; }
     #loadingOverlay { position: fixed; inset: 0; background: linear-gradient(145deg, #f8faff, #edf2fc); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; gap: 18px; }
@@ -283,6 +284,10 @@
     .shift-cell.empty:hover { background: #e6f5ee; border-color: #b8d9c8; }
     .shift-cell.off-day { background: #fff9ee; border: 1.5px solid #ffd8a8; color: #a55c00; }
     .shift-cell.off-day:hover { background: #fff3e2; }
+    .shift-cell.absent-day { background: #ff0000; border: 1.5px solid #cc0000; color: #ffffff; }
+    .shift-cell.absent-day:hover { background: #e60000; }
+    .shift-cell.absent-day .shift-delete-btn { background: rgba(0,0,0,0.35); color: white; }
+    .shift-cell.absent-day:hover .shift-delete-btn { background: #990000; color: white; }
     .shift-cell.filled { color: white; box-shadow: 0 6px 12px -4px rgba(0,0,0,0.15); }
     .shift-cell.filled:hover { transform: translateY(-2px); box-shadow: 0 10px 18px -6px rgba(0,0,0,0.25); }
     .shift-cell .shift-time { font-size: 0.86rem; font-weight: 800; letter-spacing: 0.3px; }
@@ -331,6 +336,20 @@
     .device-cell { display: flex; flex-direction: column; gap: 4px; }
     .device-cell .device-os { font-size: 0.78rem; font-weight: 700; padding: 4px 10px; border-radius: 40px; display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
     .device-cell .device-meta { font-size: 0.7rem; color: #7b8fb0; font-weight: 600; }
+    .report-toolbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; margin-bottom: 22px; background: white; padding: 18px; border-radius: 20px; border: 1.5px solid var(--border-soft); }
+    .report-toolbar .form-group { margin-bottom: 0; min-width: 160px; }
+    .report-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-bottom: 22px; }
+    .report-summary .card { background: white; border-radius: 18px; padding: 18px; border: 1.5px solid var(--border-soft); text-align: center; }
+    .report-summary .card .label { font-size: 0.7rem; font-weight: 800; color: var(--text-mid); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 6px; }
+    .report-summary .card .value { font-size: 1.6rem; font-weight: 800; color: var(--primary); }
+    .report-summary .card .value.good { color: #0b6b4e; }
+    .report-summary .card .value.warn { color: #a55c00; }
+    .report-summary .card .value.bad { color: #d64545; }
+    .compliance-bar { height: 8px; border-radius: 4px; background: #e4efe8; overflow: hidden; min-width: 80px; }
+    .compliance-bar .fill { height: 100%; border-radius: 4px; transition: width 0.3s; }
+    .compliance-bar .fill.good { background: linear-gradient(90deg, #2d9c6e, #1e6b4b); }
+    .compliance-bar .fill.warn { background: linear-gradient(90deg, #d68b2c, #b45a2c); }
+    .compliance-bar .fill.bad { background: linear-gradient(90deg, #d64545, #b22222); }
     @media (max-width: 900px) {
       .hero { grid-template-columns: 1fr; padding: 48px 24px; gap: 40px; }
       .hero h2 { font-size: 2.4rem; }
@@ -373,7 +392,7 @@
   <nav class="landing-nav">
     <div class="landing-logo">
       <div class="landing-logo-icon"><i class="fas fa-store-alt"></i></div>
-      <div class="landing-logo-text"><h1>Bright Mesh HR</h1><span>Supermarket & Grocery</span></div>
+      <div class="landing-logo-text"><h1>Bright Mesh HR</h1><span>Supermarket &amp; Grocery</span></div>
     </div>
     <div class="landing-nav-links">
       <a onclick="scrollToSection('features')">Features</a>
@@ -405,7 +424,7 @@
       <div class="hero-card">
         <div class="hero-card-header"><h4>Team Payroll</h4><span>This Month</span></div>
         <div class="hero-mini-row"><div class="hero-mini-avatar" style="background:#e6f5ee;color:#1e6b4b;">MS</div><div class="hero-mini-info"><strong>Maria Santos</strong><span>Produce Manager</span></div><div class="hero-mini-amount">UGX 5.8M</div></div>
-        <div class="hero-mini-row"><div class="hero-mini-avatar" style="background:#fff3e2;color:#a55c00;">JT</div><div class="hero-mini-info"><strong>James Thompson</strong><span>Meat & Seafood</span></div><div class="hero-mini-amount">UGX 6.5M</div></div>
+        <div class="hero-mini-row"><div class="hero-mini-avatar" style="background:#fff3e2;color:#a55c00;">JT</div><div class="hero-mini-info"><strong>James Thompson</strong><span>Meat &amp; Seafood</span></div><div class="hero-mini-amount">UGX 6.5M</div></div>
         <div class="hero-mini-row"><div class="hero-mini-avatar" style="background:#e6f0ff;color:#1e4b8a;">AP</div><div class="hero-mini-info"><strong>Aisha Patel</strong><span>Bakery Manager</span></div><div class="hero-mini-amount">UGX 5.4M</div></div>
         <div class="hero-mini-row"><div class="hero-mini-avatar" style="background:#f0e9ff;color:#5e2e8a;">RC</div><div class="hero-mini-info"><strong>Robert Chen</strong><span>Store Manager</span></div><div class="hero-mini-amount">UGX 9.7M</div></div>
       </div>
@@ -416,11 +435,11 @@
     <div class="section-header"><h3>Everything your store needs</h3><p>Built specifically for supermarkets and grocery retailers — from produce to front end.</p></div>
     <div class="features-grid">
       <div class="feature-card"><div class="feature-icon" style="background:#e6f5ee;color:#1e6b4b;"><i class="fas fa-users"></i></div><h4>Employee Management</h4><p>Add, edit, and organize all your staff across every department with full profile details.</p></div>
-      <div class="feature-card"><div class="feature-icon" style="background:#fff3e2;color:#a55c00;"><i class="fas fa-money-bill-wave"></i></div><h4>Salary & Allowances</h4><p>Track base salaries plus daily, weekly, or monthly allowances in Ugandan Shillings (UGX).</p></div>
+      <div class="feature-card"><div class="feature-icon" style="background:#fff3e2;color:#a55c00;"><i class="fas fa-money-bill-wave"></i></div><h4>Salary &amp; Allowances</h4><p>Track base salaries plus daily, weekly, or monthly allowances in Ugandan Shillings (UGX).</p></div>
       <div class="feature-card"><div class="feature-icon" style="background:#e6f0ff;color:#1e4b8a;"><i class="fas fa-calendar-week"></i></div><h4>Weekly Scheduling</h4><p>Build weekly shifts for cashiers with colored segments and enforced off-day rules.</p></div>
-      <div class="feature-card"><div class="feature-icon" style="background:#f0e9ff;color:#5e2e8a;"><i class="fas fa-file-invoice-dollar"></i></div><h4>Payroll & Payslips</h4><p>Generate monthly payslips with automatic NSSF, PAYE, and absence deductions.</p></div>
+      <div class="feature-card"><div class="feature-icon" style="background:#f0e9ff;color:#5e2e8a;"><i class="fas fa-file-invoice-dollar"></i></div><h4>Payroll &amp; Payslips</h4><p>Generate monthly payslips with automatic NSSF, PAYE, and absence deductions.</p></div>
       <div class="feature-card"><div class="feature-icon" style="background:#ffe8e8;color:#d64545;"><i class="fas fa-shield-alt"></i></div><h4>Device Audit Trail</h4><p>Detect mobile clock-ins with OS, browser, and device type tracking.</p></div>
-      <div class="feature-card"><div class="feature-icon" style="background:#e8f4ff;color:#2d7ab3;"><i class="fas fa-user-clock"></i></div><h4>Manager Overrides</h4><p>Force clock-out forgotten shifts and clean up duplicate attendance records.</p></div>
+      <div class="feature-card"><div class="feature-icon" style="background:#e8f4ff;color:#2d7ab3;"><i class="fas fa-chart-line"></i></div><h4>Compliance Reports</h4><p>Daily attendance, punctuality, and full-hours compliance for every employee.</p></div>
     </div>
   </section>
 
@@ -444,7 +463,7 @@
   </section>
 
   <footer class="landing-footer">
-    <p>© 2025 <strong>Bright Mesh HR</strong> · Supermarket & Grocery Employee Management · Made with ❤️ in Uganda</p>
+    <p>© 2025 <strong>Bright Mesh HR</strong> · Supermarket &amp; Grocery Employee Management · Made with ❤️ in Uganda</p>
   </footer>
 </div>
 
@@ -472,7 +491,7 @@
   <header class="app-header">
     <div class="logo-area">
       <div class="logo-icon"><i class="fas fa-store-alt"></i></div>
-      <div class="logo-text"><h1>Bright Mesh HR</h1><span id="appSubtitle">supermarket & grocery · employee management</span></div>
+      <div class="logo-text"><h1>Bright Mesh HR</h1><span id="appSubtitle">supermarket &amp; grocery · employee management</span></div>
     </div>
     <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
       <div class="user-badge">
@@ -496,6 +515,7 @@
     <button class="dash-tab" data-role="manager" data-tab="users"><i class="fas fa-user-plus"></i> Manage Users</button>
     <button class="dash-tab" data-role="manager" data-tab="schedule"><i class="fas fa-calendar-week"></i> Schedule</button>
     <button class="dash-tab" data-role="manager" data-tab="attendance"><i class="fas fa-clock"></i> Attendance</button>
+    <button class="dash-tab" data-role="manager" data-tab="reports"><i class="fas fa-chart-line"></i> Reports</button>
     <button class="dash-tab" data-role="manager" data-tab="payroll"><i class="fas fa-file-invoice-dollar"></i> Payroll</button>
     <button class="dash-tab" data-role="manager" data-tab="leave"><i class="fas fa-umbrella-beach"></i> Leave Approvals</button>
     <button class="dash-tab" data-role="all" data-tab="myschedule"><i class="fas fa-calendar-alt"></i> My Schedule</button>
@@ -592,7 +612,7 @@
       </div>
       <div style="background:#e6f0ff;border:1.5px solid #c2d6f5;border-radius:14px;padding:14px 18px;margin-bottom:18px;font-size:0.85rem;color:#1e4b8a;font-weight:600;">
         <i class="fas fa-info-circle" style="margin-right:8px;"></i>
-        Click a cell to assign a shift. Hover over a saved shift and click <strong>✕</strong> to delete. Use <strong>Clear Week</strong> to wipe the entire week. Each cashier needs at least <strong>1 off-day</strong>. Cashiers can only swap <strong>future</strong> shifts.
+        Click a cell to assign a shift, mark an <strong>off‑day</strong>, or tag <strong>ABSENT</strong> (bright red). Hover over a saved shift and click <strong>✕</strong> to delete. Use <strong>Clear Week</strong> to wipe the entire week. Each cashier needs at least <strong>1 off‑day</strong>.
       </div>
       <div id="scheduleGridContainer"></div>
     </div>
@@ -623,6 +643,56 @@
         <table style="min-width:1100px;">
           <thead><tr><th>Date</th><th>Employee</th><th>Scheduled</th><th>Clock In</th><th>Clock Out</th><th>Hours</th><th>Device</th><th>Status</th><th style="text-align:center;">Actions</th></tr></thead>
           <tbody id="attendanceTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- REPORTS (NEW) -->
+  <div class="tab-panel" id="panel-reports">
+    <div class="admin-card">
+      <div class="admin-card-header">
+        <h3><i class="fas fa-chart-line"></i> Daily Attendance &amp; Compliance Report</h3>
+        <button class="btn btn-outline btn-sm" onclick="exportReportCSV()"><i class="fas fa-download"></i> Export CSV</button>
+      </div>
+      <div class="report-toolbar">
+        <div class="form-group">
+          <label>Employee</label>
+          <select id="reportEmployeeFilter">
+            <option value="">All Employees</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>From Date</label>
+          <input type="date" id="reportDateFrom">
+        </div>
+        <div class="form-group">
+          <label>To Date</label>
+          <input type="date" id="reportDateTo">
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="renderReport()" style="margin-bottom:0;"><i class="fas fa-sync"></i> Apply</button>
+        <button class="btn btn-outline btn-sm" onclick="resetReportFilters()" style="margin-bottom:0;"><i class="fas fa-undo"></i> Reset</button>
+      </div>
+
+      <div class="report-summary" id="reportSummary"></div>
+
+      <div style="overflow-x:auto;">
+        <table style="min-width:1000px;">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Employee</th>
+              <th>Scheduled</th>
+              <th>Clock In</th>
+              <th>Clock Out</th>
+              <th>Hours</th>
+              <th>Attendance</th>
+              <th>Punctuality</th>
+              <th>Full Hours</th>
+              <th>Compliance</th>
+            </tr>
+          </thead>
+          <tbody id="reportTableBody"></tbody>
         </table>
       </div>
     </div>
@@ -757,7 +827,7 @@
   <!-- MY PAYSLIPS -->
   <div class="tab-panel" id="panel-mypayslips">
     <div class="admin-card">
-      <div class="admin-card-header"><h3><i class="fas fa-receipt"></i> My Payslips & Deductions</h3></div>
+      <div class="admin-card-header"><h3><i class="fas fa-receipt"></i> My Payslips &amp; Deductions</h3></div>
       <div style="overflow-x:auto;">
         <table style="min-width:800px;">
           <thead><tr><th>Month</th><th>Gross Pay</th><th>NSSF</th><th>PAYE</th><th>Other Deductions</th><th>Net Pay</th><th style="text-align:center;">View</th></tr></thead>
@@ -779,7 +849,7 @@
       <div class="logo-icon" style="background:linear-gradient(135deg,#8a4b3c,#b45a2c);"><i class="fas fa-crown"></i></div>
       <div class="logo-text">
         <h1 style="background:linear-gradient(145deg,#8a4b3c,#b45a2c);-webkit-background-clip:text;background-clip:text;">Admin Control</h1>
-        <span>master dashboard · locations, companies & branches</span>
+        <span>master dashboard · locations, companies &amp; branches</span>
       </div>
     </div>
     <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
@@ -814,7 +884,7 @@
 
   <div class="admin-tabs">
     <button class="admin-tab active" data-atab="locations" onclick="switchAdminTab('locations', this)"><i class="fas fa-map-marker-alt"></i> 1. Locations</button>
-    <button class="admin-tab" data-atab="companies" onclick="switchAdminTab('companies', this)"><i class="fas fa-building"></i> 2. Companies & Managers</button>
+    <button class="admin-tab" data-atab="companies" onclick="switchAdminTab('companies', this)"><i class="fas fa-building"></i> 2. Companies &amp; Managers</button>
     <button class="admin-tab" data-atab="users" onclick="switchAdminTab('users', this)"><i class="fas fa-users-cog"></i> All Users</button>
     <button class="admin-tab" data-atab="firestore" onclick="switchAdminTab('firestore', this)"><i class="fas fa-database"></i> All Firestore Data</button>
     <button class="admin-tab" data-atab="billing" onclick="switchAdminTab('billing', this)"><i class="fas fa-file-invoice"></i> Billing Preview</button>
@@ -834,7 +904,7 @@
   <div class="admin-panel" id="admin-panel-companies">
     <div class="admin-card">
       <div class="admin-card-header">
-        <h3><i class="fas fa-building"></i> Companies & Managers</h3>
+        <h3><i class="fas fa-building"></i> Companies &amp; Managers</h3>
         <button class="btn btn-primary btn-sm" onclick="showCreateCompanyModal()"><i class="fas fa-plus"></i> Create New Company</button>
       </div>
       <p style="font-size:0.85rem;color:#62759b;margin-bottom:18px;"><strong>Step 2:</strong> Create companies, then assign them to locations.</p>
@@ -907,8 +977,8 @@
             <select id="empDepartment" required>
               <option value="">Select department</option>
               <option>Front End</option>
-              <option>Produce</option><option>Meat & Seafood</option><option>Bakery</option>
-              <option>Deli</option><option>Dairy & Frozen</option><option>Grocery</option>
+              <option>Produce</option><option>Meat &amp; Seafood</option><option>Bakery</option>
+              <option>Deli</option><option>Dairy &amp; Frozen</option><option>Grocery</option>
               <option>Customer Service</option><option>Inventory</option>
               <option>Floral</option><option>Security</option><option>Management</option>
             </select>
@@ -950,7 +1020,7 @@
         <div class="form-group">
           <label>Upload Documents</label>
           <div class="file-upload-area" id="fileUploadArea">
-            <i class="fas fa-cloud-upload-alt"></i><p>Click to upload or drag & drop files</p><span>PDF, DOC, JPG, PNG — multiple files allowed</span>
+            <i class="fas fa-cloud-upload-alt"></i><p>Click to upload or drag &amp; drop files</p><span>PDF, DOC, JPG, PNG — multiple files allowed</span>
             <input type="file" id="fileInput" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
           </div>
           <ul class="file-list" id="fileList"></ul>
@@ -987,8 +1057,8 @@
             <select id="editDepartment" required>
               <option value="">Select department</option>
               <option>Front End</option>
-              <option>Produce</option><option>Meat & Seafood</option><option>Bakery</option>
-              <option>Deli</option><option>Dairy & Frozen</option><option>Grocery</option>
+              <option>Produce</option><option>Meat &amp; Seafood</option><option>Bakery</option>
+              <option>Deli</option><option>Dairy &amp; Frozen</option><option>Grocery</option>
               <option>Customer Service</option><option>Inventory</option>
               <option>Floral</option><option>Security</option><option>Management</option>
             </select>
@@ -1179,7 +1249,7 @@
 
 <div class="modal-overlay" id="createCompanyModal" data-closeable="true">
   <div class="modal" style="max-width: 580px;">
-    <div class="modal-header"><h2><i class="fas fa-building"></i> Create Company & Manager</h2><button class="modal-close" onclick="closeModal('createCompanyModal')"><i class="fas fa-times"></i></button></div>
+    <div class="modal-header"><h2><i class="fas fa-building"></i> Create Company &amp; Manager</h2><button class="modal-close" onclick="closeModal('createCompanyModal')"><i class="fas fa-times"></i></button></div>
     <div class="modal-body">
       <form id="createCompanyForm">
         <div class="form-group"><label>Company Name <span style="color:#d64545;">*</span></label><input type="text" id="newCompanyName" placeholder="e.g. Quality Supermarket Ltd" required></div>
@@ -1340,6 +1410,7 @@
   const SESSION_KEY = 'brightMeshHR_session';
   const OFF_DAYS_PER_MONTH = 4;
   const CASHIER_COLOR_PALETTE = ['#1e6b4b', '#3f66d0', '#8a4b3c', '#9c4b8a', '#2f7a6b', '#b45a2c', '#4b6b8a', '#b24b8b', '#6b4b2c', '#1e5a7a'];
+  const ABSENT_COLOR = '#ff0000';
 
   const state = {
     employees: [], users: [], locations: [], companies: [],
@@ -1348,7 +1419,6 @@
     currentUser: null
   };
 
-  // Global lock to prevent duplicate clock-in clicks
   let clockInLock = false;
 
   // ---------- HELPERS ----------
@@ -1554,6 +1624,9 @@
       renderManagerLocations(); renderManagerUsers();
       populateEmployeeLocationDropdown('empLocation', '');
       populateEmployeeLinkDropdown();
+      populateReportEmployeeFilter();
+      initReportDates();
+      renderReport();
     }
     if (!document.getElementById('myScheduleWeek').value)
       document.getElementById('myScheduleWeek').value = formatDateISO(getWeekStart());
@@ -1616,6 +1689,7 @@
     }
     if (tab === 'swaps') { renderMySwapRequests(); renderIncomingSwapRequests(); }
     if (tab === 'attendance' && isManager()) renderAttendance();
+    if (tab === 'reports' && isManager()) { populateReportEmployeeFilter(); renderReport(); }
     if (tab === 'payroll' && isManager()) renderPayrollTable();
     if (tab === 'leave' && isManager()) renderLeave();
     if (tab === 'locations' && isManager()) renderManagerLocations();
@@ -1694,8 +1768,9 @@
     const record = state.attendance.find(a => a.employeeId === emp.id && a.date === today);
     const todayShift = state.schedules.find(s => s.employeeId === emp.id && s.date === today);
     let shiftInfo = '';
-    if (todayShift && !todayShift.isOff) shiftInfo = ` · Scheduled: ${todayShift.startTime}–${todayShift.endTime}`;
+    if (todayShift && !todayShift.isOff && !todayShift.isAbsent) shiftInfo = ` · Scheduled: ${todayShift.startTime}–${todayShift.endTime}`;
     else if (todayShift && todayShift.isOff) shiftInfo = ' · Off day today';
+    else if (todayShift && todayShift.isAbsent) shiftInfo = ' · Tagged absent today';
     if (!record || !record.clockIn) { statusEl.textContent = 'You haven\'t clocked in today yet.' + shiftInfo; if (inBtn) inBtn.disabled = false; if (outBtn) outBtn.disabled = true; }
     else if (!record.clockOut) { statusEl.textContent = `Clocked in at ${record.clockIn}. Don't forget to clock out!` + shiftInfo; if (inBtn) inBtn.disabled = true; if (outBtn) outBtn.disabled = false; }
     else { statusEl.textContent = `Completed today: ${record.clockIn} → ${record.clockOut} (${record.hours}h)` + shiftInfo; if (inBtn) inBtn.disabled = true; if (outBtn) outBtn.disabled = true; }
@@ -1728,19 +1803,14 @@
 
   // ---------- CLOCK IN (duplicate prevention) ----------
   window.selfClockIn = async function() {
-    // Duplicate click prevention
     if (clockInLock) {
       showToast('⚠️ Please wait — your clock-in is being processed...', 'info');
       return;
     }
-
     const emp = myEmployeeRecord();
     if (!emp) { showToast('⚠️ No employee record linked', 'info'); return; }
-
     const today = new Date().toISOString().slice(0, 10);
     const existing = state.attendance.find(a => a.employeeId === emp.id && a.date === today);
-
-    // Already clocked in — warn user, do not save a duplicate
     if (existing && existing.clockIn) {
       const outBtn = document.getElementById('bigClockOutBtn');
       const inBtn = document.getElementById('bigClockInBtn');
@@ -1754,23 +1824,18 @@
       }
       return;
     }
-
-    // Acquire lock
     clockInLock = true;
     const inBtn = document.getElementById('bigClockInBtn');
     if (inBtn) {
       inBtn.disabled = true;
       inBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
     }
-
     const now = new Date().toTimeString().slice(0, 5);
-
-    // Auto late detection
     let isLate = false;
     let scheduledStart = null;
     let lateByMinutes = 0;
     const todayShift = state.schedules.find(s => s.employeeId === emp.id && s.date === today);
-    if (todayShift && !todayShift.isOff && todayShift.startTime) {
+    if (todayShift && !todayShift.isOff && !todayShift.isAbsent && todayShift.startTime) {
       scheduledStart = todayShift.startTime;
       const [sh, sm] = scheduledStart.split(':').map(Number);
       const [ch, cm] = now.split(':').map(Number);
@@ -1781,9 +1846,7 @@
         lateByMinutes = clockInMin - scheduledMin;
       }
     }
-
     const device = detectDevice();
-
     try {
       const data = {
         employeeId: emp.id,
@@ -1800,12 +1863,9 @@
       };
       const newId = await fsAdd('attendance', data);
       state.attendance.push({ id: newId, ...data });
-
       refreshMyClockStatus(); renderMyAttendance(); if (isManager()) renderAttendance();
       const lateMsg = isLate ? ` (late by ${lateByMinutes} min)` : '';
       showToast(`✅ Clocked in at ${now}${lateMsg}`, isLate ? 'info' : 'success');
-
-      // Strong reminder to clock out later
       setTimeout(() => {
         alert(`You clocked in at ${now}.\n\n⚠️ Remember to CLOCK OUT when your shift ends — if you forget, your manager must manually clock you out.`);
       }, 500);
@@ -1831,9 +1891,7 @@
     const [h1, m1] = record.clockIn.split(':').map(Number);
     const [h2, m2] = now.split(':').map(Number);
     const hours = Math.max(0, ((h2 * 60 + m2) - (h1 * 60 + m1)) / 60);
-
     const device = detectDevice();
-
     try {
       await fsUpdate('attendance', record.id, {
         clockOut: now,
@@ -1913,7 +1971,7 @@
       if (dateStr > today) continue;
       const hasRecord = state.attendance.some(a => a.employeeId === empId && a.date === dateStr && a.clockIn);
       const onApprovedLeave = state.leaves.some(l => l.employeeId === empId && l.status === 'approved' && l.startDate <= dateStr && l.endDate >= dateStr);
-      const isScheduledOff = state.schedules.some(s => s.employeeId === empId && s.date === dateStr && s.isOff);
+      const isScheduledOff = state.schedules.some(s => s.employeeId === empId && s.date === dateStr && (s.isOff || s.isAbsent));
       if (!hasRecord && !onApprovedLeave && !isScheduledOff) absentCount++;
     }
     return absentCount;
@@ -2150,7 +2208,7 @@
       const newId = await fsAdd('employees', empData);
       state.employees.push({ id: newId, ...empData });
       renderTable(document.getElementById('searchInput').value); updateStats();
-      populateEmployeeLinkDropdown(); renderManagerLocations();
+      populateEmployeeLinkDropdown(); renderManagerLocations(); populateReportEmployeeFilter();
       closeModal('employeeModal'); pendingFiles = [];
       showToast(`✨ ${name} saved`, 'success');
     } catch (err) { showToast('❌ ' + err.message, 'error'); }
@@ -2250,7 +2308,7 @@
       if (pendingEditFiles.length > 0) updates.files = [...(emp.files || []), ...pendingEditFiles.map(f => f.name)];
       await fsUpdate('employees', id, updates);
       Object.assign(emp, updates);
-      renderTable(document.getElementById('searchInput').value); updateStats(); renderManagerLocations();
+      renderTable(document.getElementById('searchInput').value); updateStats(); renderManagerLocations(); populateReportEmployeeFilter();
       closeModal('editModal'); pendingEditFiles = [];
       showToast(`✏️ ${emp.name} updated`, 'success');
     } catch (err) { showToast('❌ ' + err.message, 'error'); }
@@ -2259,7 +2317,7 @@
   window.deleteEmployee = async function(id) {
     const emp = state.employees.find(e => e.id === id); if (!emp) return;
     if (confirm(`Delete ${emp.name}?`)) {
-      try { await fsDelete('employees', id); state.employees = state.employees.filter(e => e.id !== id); renderTable(document.getElementById('searchInput').value); updateStats(); populateEmployeeLinkDropdown(); renderManagerLocations(); showToast('🗑️ Removed', 'info'); }
+      try { await fsDelete('employees', id); state.employees = state.employees.filter(e => e.id !== id); renderTable(document.getElementById('searchInput').value); updateStats(); populateEmployeeLinkDropdown(); renderManagerLocations(); populateReportEmployeeFilter(); showToast('🗑️ Removed', 'info'); }
       catch (err) { showToast('❌ ' + err.message, 'error'); }
     }
   };
@@ -2363,7 +2421,6 @@
     const tbody = document.getElementById('attendanceTableBody'); if (!tbody) return;
     if (recent.length === 0) { tbody.innerHTML = '<tr class="empty-row"><td colspan="9">No attendance records yet.</td></tr>'; return; }
 
-    // Duplicate detection: same employee + same date
     const dupCounts = {};
     myAtt.forEach(r => {
       const key = r.employeeId + '|' + r.date;
@@ -2391,12 +2448,10 @@
           </div>`;
       }
 
-      // Duplicate badge
       const dupKey = a.employeeId + '|' + a.date;
       const isDup = dupCounts[dupKey] > 1;
       const dupBadge = isDup ? `<span class="badge badge-red" style="font-size:0.68rem;margin-left:6px;" title="Duplicate — same employee+date appears ${dupCounts[dupKey]} times">DUPLICATE</span>` : '';
 
-      // Force clock-out if open
       const isOpen = a.clockIn && !a.clockOut;
       const forceBtn = isOpen
         ? `<button class="icon-btn" onclick="openForceClockOut('${a.employeeId}', '${a.date}')" title="Force Clock Out" style="color:#d68b2c;border-color:#ffd8a8;background:#fff9ee;"><i class="fas fa-user-clock"></i></button>`
@@ -2519,6 +2574,251 @@
     } catch (err) { showToast('❌ ' + err.message, 'error'); }
   };
 
+  // ---------- REPORTS (NEW) ----------
+  function populateReportEmployeeFilter() {
+    const sel = document.getElementById('reportEmployeeFilter'); if (!sel) return;
+    const emps = myEmployees().sort((a, b) => a.name.localeCompare(b.name));
+    const currentVal = sel.value;
+    sel.innerHTML = '<option value="">All Employees</option>' + emps.map(e => `<option value="${e.id}">${escapeHtml(e.name)} — ${escapeHtml(e.role)}</option>`).join('');
+    if (currentVal) sel.value = currentVal;
+  }
+
+  function initReportDates() {
+    const fromEl = document.getElementById('reportDateFrom');
+    const toEl = document.getElementById('reportDateTo');
+    if (!fromEl.value) {
+      const d = new Date();
+      d.setDate(d.getDate() - 14);
+      fromEl.value = d.toISOString().slice(0, 10);
+    }
+    if (!toEl.value) toEl.value = new Date().toISOString().slice(0, 10);
+  }
+
+  window.resetReportFilters = function() {
+    document.getElementById('reportEmployeeFilter').value = '';
+    initReportDates();
+    renderReport();
+  };
+
+  // Compliance calculation
+  function calcComplianceForRecord(record, shift, emp) {
+    // Attendance: 100 if clocked in, 0 otherwise
+    const attendanceScore = (record && record.clockIn) ? 100 : 0;
+    // Punctuality: 100 if on time or early, scaled down by lateness
+    let punctualityScore = 0;
+    if (record && record.clockIn) {
+      if (record.status === 'late' && record.lateByMinutes > 0) {
+        // Deduct 1 point per minute late, min 0
+        punctualityScore = Math.max(0, 100 - record.lateByMinutes * 2);
+      } else {
+        punctualityScore = 100;
+      }
+    }
+    // Full hours: 100 if worked >= scheduled hours (or 8h default), scaled down
+    let fullHoursScore = 0;
+    const scheduledHours = shift && !shift.isOff && !shift.isAbsent && shift.startTime && shift.endTime
+      ? computeShiftHours(shift.startTime, shift.endTime)
+      : 8;
+    if (record && record.clockIn && record.clockOut) {
+      const workedHours = record.hours || 0;
+      if (workedHours >= scheduledHours) fullHoursScore = 100;
+      else fullHoursScore = Math.max(0, Math.round((workedHours / scheduledHours) * 100));
+    } else if (record && record.clockIn && !record.clockOut) {
+      fullHoursScore = 0; // open shift, no full hours yet
+    } else {
+      fullHoursScore = 0;
+    }
+    const overall = Math.round((attendanceScore + punctualityScore + fullHoursScore) / 3);
+    return { attendanceScore, punctualityScore, fullHoursScore, overall };
+  }
+
+  function computeShiftHours(start, end) {
+    if (!start || !end) return 8;
+    const [sh, sm] = start.split(':').map(Number);
+    const [eh, em] = end.split(':').map(Number);
+    let mins = (eh * 60 + em) - (sh * 60 + sm);
+    if (mins < 0) mins += 24 * 60;
+    return mins / 60;
+  }
+
+  function scoreClass(score) {
+    if (score >= 80) return 'good';
+    if (score >= 50) return 'warn';
+    return 'bad';
+  }
+
+  window.renderReport = function() {
+    const tbody = document.getElementById('reportTableBody');
+    const summaryEl = document.getElementById('reportSummary');
+    if (!tbody) return;
+    const empFilter = document.getElementById('reportEmployeeFilter').value;
+    const from = document.getElementById('reportDateFrom').value;
+    const to = document.getElementById('reportDateTo').value;
+    if (!from || !to) { tbody.innerHTML = '<tr class="empty-row"><td colspan="10">Please select a date range.</td></tr>'; if (summaryEl) summaryEl.innerHTML = ''; return; }
+    if (from > to) { tbody.innerHTML = '<tr class="empty-row"><td colspan="10">From date must be before To date.</td></tr>'; if (summaryEl) summaryEl.innerHTML = ''; return; }
+
+    const emps = myEmployees();
+    const filteredEmps = empFilter ? emps.filter(e => e.id === empFilter) : emps;
+    if (filteredEmps.length === 0) { tbody.innerHTML = '<tr class="empty-row"><td colspan="10">No employees found.</td></tr>'; if (summaryEl) summaryEl.innerHTML = ''; return; }
+
+    // Build rows per employee per day
+    const rows = [];
+    const startDate = new Date(from + 'T00:00:00');
+    const endDate = new Date(to + 'T00:00:00');
+    const today = new Date().toISOString().slice(0, 10);
+
+    for (const emp of filteredEmps) {
+      for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+        const dateStr = formatDateISO(d);
+        if (dateStr > today) continue; // skip future dates
+
+        const shift = getShiftFor(emp.id, dateStr);
+        const record = state.attendance.find(a => a.employeeId === emp.id && a.date === dateStr);
+        const isOffDay = shift && shift.isOff;
+        const isAbsentTagged = shift && shift.isAbsent;
+        const isApprovedLeave = state.leaves.some(l => l.employeeId === emp.id && l.status === 'approved' && l.startDate <= dateStr && l.endDate >= dateStr);
+
+        // Skip off-days and leave days in compliance calc (they're not required to work)
+        if (isOffDay || isApprovedLeave) continue;
+
+        const comp = calcComplianceForRecord(record, shift, emp);
+        const scheduled = shift && !shift.isOff && !shift.isAbsent
+          ? `${shift.startTime}–${shift.endTime}`
+          : '—';
+
+        let attendanceBadge, punctualityBadge, fullHoursBadge;
+        if (record && record.clockIn) {
+          attendanceBadge = '<span class="badge badge-green" style="font-size:0.7rem;">Present</span>';
+        } else if (isAbsentTagged) {
+          attendanceBadge = '<span class="badge" style="background:#ff0000;color:#fff;font-size:0.7rem;">Absent</span>';
+        } else {
+          attendanceBadge = '<span class="badge badge-red" style="font-size:0.7rem;">Absent</span>';
+        }
+
+        if (!record || !record.clockIn) {
+          punctualityBadge = '<span style="color:#a8bccf;font-size:0.78rem;">—</span>';
+          fullHoursBadge = '<span style="color:#a8bccf;font-size:0.78rem;">—</span>';
+        } else {
+          const pCls = scoreClass(comp.punctualityScore);
+          punctualityBadge = `<span style="font-weight:700;font-size:0.78rem;color:${pCls === 'good' ? '#0b6b4e' : pCls === 'warn' ? '#a55c00' : '#d64545'};">${comp.punctualityScore}%</span>`;
+          const fCls = scoreClass(comp.fullHoursScore);
+          fullHoursBadge = `<span style="font-weight:700;font-size:0.78rem;color:${fCls === 'good' ? '#0b6b4e' : fCls === 'warn' ? '#a55c00' : '#d64545'};">${comp.fullHoursScore}%</span>`;
+        }
+
+        rows.push({
+          date: dateStr,
+          emp,
+          scheduled,
+          clockIn: record && record.clockIn ? record.clockIn : '—',
+          clockOut: record && record.clockOut ? record.clockOut : (record && record.clockIn ? 'open' : '—'),
+          hours: record && record.hours ? record.hours.toFixed(1) + 'h' : '—',
+          attendanceBadge,
+          punctualityBadge,
+          fullHoursBadge,
+          comp
+        });
+      }
+    }
+
+    // Sort rows by date desc then employee name
+    rows.sort((a, b) => b.date.localeCompare(a.date) || a.emp.name.localeCompare(b.emp.name));
+
+    if (rows.length === 0) {
+      tbody.innerHTML = '<tr class="empty-row"><td colspan="10">No records for the selected range.</td></tr>';
+      if (summaryEl) summaryEl.innerHTML = '';
+      return;
+    }
+
+    // Summary
+    const totalRecords = rows.length;
+    const avgOverall = Math.round(rows.reduce((s, r) => s + r.comp.overall, 0) / totalRecords);
+    const avgAttendance = Math.round(rows.reduce((s, r) => s + r.comp.attendanceScore, 0) / totalRecords);
+    const avgPunctuality = Math.round(rows.reduce((s, r) => s + r.comp.punctualityScore, 0) / totalRecords);
+    const avgFullHours = Math.round(rows.reduce((s, r) => s + r.comp.fullHoursScore, 0) / totalRecords);
+    const goodCount = rows.filter(r => r.comp.overall >= 80).length;
+    const warnCount = rows.filter(r => r.comp.overall >= 50 && r.comp.overall < 80).length;
+    const badCount = rows.filter(r => r.comp.overall < 50).length;
+
+    summaryEl.innerHTML = `
+      <div class="card"><div class="label">Records</div><div class="value">${totalRecords}</div></div>
+      <div class="card"><div class="label">Avg Compliance</div><div class="value ${scoreClass(avgOverall)}">${avgOverall}%</div></div>
+      <div class="card"><div class="label">Avg Attendance</div><div class="value ${scoreClass(avgAttendance)}">${avgAttendance}%</div></div>
+      <div class="card"><div class="label">Avg Punctuality</div><div class="value ${scoreClass(avgPunctuality)}">${avgPunctuality}%</div></div>
+      <div class="card"><div class="label">Avg Full Hours</div><div class="value ${scoreClass(avgFullHours)}">${avgFullHours}%</div></div>
+      <div class="card"><div class="label">Good / Warn / Poor</div><div class="value" style="font-size:1.2rem;">${goodCount} / ${warnCount} / ${badCount}</div></div>
+    `;
+
+    tbody.innerHTML = rows.map(r => {
+      const initials = getInitials(r.emp.name);
+      const color = r.emp.avatarColor || getAvatarColor(r.emp.name);
+      const overallCls = scoreClass(r.comp.overall);
+      return `<tr>
+        <td>${r.date}</td>
+        <td><div style="display:flex;align-items:center;gap:8px;"><div class="avatar" style="width:28px;height:28px;border-radius:8px;font-size:0.72rem;background:${color}20;color:${color};">${initials}</div><span style="font-weight:600;">${escapeHtml(r.emp.name)}</span></div></td>
+        <td>${r.scheduled}</td>
+        <td>${r.clockIn}</td>
+        <td>${r.clockOut}</td>
+        <td>${r.hours}</td>
+        <td>${r.attendanceBadge}</td>
+        <td>${r.punctualityBadge}</td>
+        <td>${r.fullHoursBadge}</td>
+        <td>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="font-weight:800;font-size:0.85rem;color:${overallCls === 'good' ? '#0b6b4e' : overallCls === 'warn' ? '#a55c00' : '#d64545'};min-width:42px;">${r.comp.overall}%</span>
+            <div class="compliance-bar" style="flex:1;"><div class="fill ${overallCls}" style="width:${r.comp.overall}%;"></div></div>
+          </div>
+        </td>
+      </tr>`;
+    }).join('');
+  };
+
+  window.exportReportCSV = function() {
+    const empFilter = document.getElementById('reportEmployeeFilter').value;
+    const from = document.getElementById('reportDateFrom').value;
+    const to = document.getElementById('reportDateTo').value;
+    if (!from || !to) { showToast('⚠️ Select a date range', 'info'); return; }
+    const emps = myEmployees();
+    const filteredEmps = empFilter ? emps.filter(e => e.id === empFilter) : emps;
+    const rows = [];
+    const startDate = new Date(from + 'T00:00:00');
+    const endDate = new Date(to + 'T00:00:00');
+    const today = new Date().toISOString().slice(0, 10);
+    for (const emp of filteredEmps) {
+      for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+        const dateStr = formatDateISO(d);
+        if (dateStr > today) continue;
+        const shift = getShiftFor(emp.id, dateStr);
+        const record = state.attendance.find(a => a.employeeId === emp.id && a.date === dateStr);
+        const isOffDay = shift && shift.isOff;
+        const isApprovedLeave = state.leaves.some(l => l.employeeId === emp.id && l.status === 'approved' && l.startDate <= dateStr && l.endDate >= dateStr);
+        if (isOffDay || isApprovedLeave) continue;
+        const comp = calcComplianceForRecord(record, shift, emp);
+        rows.push([
+          dateStr,
+          emp.name,
+          shift && !shift.isOff && !shift.isAbsent ? `${shift.startTime}-${shift.endTime}` : '',
+          record && record.clockIn ? record.clockIn : '',
+          record && record.clockOut ? record.clockOut : '',
+          record && record.hours ? record.hours.toFixed(2) : '',
+          comp.attendanceScore + '%',
+          comp.punctualityScore + '%',
+          comp.fullHoursScore + '%',
+          comp.overall + '%'
+        ]);
+      }
+    }
+    if (rows.length === 0) { showToast('⚠️ No data to export', 'info'); return; }
+    const csv = ['Date,Employee,Scheduled,Clock In,Clock Out,Hours,Attendance,Punctuality,Full Hours,Compliance']
+      .concat(rows.map(r => r.join(','))).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a'); link.href = url;
+    link.download = `compliance-report-${from}-to-${to}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+    showToast('📥 Report exported', 'success');
+  };
+
   // ---------- SCHEDULE ----------
   window.shiftWeek = function(days) {
     const el = document.getElementById('scheduleWeekStart');
@@ -2558,6 +2858,11 @@
         const shift = getShiftFor(c.id, d);
         if (!shift) {
           html += `<div class="shift-cell empty" onclick="openShiftEditor('${c.id}', '${d}')">+ Add</div>`;
+        } else if (shift.isAbsent) {
+          html += `<div class="shift-cell absent-day" onclick="openShiftEditor('${c.id}', '${d}')">
+            <button class="shift-delete-btn" onclick="event.stopPropagation();deleteShift('${c.id}', '${d}')" title="Delete absent tag"><i class="fas fa-times"></i></button>
+            <div class="shift-time">ABSENT</div>
+          </div>`;
         } else if (shift.isOff) {
           html += `<div class="shift-cell off-day" onclick="openShiftEditor('${c.id}', '${d}')">
             <button class="shift-delete-btn" onclick="event.stopPropagation();deleteShift('${c.id}', '${d}')" title="Delete off-day"><i class="fas fa-times"></i></button>
@@ -2580,26 +2885,32 @@
     const emp = state.employees.find(e => e.id === empId);
     if (!emp) return;
     const existing = getShiftFor(empId, dateStr);
-    const cur = existing ? (existing.isOff ? 'off' : `${existing.startTime}–${existing.endTime}`) : 'none';
+    let cur = 'none';
+    if (existing) {
+      if (existing.isAbsent) cur = 'absent';
+      else if (existing.isOff) cur = 'off';
+      else cur = `${existing.startTime}–${existing.endTime}`;
+    }
     const choice = prompt(
-      `Shift for ${emp.name} on ${dateStr}\n\nEnter:\n  • "off" for an off-day\n  • start time in HH:MM (e.g. 08:00)\n  • or "HH:MM-HH:MM" for a custom range\n\nCurrent: ${cur}`,
-      existing ? (existing.isOff ? 'off' : `${existing.startTime}-${existing.endTime}`) : '08:00-16:00'
+      `Shift for ${emp.name} on ${dateStr}\n\nEnter:\n  • "off" for an off-day\n  • "absent" for an absent day\n  • start time in HH:MM (e.g. 08:00)\n  • or "HH:MM-HH:MM" for a custom range\n\nCurrent: ${cur}`,
+      existing ? (existing.isAbsent ? 'absent' : existing.isOff ? 'off' : `${existing.startTime}-${existing.endTime}`) : '08:00-16:00'
     );
     if (choice === null) return;
-    const trimmed = choice.trim();
-    let isOff = false, startTime = '08:00', endTime = '16:00';
-    if (trimmed.toLowerCase() === 'off') { isOff = true; }
-    else if (/^\d{1,2}:\d{2}$/.test(trimmed)) {
-      startTime = trimmed.padStart(5, '0');
+    const trimmed = choice.trim().toLowerCase();
+    let isOff = false, isAbsent = false, startTime = '08:00', endTime = '16:00';
+    if (trimmed === 'off') { isOff = true; }
+    else if (trimmed === 'absent') { isAbsent = true; }
+    else if (/^\d{1,2}:\d{2}$/.test(choice.trim())) {
+      startTime = choice.trim().padStart(5, '0');
       const [h, m] = startTime.split(':').map(Number);
       const endH = (h + 8) % 24;
       endTime = `${String(endH).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
-    } else if (/^\d{1,2}:\d{2}\s*-\s*\d{1,2}:\d{2}$/.test(trimmed)) {
-      const [s, e] = trimmed.split('-').map(x => x.trim().padStart(5, '0'));
+    } else if (/^\d{1,2}:\d{2}\s*-\s*\d{1,2}:\d{2}$/.test(choice.trim())) {
+      const [s, e] = choice.trim().split('-').map(x => x.trim().padStart(5, '0'));
       startTime = s; endTime = e;
-    } else { showToast('⚠️ Invalid format', 'info'); return; }
+    } else { showToast('⚠️ Invalid format. Use "off", "absent", HH:MM, or HH:MM-HH:MM', 'info'); return; }
     const idx = state.schedules.findIndex(s => s.employeeId === empId && s.date === dateStr);
-    const entry = { employeeId: empId, employeeName: emp.name, date: dateStr, startTime, endTime, isOff, companyId: myCompanyId(), updatedAt: new Date().toISOString(), _dirty: true };
+    const entry = { employeeId: empId, employeeName: emp.name, date: dateStr, startTime, endTime, isOff, isAbsent, companyId: myCompanyId(), updatedAt: new Date().toISOString(), _dirty: true };
     if (idx >= 0) state.schedules[idx] = { ...state.schedules[idx], ...entry };
     else state.schedules.push({ id: 'temp_' + Date.now() + '_' + empId + '_' + dateStr, ...entry });
     renderScheduleGrid();
@@ -2628,7 +2939,7 @@
     if (!shift) return;
     const emp = state.employees.find(e => e.id === empId);
     const empName = emp ? emp.name : 'employee';
-    const shiftDesc = shift.isOff ? 'off-day' : `shift ${shift.startTime}–${shift.endTime}`;
+    const shiftDesc = shift.isAbsent ? 'absent day' : shift.isOff ? 'off-day' : `shift ${shift.startTime}–${shift.endTime}`;
     if (!confirm(`Delete ${empName}'s ${shiftDesc} on ${dateStr}?`)) return;
     try {
       if (shift.id && !shift.id.startsWith('temp_')) await fsDelete('schedules', shift.id);
@@ -2687,6 +2998,7 @@
     days.forEach(d => {
       const shift = getShiftFor(emp.id, d);
       if (!shift) html += `<div class="shift-cell empty" style="cursor:default;">—</div>`;
+      else if (shift.isAbsent) html += `<div class="shift-cell absent-day" style="cursor:default;"><div class="shift-time">ABSENT</div></div>`;
       else if (shift.isOff) html += `<div class="shift-cell off-day" style="cursor:default;"><div class="shift-time">OFF</div></div>`;
       else {
         const isPastOrToday = d <= today;
@@ -2721,6 +3033,7 @@
           days.forEach(d => {
             const shift = getShiftFor(c.id, d);
             if (!shift) th += `<div class="shift-cell empty" style="cursor:default;">—</div>`;
+            else if (shift.isAbsent) th += `<div class="shift-cell absent-day" style="cursor:default;"><div class="shift-time">ABSENT</div></div>`;
             else if (shift.isOff) th += `<div class="shift-cell off-day" style="cursor:default;"><div class="shift-time">OFF</div></div>`;
             else th += `<div class="shift-cell filled" style="background:${color};cursor:default;"><div class="shift-time">${shift.startTime}</div><div class="shift-sub">→ ${shift.endTime}</div></div>`;
           });
@@ -2736,7 +3049,6 @@
     const myEmp = state.employees.find(e => e.id === myEmpId);
     if (!myEmp) return;
 
-    // Block past/today swaps
     const today = new Date().toISOString().slice(0, 10);
     if (dateStr <= today) {
       const isToday = dateStr === today;
@@ -2749,7 +3061,7 @@
     }
 
     const myShift = getShiftFor(myEmpId, dateStr);
-    if (!myShift || myShift.isOff) { showToast('⚠️ You can only swap working shifts', 'info'); return; }
+    if (!myShift || myShift.isOff || myShift.isAbsent) { showToast('⚠️ You can only swap working shifts', 'info'); return; }
     document.getElementById('swapMyShiftId').value = `${myEmpId}|${dateStr}`;
     document.getElementById('swapMyShiftLabel').textContent = `${dayLabel(dateStr)} ${dateStr} · ${myShift.startTime}–${myShift.endTime}`;
     document.getElementById('swapReason').value = '';
@@ -2775,11 +3087,11 @@
     days.forEach(d => {
       if (d <= today) {
         const shift = getShiftFor(targetId, d);
-        if (shift && !shift.isOff) skippedPastCount++;
+        if (shift && !shift.isOff && !shift.isAbsent) skippedPastCount++;
         return;
       }
       const shift = getShiftFor(targetId, d);
-      if (shift && !shift.isOff) options.push(`<option value="${targetId}|${d}">${dayLabel(d)} ${d} · ${shift.startTime}–${shift.endTime}</option>`);
+      if (shift && !shift.isOff && !shift.isAbsent) options.push(`<option value="${targetId}|${d}">${dayLabel(d)} ${d} · ${shift.startTime}–${shift.endTime}</option>`);
     });
     if (options.length === 0) {
       const msg = skippedPastCount > 0 ? '-- No future shifts available (past shifts excluded) --' : '-- This cashier has no working shifts this week --';
@@ -2808,7 +3120,7 @@
     const myShift = getShiftFor(myEmpId, myDate);
     const targetShift = getShiftFor(targetEmpId, targetDate);
     if (!myShift || !targetShift) { showToast('❌ Shift not found', 'error'); return; }
-    if (myShift.isOff || targetShift.isOff) { showToast('❌ Cannot swap an off-day', 'error'); return; }
+    if (myShift.isOff || targetShift.isOff || myShift.isAbsent || targetShift.isAbsent) { showToast('❌ Cannot swap an off-day or absent day', 'error'); return; }
 
     const weekStartForCheck = getWeekStart(myDate);
     const weekDays = [];
@@ -2817,7 +3129,7 @@
       let count = 0;
       weekDays.forEach(d => {
         const s = getShiftFor(empId, d);
-        let works = s && !s.isOff;
+        let works = s && !s.isOff && !s.isAbsent;
         if (d === removeDate) works = false;
         if (d === addDate) works = true;
         if (works) count++;
@@ -2907,7 +3219,7 @@
       let count = 0;
       days.forEach(d => {
         const s = getShiftFor(empId, d);
-        let works = s && !s.isOff;
+        let works = s && !s.isOff && !s.isAbsent;
         if (d === removeDate) works = false;
         if (d === addDate) works = true;
         if (works) count++;
@@ -2933,10 +3245,10 @@
         if (s.employeeId === req.toEmployeeId && s.date === req.toDate) return false;
         return true;
       });
-      const newA = { employeeId: req.toEmployeeId, employeeName: req.toEmployeeName, date: req.fromDate, startTime: req.fromStartTime, endTime: req.fromEndTime, isOff: false, companyId: req.companyId, updatedAt: new Date().toISOString() };
+      const newA = { employeeId: req.toEmployeeId, employeeName: req.toEmployeeName, date: req.fromDate, startTime: req.fromStartTime, endTime: req.fromEndTime, isOff: false, isAbsent: false, companyId: req.companyId, updatedAt: new Date().toISOString() };
       const idA = await fsAdd('schedules', newA);
       state.schedules.push({ id: idA, ...newA });
-      const newB = { employeeId: req.fromEmployeeId, employeeName: req.fromEmployeeName, date: req.toDate, startTime: req.toStartTime, endTime: req.toEndTime, isOff: false, companyId: req.companyId, updatedAt: new Date().toISOString() };
+      const newB = { employeeId: req.fromEmployeeId, employeeName: req.fromEmployeeName, date: req.toDate, startTime: req.toStartTime, endTime: req.toEndTime, isOff: false, isAbsent: false, companyId: req.companyId, updatedAt: new Date().toISOString() };
       const idB = await fsAdd('schedules', newB);
       state.schedules.push({ id: idB, ...newB });
       await fsUpdate('swapRequests', id, { status: 'approved', approvedAt: new Date().toISOString() });
