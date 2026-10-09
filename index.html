@@ -27,13 +27,11 @@
     html { -webkit-text-size-adjust: 100%; }
     body { background: linear-gradient(145deg, #f8faff 0%, #edf2fc 100%); min-height: 100vh; color: #1d2b4b; line-height: 1.5; overscroll-behavior-y: none; }
     
-    /* Loading Overlay */
     #loadingOverlay { position: fixed; inset: 0; background: linear-gradient(145deg, #f8faff, #edf2fc); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; gap: 18px; padding: 24px; }
     #loadingOverlay .spinner { width: 56px; height: 56px; border: 5px solid #d4e6dc; border-top-color: var(--primary-light); border-radius: 50%; animation: spin 0.9s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
     #loadingOverlay p { font-size: 0.95rem; font-weight: 700; color: var(--primary); text-align: center; }
 
-    /* Landing Page */
     #landingPage { display: block; }
     .landing-nav { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; background: rgba(255,255,255,0.92); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid rgba(212,230,220,0.6); padding-top: calc(16px + var(--safe-top)); }
     .landing-logo { display: flex; align-items: center; gap: 10px; }
@@ -46,11 +44,8 @@
     .landing-nav-actions .btn { padding: 8px 14px; font-size: 0.8rem; }
     .landing-nav-actions .btn i { font-size: 0.85rem; }
     .landing-nav-actions .btn span.btn-label { display: none; }
-    @media (min-width: 480px) {
-      .landing-nav-actions .btn span.btn-label { display: inline; }
-    }
+    @media (min-width: 480px) { .landing-nav-actions .btn span.btn-label { display: inline; } }
 
-    /* Hero */
     .hero { display: grid; grid-template-columns: 1fr; gap: 40px; align-items: center; padding: 32px 20px 48px; max-width: 1400px; margin: 0 auto; }
     .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: #e6f5ee; color: var(--primary); padding: 6px 14px; border-radius: 40px; font-size: 0.72rem; font-weight: 700; margin-bottom: 18px; border: 1px solid #b8d9c8; }
     .hero h2 { font-size: 2rem; font-weight: 800; line-height: 1.15; letter-spacing: -0.8px; color: var(--text-dark); margin-bottom: 16px; }
@@ -75,19 +70,17 @@
     .hero-mini-amount { font-size: 0.8rem; font-weight: 700; color: var(--primary); white-space: nowrap; }
     .hero-blob { position: absolute; width: 280px; height: 280px; background: linear-gradient(135deg, #a8e6c8, #6bc9a0); border-radius: 50%; filter: blur(70px); opacity: 0.35; z-index: -1; top: -30px; right: -30px; }
 
-    /* Features */
     .features { padding: 48px 20px; max-width: 1400px; margin: 0 auto; }
     .section-header { text-align: center; max-width: 680px; margin: 0 auto 36px; }
     .section-header h3 { font-size: 1.6rem; font-weight: 800; color: var(--text-dark); letter-spacing: -0.5px; margin-bottom: 12px; }
     .section-header p { font-size: 0.95rem; color: #5f7194; font-weight: 500; }
     .features-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
-    .feature-card { background: white; border-radius: 20px; padding: 22px; border: 1px solid rgba(212,230,220,0.6); box-shadow: var(--shadow-sm); transition: transform 0.25s; }
+    .feature-card { background: white; border-radius: 20px; padding: 22px; border: 1px solid rgba(212,230,220,0.6); box-shadow: var(--shadow-sm); }
     .feature-card:active { transform: scale(0.98); }
     .feature-icon { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin-bottom: 14px; }
     .feature-card h4 { font-size: 1.05rem; font-weight: 700; color: var(--text-dark); margin-bottom: 8px; }
     .feature-card p { font-size: 0.88rem; color: #6c7fa8; font-weight: 500; line-height: 1.6; }
 
-    /* Contact */
     .contact-section { padding: 48px 20px; background: linear-gradient(145deg, #f0f9f4, #e6f5ee); }
     .contact-inner { max-width: 700px; margin: 0 auto; text-align: center; }
     .contact-inner h3 { font-size: 1.6rem; font-weight: 800; color: var(--text-dark); letter-spacing: -0.5px; margin-bottom: 14px; }
@@ -102,7 +95,6 @@
     .landing-footer p { font-size: 0.8rem; font-weight: 500; line-height: 1.6; }
     .landing-footer p strong { color: #2d9c6e; }
 
-    /* App Dashboard */
     #appDashboard { display: none; min-height: 100vh; padding-bottom: calc(80px + var(--safe-bottom)); }
     .app-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; padding-top: calc(12px + var(--safe-top)); background: white; position: sticky; top: 0; z-index: 50; border-bottom: 1px solid var(--border-soft); gap: 10px; flex-wrap: wrap; }
     .logo-area { display: flex; align-items: center; gap: 10px; min-width: 0; }
@@ -132,7 +124,6 @@
     .company-banner .info strong { font-size: 0.9rem; color: var(--text-dark); display: block; font-weight: 800; }
     .company-banner .info span { font-size: 0.75rem; color: var(--text-mid); font-weight: 500; }
 
-    /* Dashboard Tabs — horizontal scroll on mobile */
     .dashboard-tabs { display: flex; gap: 8px; padding: 0 16px 12px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; scroll-snap-type: x proximity; }
     .dashboard-tabs::-webkit-scrollbar { display: none; }
     .dash-tab { padding: 10px 16px; border-radius: 40px; font-weight: 700; font-size: 0.82rem; background: white; border: 1px solid var(--border-soft); color: var(--text-mid); cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0; scroll-snap-align: start; }
@@ -143,19 +134,17 @@
     .tab-panel { display: none; padding: 0 16px; }
     .tab-panel.active { display: block; }
 
-    /* Admin Dashboard */
     #adminDashboard { display: none; min-height: 100vh; padding-bottom: calc(40px + var(--safe-bottom)); }
 
-    /* Cards & Panels */
     .admin-card { background: white; border-radius: 20px; padding: 18px; box-shadow: var(--shadow-md); border: 1px solid rgba(212,230,220,0.6); margin-bottom: 16px; }
     .admin-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
     .admin-card-header h3 { font-size: 1rem; font-weight: 800; color: var(--text-dark); display: flex; align-items: center; gap: 8px; }
     .admin-card-header h3 i { color: var(--primary-light); font-size: 0.95rem; }
 
-    /* Clock Hero */
     .clock-hero { background: linear-gradient(135deg, #1e6b4b, #2d9c6e); border-radius: 22px; padding: 24px 18px; color: white; margin-bottom: 16px; display: flex; flex-direction: column; align-items: center; gap: 14px; box-shadow: 0 20px 40px -18px rgba(30,107,75,0.5); }
     .clock-hero h2 { font-size: 1.15rem; font-weight: 800; text-align: center; }
     .clock-hero .clock-status { font-size: 0.85rem; opacity: 0.9; font-weight: 500; text-align: center; line-height: 1.5; }
+    .clock-hero .cross-night-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.35); padding: 4px 12px; border-radius: 40px; font-size: 0.72rem; font-weight: 700; }
     .clock-buttons { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; width: 100%; }
     .clock-btn { padding: 16px 24px; border-radius: 60px; font-size: 0.95rem; font-weight: 800; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; transition: transform 0.15s; text-transform: uppercase; letter-spacing: 0.5px; flex: 1 1 auto; justify-content: center; min-width: 140px; }
     .clock-btn-in { background: white; color: var(--primary); box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
@@ -165,14 +154,12 @@
     .clock-btn:disabled { opacity: 0.5; cursor: not-allowed; }
     .clock-time { font-size: 2rem; font-weight: 800; letter-spacing: -1px; }
 
-    /* Stats Grid */
     .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
     .stat-card { background: rgba(255,255,255,0.88); border-radius: 18px; padding: 14px; border: 1px solid rgba(255,255,255,0.9); box-shadow: var(--shadow-sm); }
     .stat-title { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; color: #5f7194; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; letter-spacing: 0.3px; }
     .stat-number { font-size: 1.35rem; font-weight: 800; color: var(--text-dark); line-height: 1.2; word-break: break-word; }
     .stat-sub { font-size: 0.7rem; color: #62759b; margin-top: 2px; font-weight: 500; }
 
-    /* Toolbar */
     .toolbar { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
     .search-box { background: white; border-radius: 40px; padding: 4px 4px 4px 14px; display: flex; align-items: center; border: 1px solid #c2d9cf; box-shadow: var(--shadow-sm); flex: 1 1 100%; min-width: 200px; }
     .search-box i { color: #6b8f7a; font-size: 0.9rem; }
@@ -180,7 +167,6 @@
     .toolbar-actions { display: flex; gap: 8px; flex: 1 1 100%; }
     .toolbar-actions .btn { flex: 1; justify-content: center; }
 
-    /* Tables — responsive */
     .table-card { background: rgba(255,255,255,0.95); border-radius: 20px; padding: 4px; border: 1px solid rgba(255,255,255,0.9); box-shadow: var(--shadow-sm); overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 16px; }
     table { width: 100%; border-collapse: collapse; min-width: 800px; white-space: nowrap; }
     th { text-align: left; padding: 12px; font-size: 0.68rem; font-weight: 800; text-transform: uppercase; color: var(--text-mid); border-bottom: 1px solid var(--border-soft); letter-spacing: 0.3px; }
@@ -209,7 +195,6 @@
     .icon-btn i { font-size: 0.82rem; }
     .empty-row td { text-align: center; padding: 36px 16px; color: #7b8fb0; font-weight: 600; font-size: 0.88rem; white-space: normal; }
 
-    /* Info Grid */
     .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
     .info-card { background: white; border-radius: 18px; padding: 14px; box-shadow: var(--shadow-sm); border: 1px solid var(--border-soft); }
     .info-card h4 { font-size: 0.72rem; font-weight: 800; color: var(--text-mid); text-transform: uppercase; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; letter-spacing: 0.2px; }
@@ -218,14 +203,12 @@
     .info-card .big-number.warning { color: var(--warning); }
     .info-card .big-number.danger { color: var(--danger); }
 
-    /* Status pills */
     .status-pill { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 40px; font-size: 0.72rem; font-weight: 700; }
     .status-present { background: #e3f6ef; color: #0b6b4e; }
     .status-absent { background: #ffe8e8; color: #d64545; }
     .status-late { background: #fff3e2; color: #a55c00; }
     .status-leave { background: #e6f0ff; color: #1e4b8a; }
 
-    /* Buttons */
     .btn { padding: 10px 18px; border-radius: 40px; font-weight: 600; font-size: 0.88rem; display: inline-flex; align-items: center; gap: 8px; border: none; cursor: pointer; transition: all 0.15s; background: white; color: #1d2b4b; box-shadow: var(--shadow-sm); border: 1px solid rgba(255,255,255,0.7); text-decoration: none; touch-action: manipulation; }
     .btn:active:not(:disabled) { transform: scale(0.97); }
     .btn:disabled { opacity: 0.6; cursor: not-allowed; }
@@ -234,7 +217,6 @@
     .btn-sm { padding: 7px 14px; font-size: 0.78rem; }
     .btn-danger { background: #fff0f0; border: 1px solid #f5c2c2; color: var(--danger); }
 
-    /* Modals */
     .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(15,30,64,0.5); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); z-index: 1000; align-items: flex-end; justify-content: center; padding: 0; }
     .modal-overlay.active { display: flex; }
     .modal { background: white; border-radius: 24px 24px 0 0; max-width: 100%; width: 100%; max-height: 92vh; overflow-y: auto; box-shadow: 0 -20px 60px -20px rgba(15,30,64,0.4); position: relative; padding-bottom: var(--safe-bottom); animation: slideUp 0.3s ease; }
@@ -255,17 +237,14 @@
     .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; padding-top: 16px; border-top: 1px solid #e4efe8; flex-wrap: wrap; }
     .modal-actions .btn { flex: 1; justify-content: center; min-width: 120px; }
 
-    /* Allowance group */
     .allowance-group { display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 12px; }
     .allowance-group .form-group { margin-bottom: 0; }
 
-    /* Checkbox rows */
     .checkbox-row { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border: 1.5px solid var(--border-soft); border-radius: 12px; background: var(--bg-soft); cursor: pointer; margin-bottom: 10px; }
     .checkbox-row input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--primary); cursor: pointer; flex-shrink: 0; }
     .checkbox-row label { cursor: pointer; font-weight: 600; color: var(--text-dark); font-size: 0.88rem; flex: 1; margin: 0; text-transform: none; }
     .checkbox-row small { display: block; font-size: 0.72rem; color: var(--text-light); font-weight: 500; margin-top: 2px; }
 
-    /* File upload */
     .file-upload-area { border: 2px dashed #b8d9c8; border-radius: 14px; padding: 18px; text-align: center; background: var(--bg-soft); cursor: pointer; margin-bottom: 10px; }
     .file-upload-area i { font-size: 1.5rem; color: var(--primary-light); margin-bottom: 8px; }
     .file-upload-area p { font-size: 0.82rem; color: var(--text-mid); font-weight: 600; }
@@ -278,19 +257,13 @@
     .file-list li .file-info span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .file-list li .remove-file { background: none; border: none; color: var(--danger); cursor: pointer; font-size: 0.9rem; padding: 4px 6px; flex-shrink: 0; }
 
-    /* Toast */
     .toast-message { position: fixed; bottom: calc(20px + var(--safe-bottom)); left: 16px; right: 16px; background: #1e3a5f; color: white; padding: 14px 20px; border-radius: 16px; font-weight: 600; font-size: 0.88rem; box-shadow: 0 20px 30px -10px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 10px; z-index: 2000; opacity: 0; transform: translateY(20px); transition: all 0.3s ease; pointer-events: none; }
     .toast-message.show { opacity: 1; transform: translateY(0); }
-    @media (min-width: 600px) {
-      .toast-message { left: auto; right: 30px; max-width: 90vw; }
-    }
+    @media (min-width: 600px) { .toast-message { left: auto; right: 30px; max-width: 90vw; } }
     .error-banner { position: fixed; top: calc(16px + var(--safe-top)); left: 16px; right: 16px; background: #d64545; color: white; padding: 14px 20px; border-radius: 16px; font-weight: 700; font-size: 0.85rem; box-shadow: 0 20px 30px -10px rgba(214,69,69,0.5); z-index: 3000; display: none; text-align: center; }
     .error-banner.show { display: block; }
-    @media (min-width: 600px) {
-      .error-banner { left: 50%; right: auto; transform: translateX(-50%); max-width: 90vw; }
-    }
+    @media (min-width: 600px) { .error-banner { left: 50%; right: auto; transform: translateX(-50%); max-width: 90vw; } }
 
-    /* Overview Hero */
     .overview-hero { background: linear-gradient(135deg, #8a4b3c, #b45a2c); border-radius: 20px; padding: 20px; color: white; margin: 16px; box-shadow: 0 20px 40px -15px rgba(138,75,60,0.4); }
     .overview-hero h2 { font-size: 1.15rem; font-weight: 800; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
     .overview-hero p { font-size: 0.82rem; opacity: 0.9; font-weight: 500; margin-bottom: 16px; }
@@ -299,20 +272,17 @@
     .overview-hero-stat .num { font-size: 1.5rem; font-weight: 800; line-height: 1; }
     .overview-hero-stat .lbl { font-size: 0.65rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.4px; opacity: 0.9; margin-top: 4px; }
 
-    /* Workflow Guide */
     .workflow-guide { background: linear-gradient(105deg, #fff9ee, #fff3e2); border: 1.5px solid #ffd8a8; border-radius: 16px; padding: 14px 16px; margin: 0 16px 16px; display: flex; align-items: flex-start; gap: 12px; }
     .workflow-guide i { font-size: 1.3rem; color: #a55c00; flex-shrink: 0; margin-top: 2px; }
     .workflow-guide .text { flex: 1; font-size: 0.82rem; color: #7a4500; font-weight: 600; line-height: 1.6; }
     .workflow-guide .text strong { color: #a55c00; }
 
-    /* Admin Tabs */
     .admin-tabs { display: flex; gap: 8px; padding: 0 16px 12px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
     .admin-tabs::-webkit-scrollbar { display: none; }
     .admin-tab { padding: 10px 16px; border-radius: 40px; font-weight: 700; font-size: 0.82rem; background: white; border: 1px solid var(--border-soft); color: var(--text-mid); cursor: pointer; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0; }
     .admin-tab:active { transform: scale(0.96); }
     .admin-tab.active { background: linear-gradient(105deg, #1e6b4b, #2d9c6e); color: white; border-color: transparent; }
 
-    /* Location Grid */
     .location-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
     .location-card { background: white; border-radius: 18px; padding: 16px; border: 1.5px solid var(--border-soft); box-shadow: var(--shadow-sm); }
     .location-card.assigned { border-color: #b2e3d2; background: linear-gradient(145deg, #ffffff, #f7fdfa); }
@@ -329,7 +299,6 @@
     .location-card .stats-row div { font-size: 0.72rem; color: var(--text-light); font-weight: 600; }
     .location-card .stats-row strong { color: var(--text-dark); font-weight: 800; font-size: 0.95rem; display: block; }
 
-    /* Company Grid */
     .company-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
     .company-card { background: white; border-radius: 18px; padding: 18px; border: 1.5px solid var(--border-soft); box-shadow: var(--shadow-sm); }
     .company-card h4 { font-size: 1rem; font-weight: 800; color: var(--text-dark); margin-bottom: 4px; }
@@ -345,7 +314,6 @@
     .company-card .stats-row > div { font-size: 0.72rem; color: var(--text-light); font-weight: 600; }
     .company-card .stats-row > div strong { color: var(--text-dark); font-weight: 800; font-size: 0.95rem; display: block; }
 
-    /* Firestore list */
     .firestore-list { max-height: 400px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
     .fs-row { display: flex; flex-direction: column; gap: 8px; padding: 12px; border-bottom: 1px solid #e4efe8; }
     .fs-row:last-child { border-bottom: none; }
@@ -355,7 +323,6 @@
     .fs-row code { background: #f0f9f4; color: var(--primary); padding: 2px 6px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; display: inline-block; margin-top: 3px; }
     .fs-row .fs-actions { display: flex; gap: 6px; }
 
-    /* Schedule Grid — becomes a vertical list on mobile */
     .schedule-grid-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 16px; }
     .schedule-grid { display: grid; grid-template-columns: 100px repeat(7, minmax(80px, 1fr)); gap: 4px; background: white; border-radius: 16px; padding: 8px; border: 1.5px solid var(--border-soft); min-width: 700px; }
     .schedule-grid > div { padding: 4px; }
@@ -371,28 +338,25 @@
     .shift-cell.filled { color: white; box-shadow: 0 4px 8px -2px rgba(0,0,0,0.15); }
     .shift-cell .shift-time { font-size: 0.78rem; font-weight: 800; letter-spacing: 0.2px; }
     .shift-cell .shift-sub { font-size: 0.6rem; font-weight: 600; opacity: 0.85; }
+    .shift-cell .cross-night-icon { font-size: 0.6rem; margin-left: 2px; }
     .shift-delete-btn { position: absolute; top: 2px; right: 2px; width: 20px; height: 20px; border-radius: 50%; background: rgba(0,0,0,0.4); color: white; border: none; cursor: pointer; display: none; align-items: center; justify-content: center; font-size: 9px; z-index: 3; }
     .shift-cell:hover .shift-delete-btn, .shift-cell:active .shift-delete-btn { display: flex; }
     .shift-cell.off-day .shift-delete-btn { background: rgba(165,92,0,0.6); }
     .shift-cell.absent-day .shift-delete-btn { background: rgba(0,0,0,0.4); }
 
-    /* Schedule Week Bar */
     .schedule-week-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 14px; }
     .schedule-week-bar input[type="date"] { padding: 9px 12px; border-radius: 10px; border: 1.5px solid var(--border-soft); font-weight: 600; font-size: 0.82rem; background: var(--bg-soft); flex: 1 1 140px; }
     .schedule-week-bar .btn { flex: 1 1 auto; justify-content: center; min-width: 90px; }
 
-    /* Swap requests */
     .swap-request-row { display: flex; flex-direction: column; gap: 10px; padding: 12px; border-bottom: 1px solid #e4efe8; }
     .swap-request-row:last-child { border-bottom: none; }
     .swap-request-row .who { font-weight: 700; font-size: 0.85rem; color: var(--text-dark); margin-bottom: 4px; }
     .swap-request-row .what { font-size: 0.75rem; color: var(--text-light); font-weight: 500; margin-bottom: 2px; }
 
-    /* Device cell */
     .device-cell { display: flex; flex-direction: column; gap: 3px; }
     .device-cell .device-os { font-size: 0.72rem; font-weight: 700; padding: 3px 8px; border-radius: 40px; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
     .device-cell .device-meta { font-size: 0.65rem; color: #7b8fb0; font-weight: 600; }
 
-    /* Reports */
     .report-toolbar { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; background: white; padding: 14px; border-radius: 16px; border: 1.5px solid var(--border-soft); }
     .report-toolbar .form-group { margin-bottom: 0; }
     .report-toolbar .btn { justify-content: center; }
@@ -411,27 +375,22 @@
     .compliance-bar .fill.warn { background: linear-gradient(90deg, #d68b2c, #b45a2c); }
     .compliance-bar .fill.bad { background: linear-gradient(90deg, #d64545, #b22222); }
 
-    /* Payroll toolbar */
     .payroll-toolbar { display: flex; flex-direction: column; gap: 8px; width: 100%; }
     .payroll-toolbar select { padding: 10px 14px; border-radius: 40px; border: 1.5px solid var(--border-soft); font-weight: 600; font-size: 0.85rem; background: white; width: 100%; }
     .payroll-toolbar .btn { justify-content: center; }
 
-    /* Deduction row */
     .deduction-row { display: grid; grid-template-columns: 1fr; gap: 8px; margin-bottom: 8px; align-items: center; }
     .deduction-row input { padding: 10px 12px; border-radius: 10px; border: 1.5px solid var(--border-soft); font-size: 0.85rem; font-weight: 500; }
     .deduction-row .del-btn { background: #fff0f0; border: 1px solid #f5c2c2; color: var(--danger); width: 100%; height: 38px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; font-weight: 600; font-size: 0.82rem; }
 
-    /* Bottom padding for safe area */
     .tab-panel { padding-bottom: 20px; }
 
-    /* Landscape phone tweaks */
     @media (max-height: 500px) and (orientation: landscape) {
       .clock-hero { padding: 16px; }
       .clock-time { font-size: 1.5rem; }
       .clock-btn { padding: 12px 18px; font-size: 0.85rem; }
     }
 
-    /* ========== TABLET / DESKTOP BREAKPOINTS ========== */
     @media (min-width: 640px) {
       .hero { padding: 56px 32px 72px; gap: 40px; }
       .hero h2 { font-size: 2.6rem; letter-spacing: -1px; }
@@ -540,7 +499,6 @@
       #appDashboard { padding-bottom: 40px; }
     }
 
-    /* Print styles */
     @media print {
       .app-header, .dashboard-tabs, .admin-tabs, .landing-nav, .landing-footer, .btn, .icon-btn, .modal-close, .modal-actions { display: none !important; }
       body { background: white; }
@@ -610,7 +568,7 @@
       <div class="feature-card"><div class="feature-icon" style="background:#e6f0ff;color:#1e4b8a;"><i class="fas fa-calendar-week"></i></div><h4>Weekly Scheduling</h4><p>Build weekly shifts for cashiers with colored segments and enforced off-day rules.</p></div>
       <div class="feature-card"><div class="feature-icon" style="background:#f0e9ff;color:#5e2e8a;"><i class="fas fa-file-invoice-dollar"></i></div><h4>Payroll &amp; Payslips</h4><p>Generate monthly payslips with automatic NSSF, PAYE, and absence deductions.</p></div>
       <div class="feature-card"><div class="feature-icon" style="background:#ffe8e8;color:#d64545;"><i class="fas fa-shield-alt"></i></div><h4>Device Audit Trail</h4><p>Detect mobile clock-ins with OS, browser, and device type tracking.</p></div>
-      <div class="feature-card"><div class="feature-icon" style="background:#e8f4ff;color:#2d7ab3;"><i class="fas fa-chart-line"></i></div><h4>Compliance Reports</h4><p>Daily attendance, punctuality, and full-hours compliance for every employee.</p></div>
+      <div class="feature-card"><div class="feature-icon" style="background:#e8f4ff;color:#2d7ab3;"><i class="fas fa-moon"></i></div><h4>Cross-Night Shifts</h4><p>Full support for overnight shifts spanning midnight (e.g., 18:00–08:00).</p></div>
     </div>
   </section>
 
@@ -698,6 +656,7 @@
   <!-- CLOCK -->
   <div class="tab-panel active" id="panel-clock">
     <div class="clock-hero">
+      <div id="crossNightBadge" class="cross-night-badge" style="display:none;"><i class="fas fa-moon"></i> Cross-night shift active</div>
       <div class="clock-time" id="liveClock">--:--:--</div>
       <h2 id="clockGreeting">Hello!</h2>
       <div class="clock-status" id="clockStatusText">Ready to start your shift?</div>
@@ -783,7 +742,7 @@
       </div>
       <div style="background:#e6f0ff;border:1.5px solid #c2d6f5;border-radius:12px;padding:12px 14px;margin-bottom:14px;font-size:0.78rem;color:#1e4b8a;font-weight:600;line-height:1.6;">
         <i class="fas fa-info-circle" style="margin-right:6px;"></i>
-        Tap a cell to assign a shift, mark <strong>off</strong>, or tag <strong>ABSENT</strong> (red). Swipe horizontally to see all days.
+        Tap a cell to assign a shift, mark <strong>off</strong>, or tag <strong>ABSENT</strong> (red). Swipe horizontally to see all days. Use <strong>"18:00-08:00"</strong> format for cross-night shifts — they'll show a 🌙 icon.
       </div>
       <div class="schedule-grid-wrapper">
         <div id="scheduleGridContainer"></div>
@@ -805,7 +764,7 @@
         <button class="btn btn-outline btn-sm" onclick="exportAttendance()"><i class="fas fa-download"></i> CSV</button>
       </div>
       <div style="background:#fff9ee;border:1.5px solid #ffd8a8;border-radius:12px;padding:12px 14px;margin-bottom:14px;font-size:0.78rem;color:#7a4500;font-weight:600;line-height:1.6;">
-        <i class="fas fa-shield-alt" style="margin-right:6px;"></i><strong>Mobile clock-ins</strong> show a ⚠ red dot. <i class="fas fa-user-clock"></i> = force clock-out. <span class="badge badge-red" style="font-size:0.62rem;">DUPLICATE</span> = delete extras.
+        <i class="fas fa-shield-alt" style="margin-right:6px;"></i><strong>Mobile clock-ins</strong> show a ⚠ red dot. <i class="fas fa-user-clock"></i> = force clock-out. <span class="badge badge-red" style="font-size:0.62rem;">DUPLICATE</span> = delete extras. <i class="fas fa-moon" style="color:#3f66d0;"></i> = cross-night shift.
       </div>
       <div class="table-card">
         <table>
@@ -1935,26 +1894,7 @@
   }
   function stopLiveClock() { if (clockInterval) { clearInterval(clockInterval); clockInterval = null; } }
 
-  function refreshMyClockStatus() {
-    const emp = myEmployeeRecord();
-    const statusEl = document.getElementById('clockStatusText');
-    const inBtn = document.getElementById('bigClockInBtn');
-    const outBtn = document.getElementById('bigClockOutBtn');
-    if (!statusEl) return;
-    if (!emp) { statusEl.textContent = 'Your account is not linked to an employee record.'; if (inBtn) inBtn.disabled = true; if (outBtn) outBtn.disabled = true; return; }
-    const today = new Date().toISOString().slice(0, 10);
-    const record = state.attendance.find(a => a.employeeId === emp.id && a.date === today);
-    const todayShift = state.schedules.find(s => s.employeeId === emp.id && s.date === today);
-    let shiftInfo = '';
-    if (todayShift && !todayShift.isOff && !todayShift.isAbsent) shiftInfo = ` · Scheduled: ${todayShift.startTime}–${todayShift.endTime}`;
-    else if (todayShift && todayShift.isOff) shiftInfo = ' · Off day today';
-    else if (todayShift && todayShift.isAbsent) shiftInfo = ' · Tagged absent today';
-    if (!record || !record.clockIn) { statusEl.textContent = 'You haven\'t clocked in today yet.' + shiftInfo; if (inBtn) inBtn.disabled = false; if (outBtn) outBtn.disabled = true; }
-    else if (!record.clockOut) { statusEl.textContent = `Clocked in at ${record.clockIn}. Don't forget to clock out!` + shiftInfo; if (inBtn) inBtn.disabled = true; if (outBtn) outBtn.disabled = false; }
-    else { statusEl.textContent = `Completed today: ${record.clockIn} → ${record.clockOut} (${record.hours}h)` + shiftInfo; if (inBtn) inBtn.disabled = true; if (outBtn) outBtn.disabled = true; }
-  }
-
-  // ---------- SCHEDULE HELPERS ----------
+  // ---------- SHIFT HELPERS ----------
   function isCashier(emp) {
     const r = (emp.role || '').toLowerCase();
     const d = (emp.department || '').toLowerCase();
@@ -1974,30 +1914,101 @@
   function dayLabel(dateStr) { const d = new Date(dateStr + 'T00:00:00'); return d.toLocaleDateString('en-US', { weekday: 'short' }); }
   function getShiftFor(empId, dateStr) { return state.schedules.find(s => s.employeeId === empId && s.date === dateStr); }
 
+  // Check if a shift crosses midnight (e.g., 18:00 -> 08:00)
+  function isCrossNightShift(shift) {
+    if (!shift || shift.isOff || shift.isAbsent || !shift.startTime || !shift.endTime) return false;
+    const [sh, sm] = shift.startTime.split(':').map(Number);
+    const [eh, em] = shift.endTime.split(':').map(Number);
+    return (eh * 60 + em) <= (sh * 60 + sm);
+  }
+
+  // Given "today" (YYYY-MM-DD), find the shift that is currently relevant.
+  // A cross-night shift that started yesterday and ends today is still "active" today.
+  function getActiveShiftForToday(empId, todayStr) {
+    // First check today's own shift
+    const todayShift = getShiftFor(empId, todayStr);
+    if (todayShift && !todayShift.isOff && !todayShift.isAbsent) return todayShift;
+    // Then check if yesterday's shift was cross-night and still running
+    const yesterday = formatDateISO(addDays(new Date(todayStr + 'T00:00:00'), -1));
+    const yShift = getShiftFor(empId, yesterday);
+    if (yShift && !yShift.isOff && !yShift.isAbsent && isCrossNightShift(yShift)) return yShift;
+    return null;
+  }
+
+  // Find the attendance record that matches the current shift cycle.
+  // For cross-night shifts started yesterday, we want to find that record (even if clockOut is still open).
+  function findActiveAttendanceRecord(empId, todayStr) {
+    // Get all records sorted by date desc
+    const records = state.attendance
+      .filter(a => a.employeeId === empId)
+      .sort((a, b) => b.date.localeCompare(a.date));
+    if (records.length === 0) return null;
+
+    const todayShift = getShiftFor(empId, todayStr);
+    const today = records.find(a => a.date === todayStr);
+
+    // If today's record exists and is open (no clockOut) -> return it
+    if (today && today.clockIn && !today.clockOut) return { record: today, shift: todayShift, dateStr: todayStr, isCrossNight: false };
+
+    // Check yesterday's cross-night shift
+    const yesterday = formatDateISO(addDays(new Date(todayStr + 'T00:00:00'), -1));
+    const yShift = getShiftFor(empId, yesterday);
+    const yRecord = records.find(a => a.date === yesterday);
+
+    // If yesterday was a cross-night shift and the record has no clockOut -> still active
+    if (yShift && isCrossNightShift(yShift) && yRecord && yRecord.clockIn && !yRecord.clockOut) {
+      return { record: yRecord, shift: yShift, dateStr: yesterday, isCrossNight: true };
+    }
+
+    // If today has a record at all, return it (may be complete)
+    if (today) return { record: today, shift: todayShift, dateStr: todayStr, isCrossNight: false };
+
+    // Nothing found
+    return null;
+  }
+
   // ---------- CLOCK IN/OUT ----------
   window.selfClockIn = async function() {
     if (clockInLock) { showToast('⚠️ Processing...', 'info'); return; }
     const emp = myEmployeeRecord();
     if (!emp) { showToast('⚠️ No employee record linked', 'info'); return; }
+
     const today = new Date().toISOString().slice(0, 10);
-    const existing = state.attendance.find(a => a.employeeId === emp.id && a.date === today);
-    if (existing && existing.clockIn) {
+
+    // Check if there's an active attendance record that's still open
+    const active = findActiveAttendanceRecord(emp.id, today);
+    if (active && active.record && active.record.clockIn && !active.record.clockOut) {
+      // Already clocked in for the current shift cycle
       const outBtn = document.getElementById('bigClockOutBtn');
       const inBtn = document.getElementById('bigClockInBtn');
       if (inBtn) inBtn.disabled = true;
       if (outBtn) outBtn.disabled = false;
-      showToast(`⚠️ Already clocked in at ${existing.clockIn}`, 'error');
+      const shiftDesc = active.isCrossNight ? ' (from yesterday\'s cross-night shift)' : '';
+      showToast(`⚠️ Already clocked in at ${active.record.clockIn}${shiftDesc}`, 'error');
       if (!window.selfClockIn._warned) {
         window.selfClockIn._warned = true;
-        alert(`You are ALREADY clocked in (${existing.clockIn}).\n\nRemember to CLOCK OUT when your shift ends.`);
+        alert(`You are ALREADY clocked in (${active.record.clockIn})${shiftDesc}.\n\nRemember to CLOCK OUT when your shift ends.`);
         setTimeout(() => { window.selfClockIn._warned = false; }, 5000);
       }
       return;
     }
+
+    // Check if today already has a complete record — allow clocking in for a NEW shift on the same date only if there's no open record
+    // (this happens when the user previously completed a shift earlier today and is starting a new one — rare but possible)
+    const todayRecord = state.attendance.find(a => a.employeeId === emp.id && a.date === today);
+    if (todayRecord && todayRecord.clockIn && !todayRecord.clockOut) {
+      // Already handled above, but keep for safety
+      showToast(`⚠️ Already clocked in today at ${todayRecord.clockIn}`, 'error');
+      return;
+    }
+
     clockInLock = true;
     const inBtn = document.getElementById('bigClockInBtn');
     if (inBtn) { inBtn.disabled = true; inBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...'; }
+
     const now = new Date().toTimeString().slice(0, 5);
+
+    // Determine lateness against the relevant shift
     let isLate = false, scheduledStart = null, lateByMinutes = 0;
     const todayShift = state.schedules.find(s => s.employeeId === emp.id && s.date === today);
     if (todayShift && !todayShift.isOff && !todayShift.isAbsent && todayShift.startTime) {
@@ -2006,11 +2017,25 @@
       const [ch, cm] = now.split(':').map(Number);
       const scheduledMin = sh * 60 + sm;
       const clockInMin = ch * 60 + cm;
+      // For cross-night shift that starts at e.g. 18:00 and current time is 06:00 next day, skip lateness check (already handled by yesterday's shift)
       if (clockInMin > scheduledMin + 10) { isLate = true; lateByMinutes = clockInMin - scheduledMin; }
     }
+
     const device = detectDevice();
     try {
-      const data = { employeeId: emp.id, employeeName: emp.name, date: today, clockIn: now, clockOut: null, status: isLate ? 'late' : 'present', scheduledStart: scheduledStart || null, lateByMinutes, clockInDevice: device, hours: 0, createdAt: new Date().toISOString() };
+      const data = {
+        employeeId: emp.id,
+        employeeName: emp.name,
+        date: today,
+        clockIn: now,
+        clockOut: null,
+        status: isLate ? 'late' : 'present',
+        scheduledStart: scheduledStart || null,
+        lateByMinutes,
+        clockInDevice: device,
+        hours: 0,
+        createdAt: new Date().toISOString()
+      };
       const newId = await fsAdd('attendance', data);
       state.attendance.push({ id: newId, ...data });
       refreshMyClockStatus(); renderMyAttendance(); if (isManager()) renderAttendance();
@@ -2026,22 +2051,97 @@
   window.selfClockOut = async function() {
     const emp = myEmployeeRecord();
     if (!emp) { showToast('⚠️ No employee record linked', 'info'); return; }
+
     const today = new Date().toISOString().slice(0, 10);
     const now = new Date().toTimeString().slice(0, 5);
-    const record = state.attendance.find(a => a.employeeId === emp.id && a.date === today);
-    if (!record || !record.clockIn) { showToast('⚠️ Clock in first', 'info'); return; }
-    if (record.clockOut) { showToast('⚠️ Already clocked out', 'info'); return; }
-    const [h1, m1] = record.clockIn.split(':').map(Number);
-    const [h2, m2] = now.split(':').map(Number);
-    const hours = Math.max(0, ((h2 * 60 + m2) - (h1 * 60 + m1)) / 60);
+
+    // Find the active record (could be today's or yesterday's cross-night)
+    const active = findActiveAttendanceRecord(emp.id, today);
+    if (!active || !active.record || !active.record.clockIn) { showToast('⚠️ Clock in first', 'info'); return; }
+    if (active.record.clockOut) { showToast('⚠️ Already clocked out', 'info'); return; }
+
+    const record = active.record;
+
+    // Compute hours using the record's original date and the current date
+    const recordDate = record.date;
+    const clockInFull = `${recordDate}T${record.clockIn}:00`;
+    const nowFull = `${today}T${now}:00`;
+    const diffMs = new Date(nowFull) - new Date(clockInFull);
+    let hours = diffMs / 3600000;
+    if (hours < 0) hours += 24; // safety
+    if (hours > 24) hours = 24; // cap
+    hours = Math.round(hours * 100) / 100;
+
     const device = detectDevice();
     try {
-      await fsUpdate('attendance', record.id, { clockOut: now, hours: Math.round(hours * 100) / 100, clockOutDevice: device });
-      record.clockOut = now; record.hours = Math.round(hours * 100) / 100; record.clockOutDevice = device;
+      await fsUpdate('attendance', record.id, { clockOut: now, hours, clockOutDevice: device });
+      record.clockOut = now;
+      record.hours = hours;
+      record.clockOutDevice = device;
       refreshMyClockStatus(); renderMyAttendance(); if (isManager()) renderAttendance();
       showToast(`✅ Clocked out at ${now} (${hours.toFixed(1)}h)`, 'success');
     } catch (err) { showToast('❌ ' + err.message, 'error'); }
   };
+
+  function refreshMyClockStatus() {
+    const emp = myEmployeeRecord();
+    const statusEl = document.getElementById('clockStatusText');
+    const inBtn = document.getElementById('bigClockInBtn');
+    const outBtn = document.getElementById('bigClockOutBtn');
+    const crossNightBadge = document.getElementById('crossNightBadge');
+    if (!statusEl) return;
+
+    if (crossNightBadge) crossNightBadge.style.display = 'none';
+
+    if (!emp) {
+      statusEl.textContent = 'Your account is not linked to an employee record.';
+      if (inBtn) inBtn.disabled = true;
+      if (outBtn) outBtn.disabled = true;
+      return;
+    }
+
+    const today = new Date().toISOString().slice(0, 10);
+    const active = findActiveAttendanceRecord(emp.id, today);
+    const activeShift = getActiveShiftForToday(emp.id, today);
+    const todayShift = state.schedules.find(s => s.employeeId === emp.id && s.date === today);
+
+    let shiftInfo = '';
+    let isCrossNight = false;
+    if (activeShift) {
+      isCrossNight = isCrossNightShift(activeShift);
+      if (isCrossNight) shiftInfo = ` · Cross-night shift: ${activeShift.startTime}–${activeShift.endTime} 🌙`;
+      else shiftInfo = ` · Scheduled: ${activeShift.startTime}–${activeShift.endTime}`;
+    } else if (todayShift && todayShift.isOff) shiftInfo = ' · Off day today';
+    else if (todayShift && todayShift.isAbsent) shiftInfo = ' · Tagged absent today';
+
+    // Case 1: Clocked in and still open (either today's or yesterday's cross-night)
+    if (active && active.record && active.record.clockIn && !active.record.clockOut) {
+      const recordDate = active.record.date;
+      const fromYesterday = recordDate !== today;
+      if (isCrossNight || fromYesterday) {
+        if (crossNightBadge) crossNightBadge.style.display = 'inline-flex';
+        statusEl.textContent = `Clocked in at ${active.record.clockIn} (${fromYesterday ? 'yesterday' : 'today'}). Cross-night shift still active — remember to clock out!${shiftInfo}`;
+      } else {
+        statusEl.textContent = `Clocked in at ${active.record.clockIn}. Don't forget to clock out!${shiftInfo}`;
+      }
+      if (inBtn) inBtn.disabled = true;
+      if (outBtn) outBtn.disabled = false;
+      return;
+    }
+
+    // Case 2: Clocked in AND clocked out (completed)
+    if (active && active.record && active.record.clockIn && active.record.clockOut) {
+      statusEl.textContent = `Completed ${active.record.date}: ${active.record.clockIn} → ${active.record.clockOut} (${active.record.hours}h)${shiftInfo}`;
+      if (inBtn) inBtn.disabled = false; // Allow clocking in again for a new shift today
+      if (outBtn) outBtn.disabled = true;
+      return;
+    }
+
+    // Case 3: Not clocked in yet
+    statusEl.textContent = 'You haven\'t clocked in today yet.' + shiftInfo;
+    if (inBtn) inBtn.disabled = false;
+    if (outBtn) outBtn.disabled = true;
+  }
 
   function renderMyAttendance() {
     const emp = myEmployeeRecord();
@@ -2055,8 +2155,12 @@
       const devShort = d ? `${d.os} · ${d.deviceType}` : '—';
       const icon = d ? osIcon(d.os) : 'fas fa-desktop';
       const devBadge = d ? `<span class="badge ${deviceBadgeClass(d.deviceType)}" style="font-size:0.68rem;white-space:nowrap;"><i class="${icon}" style="margin-right:3px;"></i>${escapeHtml(devShort)}</span>` : '—';
+      // Cross-night indicator
+      const shift = getShiftFor(emp.id, a.date);
+      const isCrossNight = shift && isCrossNightShift(shift);
+      const crossNightIcon = isCrossNight ? ' <i class="fas fa-moon" style="color:#3f66d0;" title="Cross-night shift"></i>' : '';
       return `<tr>
-        <td>${a.date}</td>
+        <td>${a.date}${crossNightIcon}</td>
         <td>${a.clockIn || '—'}</td>
         <td>${a.clockOut || '<span style="color:#d64545;font-weight:800;">— open —</span>'}</td>
         <td>${a.hours ? a.hours.toFixed(1) + 'h' : '—'}</td>
@@ -2586,8 +2690,12 @@
       const isOpen = a.clockIn && !a.clockOut;
       const forceBtn = isOpen ? `<button class="icon-btn" onclick="openForceClockOut('${a.employeeId}', '${a.date}')" title="Force Out" style="color:#d68b2c;border-color:#ffd8a8;background:#fff9ee;"><i class="fas fa-user-clock"></i></button>` : (a.forceClockOut ? `<span title="forced" style="font-size:0.68rem;color:#a55c00;font-weight:700;"><i class="fas fa-user-shield"></i></span>` : '');
       const deleteBtn = `<button class="icon-btn danger" onclick="deleteAttendanceEntry('${a.id}')" title="Delete"><i class="fas fa-trash-alt"></i></button>`;
+      // Cross-night indicator based on the shift for that date
+      const shift = getShiftFor(a.employeeId, a.date);
+      const isCrossNight = shift && isCrossNightShift(shift);
+      const crossNightIcon = isCrossNight ? ' <i class="fas fa-moon" style="color:#3f66d0;" title="Cross-night"></i>' : '';
       return `<tr>
-        <td>${a.date}${dupBadge}</td>
+        <td>${a.date}${crossNightIcon}${dupBadge}</td>
         <td>${escapeHtml(a.employeeName || '—')}</td>
         <td>${sched}</td>
         <td>${a.clockIn || '—'}</td>
@@ -2639,10 +2747,12 @@
     let record = state.attendance.find(a => a.employeeId === empId && a.date === today && a.clockIn && !a.clockOut);
     if (!record) record = state.attendance.find(a => a.employeeId === empId && a.clockIn && !a.clockOut);
     if (!record) { showToast('ℹ️ No open clock-in', 'info'); return; }
-    const [h1, m1] = record.clockIn.split(':').map(Number);
-    const [h2, m2] = timeVal.split(':').map(Number);
-    let hours = ((h2 * 60 + m2) - (h1 * 60 + m1)) / 60;
+    const recordDate = record.date;
+    const clockInFull = `${recordDate}T${record.clockIn}:00`;
+    const clockOutFull = `${today}T${timeVal}:00`;
+    let hours = (new Date(clockOutFull) - new Date(clockInFull)) / 3600000;
     if (hours < 0) hours += 24;
+    if (hours > 24) hours = 24;
     hours = Math.round(hours * 100) / 100;
     const device = detectDevice();
     try {
@@ -2781,8 +2891,11 @@
       const initials = getInitials(r.emp.name);
       const color = r.emp.avatarColor || getAvatarColor(r.emp.name);
       const overallCls = scoreClass(r.comp.overall);
+      const shift = getShiftFor(r.emp.id, r.date);
+      const isCrossNight = shift && isCrossNightShift(shift);
+      const crossNightIcon = isCrossNight ? ' <i class="fas fa-moon" style="color:#3f66d0;font-size:0.7rem;" title="Cross-night"></i>' : '';
       return `<tr>
-        <td>${r.date}</td>
+        <td>${r.date}${crossNightIcon}</td>
         <td><div style="display:flex;align-items:center;gap:6px;"><div class="avatar" style="width:24px;height:24px;border-radius:7px;font-size:0.65rem;background:${color}20;color:${color};">${initials}</div><span style="font-weight:600;font-size:0.82rem;">${escapeHtml(r.emp.name)}</span></div></td>
         <td>${r.scheduled}</td>
         <td>${r.clockIn}</td>
@@ -2866,7 +2979,11 @@
         if (!shift) html += `<div class="shift-cell empty" onclick="openShiftEditor('${c.id}', '${d}')">+ Add</div>`;
         else if (shift.isAbsent) html += `<div class="shift-cell absent-day" onclick="openShiftEditor('${c.id}', '${d}')"><button class="shift-delete-btn" onclick="event.stopPropagation();deleteShift('${c.id}', '${d}')"><i class="fas fa-times"></i></button><div class="shift-time">ABSENT</div></div>`;
         else if (shift.isOff) html += `<div class="shift-cell off-day" onclick="openShiftEditor('${c.id}', '${d}')"><button class="shift-delete-btn" onclick="event.stopPropagation();deleteShift('${c.id}', '${d}')"><i class="fas fa-times"></i></button><div class="shift-time">OFF</div></div>`;
-        else html += `<div class="shift-cell filled" style="background:${color};" onclick="openShiftEditor('${c.id}', '${d}')"><button class="shift-delete-btn" onclick="event.stopPropagation();deleteShift('${c.id}', '${d}')"><i class="fas fa-times"></i></button><div class="shift-time">${shift.startTime}</div><div class="shift-sub">→ ${shift.endTime}</div></div>`;
+        else {
+          const crossNight = isCrossNightShift(shift);
+          const crossIcon = crossNight ? ' <i class="fas fa-moon cross-night-icon"></i>' : '';
+          html += `<div class="shift-cell filled" style="background:${color};" onclick="openShiftEditor('${c.id}', '${d}')"><button class="shift-delete-btn" onclick="event.stopPropagation();deleteShift('${c.id}', '${d}')"><i class="fas fa-times"></i></button><div class="shift-time">${shift.startTime}${crossIcon}</div><div class="shift-sub">→ ${shift.endTime}</div></div>`;
+        }
       });
     });
     html += '</div>';
@@ -2878,7 +2995,7 @@
     const existing = getShiftFor(empId, dateStr);
     let cur = 'none';
     if (existing) { if (existing.isAbsent) cur = 'absent'; else if (existing.isOff) cur = 'off'; else cur = `${existing.startTime}–${existing.endTime}`; }
-    const choice = prompt(`Shift for ${emp.name} on ${dateStr}\n\nEnter:\n  • "off" for off-day\n  • "absent" for absent day\n  • HH:MM (e.g. 08:00)\n  • HH:MM-HH:MM for range\n\nCurrent: ${cur}`, existing ? (existing.isAbsent ? 'absent' : existing.isOff ? 'off' : `${existing.startTime}-${existing.endTime}`) : '08:00-16:00');
+    const choice = prompt(`Shift for ${emp.name} on ${dateStr}\n\nEnter:\n  • "off" for off-day\n  • "absent" for absent day\n  • HH:MM (e.g. 08:00)\n  • HH:MM-HH:MM for range (e.g. 18:00-08:00 for cross-night)\n\nCurrent: ${cur}`, existing ? (existing.isAbsent ? 'absent' : existing.isOff ? 'off' : `${existing.startTime}-${existing.endTime}`) : '08:00-16:00');
     if (choice === null) return;
     const trimmed = choice.trim().toLowerCase();
     let isOff = false, isAbsent = false, startTime = '08:00', endTime = '16:00';
@@ -2965,8 +3082,10 @@
       else if (shift.isOff) html += `<div class="shift-cell off-day" style="cursor:default;"><div class="shift-time">OFF</div></div>`;
       else {
         const isPastOrToday = d <= today;
-        if (isPastOrToday) html += `<div class="shift-cell filled" style="background:${myColor};opacity:0.55;cursor:not-allowed;"><div class="shift-time">${shift.startTime}</div><div class="shift-sub">→ ${shift.endTime}</div><div style="font-size:0.55rem;opacity:0.9;margin-top:1px;">🔒</div></div>`;
-        else html += `<div class="shift-cell filled" style="background:${myColor};cursor:pointer;" onclick="openSwapModal('${emp.id}', '${d}')"><div class="shift-time">${shift.startTime}</div><div class="shift-sub">→ ${shift.endTime}</div><div style="font-size:0.55rem;opacity:0.9;margin-top:1px;">swap</div></div>`;
+        const crossNight = isCrossNightShift(shift);
+        const crossIcon = crossNight ? ' <i class="fas fa-moon cross-night-icon"></i>' : '';
+        if (isPastOrToday) html += `<div class="shift-cell filled" style="background:${myColor};opacity:0.55;cursor:not-allowed;"><div class="shift-time">${shift.startTime}${crossIcon}</div><div class="shift-sub">→ ${shift.endTime}</div><div style="font-size:0.55rem;opacity:0.9;margin-top:1px;">🔒</div></div>`;
+        else html += `<div class="shift-cell filled" style="background:${myColor};cursor:pointer;" onclick="openSwapModal('${emp.id}', '${d}')"><div class="shift-time">${shift.startTime}${crossIcon}</div><div class="shift-sub">→ ${shift.endTime}</div><div style="font-size:0.55rem;opacity:0.9;margin-top:1px;">swap</div></div>`;
       }
     });
     html += '</div>';
@@ -2987,7 +3106,11 @@
             if (!shift) th += `<div class="shift-cell empty" style="cursor:default;">—</div>`;
             else if (shift.isAbsent) th += `<div class="shift-cell absent-day" style="cursor:default;"><div class="shift-time">ABSENT</div></div>`;
             else if (shift.isOff) th += `<div class="shift-cell off-day" style="cursor:default;"><div class="shift-time">OFF</div></div>`;
-            else th += `<div class="shift-cell filled" style="background:${color};cursor:default;"><div class="shift-time">${shift.startTime}</div><div class="shift-sub">→ ${shift.endTime}</div></div>`;
+            else {
+              const crossNight = isCrossNightShift(shift);
+              const crossIcon = crossNight ? ' <i class="fas fa-moon cross-night-icon"></i>' : '';
+              th += `<div class="shift-cell filled" style="background:${color};cursor:default;"><div class="shift-time">${shift.startTime}${crossIcon}</div><div class="shift-sub">→ ${shift.endTime}</div></div>`;
+            }
           });
         });
         th += '</div>';
