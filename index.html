@@ -536,6 +536,7 @@ body *{visibility:hidden !important}
     <button class="dash-tab" data-role="manager" data-tab="payroll"><i class="fas fa-file-invoice-dollar"></i> Payroll</button>
     <button class="dash-tab" data-role="manager" data-tab="leave"><i class="fas fa-umbrella-beach"></i> Leave</button>
     <button class="dash-tab" data-role="all" data-tab="myschedule"><i class="fas fa-calendar-alt"></i> My Schedule</button>
+    <button class="dash-tab" data-role="all" data-tab="swaps"><i class="fas fa-exchange-alt"></i> Swaps</button>
     <button class="dash-tab" data-role="all" data-tab="myleave"><i class="fas fa-calendar-plus"></i> My Leave</button>
     <button class="dash-tab" data-role="all" data-tab="mypayslips"><i class="fas fa-receipt"></i> Payslips</button>
   </div>
@@ -690,7 +691,22 @@ body *{visibility:hidden !important}
     <div class="admin-card">
       <div class="admin-card-header"><h3><i class="fas fa-calendar-alt"></i> My Schedule</h3></div>
       <input type="date" id="myScheduleWeek" onchange="renderMySchedule()" style="padding:9px 12px;border-radius:10px;border:1.5px solid var(--border-soft);font-weight:600;font-size:.82rem;margin-bottom:12px">
+      <div style="background:#e6f0ff;border:1.5px solid #c2d6f5;border-radius:12px;padding:10px 14px;margin-bottom:12px;font-size:.78rem;color:#1e4b8a;font-weight:600">
+        <i class="fas fa-info-circle" style="margin-right:6px"></i>Only <strong>future</strong> shifts can be swapped. Tap a colored shift to request a swap with a colleague.
+      </div>
       <div class="schedule-grid-wrapper"><div id="myScheduleGrid"></div></div>
+    </div>
+  </div>
+
+  <!-- SHIFT SWAPS -->
+  <div class="tab-panel" id="panel-swaps">
+    <div class="admin-card">
+      <div class="admin-card-header"><h3><i class="fas fa-paper-plane"></i> My Swap Requests</h3></div>
+      <div id="mySwapRequestsList"></div>
+    </div>
+    <div class="admin-card">
+      <div class="admin-card-header"><h3><i class="fas fa-inbox"></i> Incoming Requests</h3></div>
+      <div id="incomingSwapRequestsList"></div>
     </div>
   </div>
 
@@ -984,6 +1000,34 @@ body *{visibility:hidden !important}
   </div>
 </div>
 
+<!-- SWAP REQUEST MODAL -->
+<div class="modal-overlay" id="swapRequestModal">
+  <div class="modal" style="max-width:520px">
+    <div class="modal-header"><h2><i class="fas fa-exchange-alt"></i> Request Shift Swap</h2><button class="modal-close" onclick="closeModal('swapRequestModal')"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body">
+      <input type="hidden" id="swapMyShiftId">
+      <input type="hidden" id="swapMyDate">
+      <input type="hidden" id="swapColleagueDate">
+      <div style="background:#e6f5ee;border:1.5px solid #b8d9c8;border-radius:12px;padding:12px 14px;margin-bottom:16px">
+        <div style="font-size:.7rem;font-weight:800;color:var(--primary);text-transform:uppercase">Your Shift</div>
+        <div style="font-size:.95rem;font-weight:800;color:var(--text-dark);margin-top:4px" id="swapMyShiftInfo">—</div>
+      </div>
+      <div class="form-group">
+        <label>Select Colleague *</label>
+        <select id="swapColleagueSelect" onchange="onSwapColleagueChange()"><option value="">-- Choose --</option></select>
+      </div>
+      <div class="form-group">
+        <label>Their Shift (same day) *</label>
+        <select id="swapColleagueShiftSelect"><option value="">-- Choose colleague first --</option></select>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" onclick="closeModal('swapRequestModal')">Cancel</button>
+        <button type="button" class="btn btn-primary" onclick="submitSwapRequest()"><i class="fas fa-paper-plane"></i> Send Request</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="toast-message" id="toast"><i class="fas fa-check-circle"></i> <span id="toastText">Action completed</span></div>
 
 <script type="module">
@@ -1014,6 +1058,7 @@ const COLORS = ['#1e6b4b','#3f66d0','#8a4b3c','#9c4b8a','#2f7a6b','#b45a2c','#4b
 const state = {
   employees: [], users: [], locations: [], companies: [],
   attendance: [], leaves: [], payrolls: [], schedules: [],
+  swapRequests: [],
   currentUser: null
 };
 
@@ -1119,12 +1164,14 @@ async function seedDefaultAdmin() {
 }
 
 async function loadState() {
-  const [emps, users, locs, comps, att, leaves, pays, scheds] = await Promise.all([
+  const [emps, users, locs, comps, att, leaves, pays, scheds, swaps] = await Promise.all([
     fsGetAll('employees'), fsGetAll('users'), fsGetAll('locations'), fsGetAll('companies'),
-    fsGetAll('attendance'), fsGetAll('leaves'), fsGetAll('payrolls'), fsGetAll('schedules')
+    fsGetAll('attendance'), fsGetAll('leaves'), fsGetAll('payrolls'), fsGetAll('schedules'),
+    fsGetAll('swapRequests')
   ]);
   state.employees = emps; state.users = users; state.locations = locs; state.companies = comps;
   state.attendance = att; state.leaves = leaves; state.payrolls = pays; state.schedules = scheds;
+  state.swapRequests = swaps;
   if (!state.users.find(u => u.username === 'admin')) {
     state.users.unshift({ id: 'seed-admin', username: 'admin', password: 'admin', fullName: 'Administrator', role: 'admin', location: '', employeeId: '', companyId: '' });
   }
@@ -1194,6 +1241,8 @@ window.showUserDashboard = function() {
   if (!$('myScheduleWeek').value) $('myScheduleWeek').value = formatDateISO(getWeekStart());
   if (!$('scheduleWeekStart').value) $('scheduleWeekStart').value = formatDateISO(getWeekStart());
   renderMySchedule();
+  renderMySwapRequests();
+  renderIncomingSwapRequests();
 };
 
 window.showAdminDashboard = function() {
@@ -1243,6 +1292,7 @@ window.switchDashTab = function(tab, btn) {
   if (tab === 'myleave') renderMyLeave();
   if (tab === 'mypayslips') renderMyPayslips();
   if (tab === 'clock') { refreshMyClockStatus(); renderMyAttendance(); }
+  if (tab === 'swaps') { renderMySwapRequests(); renderIncomingSwapRequests(); }
 };
 
 document.querySelectorAll('#dashboardTabs .dash-tab').forEach(btn => {
@@ -1661,30 +1711,23 @@ window.openForceClockOut = function(empId, dateStr) {
   openModal('forceClockOutModal');
 };
 
-// ⭐ FORCE CLOCK OUT: Corrected submit handler ⭐
+// FORCE CLOCK OUT SUBMIT
 window.submitForceClockOut = async function() {
   const empId = $('forceCOEmpId').value;
   const dateStr = $('forceCODate').value;
   const timeVal = $('forceCOTime').value;
   const reason = $('forceCOReason').value.trim() || 'Manager override';
-  
   if (!timeVal) { showToast('⚠️ Enter a clock-out time', 'info'); return; }
   const emp = state.employees.find(e => e.id === empId); if (!emp) return;
-  
-  // Find the specific record for this employee and date that is still open
   const record = state.attendance.find(a => a.employeeId === empId && a.date === dateStr && a.clockIn && !a.clockOut);
   if (!record) { showToast('ℹ️ No open clock-in found', 'info'); return; }
-  
   const [h1, m1] = record.clockIn.split(':').map(Number);
   const [h2, m2] = timeVal.split(':').map(Number);
   let hours = ((h2 * 60 + m2) - (h1 * 60 + m1)) / 60;
   if (hours < 0) hours += 24;
   hours = Math.round(hours * 100) / 100;
-  
   const device = detectDevice();
-  
   try {
-    // 1. Update database
     await fsUpdate('attendance', record.id, {
       clockOut: timeVal,
       hours,
@@ -1693,22 +1736,16 @@ window.submitForceClockOut = async function() {
       clockOutReason: reason,
       forceClockOut: true
     });
-    
-    // 2. Update local state object directly
     record.clockOut = timeVal;
     record.hours = hours;
     record.clockOutDevice = device;
     record.clockOutBy = state.currentUser ? state.currentUser.username : 'manager';
     record.clockOutReason = reason;
     record.forceClockOut = true;
-    
-    // 3. Re-render to show the closed state
     renderAttendance();
     closeModal('forceClockOutModal');
     showToast(`✅ ${emp.name} clocked out at ${timeVal}`, 'success');
-  } catch (err) { 
-    showToast('❌ ' + err.message, 'error'); 
-  }
+  } catch (err) { showToast('❌ ' + err.message, 'error'); }
 };
 
 window.deleteAttendanceEntry = async function(id) {
@@ -1849,7 +1886,10 @@ window.generatePayroll = function() {
       <td style="color:#d64545">-${formatUGX(other)}</td>
       <td style="color:#d64545">-${formatUGX(abs.amount)}</td>
       <td class="salary-cell" style="color:#1e6b4b">${formatUGX(net)}</td>
-      <td style="text-align:center"><button class="icon-btn" onclick="viewPayslipFor('${emp.id}', '${monthStr}')"><i class="fas fa-file-invoice"></i></button></td>
+      <td style="text-align:center"><div style="display:flex;gap:4px;justify-content:center">
+        <button class="icon-btn" onclick="viewPayslipFor('${emp.id}', '${monthStr}')" title="View"><i class="fas fa-file-invoice"></i></button>
+        <button class="icon-btn danger" onclick="deletePayrollEntry('${emp.id}', '${monthStr}')" title="Delete"><i class="fas fa-trash-alt"></i></button>
+      </div></td>
     </tr>`;
   }).join('');
   state.payrolls = oldPayrolls;
@@ -1875,10 +1915,22 @@ function renderPayrollTable() {
       <td style="color:#d64545">-${formatUGX(p.otherDeductions || 0)}</td>
       <td style="color:#d64545">-${formatUGX(p.absenceDeduction || 0)}</td>
       <td class="salary-cell" style="color:#1e6b4b">${formatUGX(p.net)}</td>
-      <td style="text-align:center"><button class="icon-btn" onclick="viewPayslipFor('${p.employeeId}', '${monthStr}')"><i class="fas fa-file-invoice"></i></button></td>
+      <td style="text-align:center"><div style="display:flex;gap:4px;justify-content:center">
+        <button class="icon-btn" onclick="viewPayslipFor('${p.employeeId}', '${monthStr}')" title="View"><i class="fas fa-file-invoice"></i></button>
+        <button class="icon-btn danger" onclick="deletePayrollEntry('${p.employeeId}', '${monthStr}')" title="Delete"><i class="fas fa-trash-alt"></i></button>
+      </div></td>
     </tr>`;
   }).join('');
 }
+
+window.deletePayrollEntry = function(empId, month) {
+  const p = state.payrolls.find(x => x.employeeId === empId && x.month === month);
+  if (!p) return;
+  if (!confirm(`Delete payroll entry for ${p.employeeName} (${formatPayrollMonth(month)})?`)) return;
+  state.payrolls = state.payrolls.filter(x => !(x.employeeId === empId && x.month === month));
+  renderPayrollTable();
+  showToast('🗑️ Payroll entry removed', 'info');
+};
 
 window.viewPayslipFor = function(empId, monthStr) {
   const emp = state.employees.find(e => e.id === empId);
@@ -2040,15 +2092,22 @@ window.renderMySchedule = function() {
   const days = []; for (let i = 0; i < 7; i++) days.push(formatDateISO(addDays(startDate, i)));
   if (!emp) { grid.innerHTML = '<div style="padding:28px;text-align:center;color:#7b8fb0">No employee record linked.</div>'; return; }
   const myColor = getCashierColor(emp);
+  const today = new Date().toISOString().slice(0, 10);
   let html = '<div class="schedule-grid"><div class="head name-col">Day</div>';
   days.forEach(d => html += `<div class="head">${dayLabel(d)}<br>${new Date(d + 'T00:00:00').getDate()}</div>`);
   html += `<div class="row-label"><span class="avatar-sm" style="background:${myColor}20;color:${myColor}">${getInitials(emp.name)}</span><span>Me</span></div>`;
   days.forEach(d => {
     const shift = getShiftFor(emp.id, d);
+    const isFuture = d > today;
     if (!shift) html += `<div class="shift-cell empty">—</div>`;
     else if (shift.isAbsent) html += `<div class="shift-cell absent-day"><div class="shift-time">ABSENT</div></div>`;
     else if (shift.isOff) html += `<div class="shift-cell off-day"><div class="shift-time">OFF</div></div>`;
-    else html += `<div class="shift-cell filled" style="background:${myColor}"><div class="shift-time">${shift.startTime}</div><div class="shift-sub">→ ${shift.endTime}</div></div>`;
+    else {
+      const swapBtn = isFuture
+        ? `<button class="shift-delete-btn" style="display:flex;background:rgba(0,0,0,.5);" onclick="event.stopPropagation();openSwapRequestModal('${emp.id}','${d}')" title="Request swap"><i class="fas fa-exchange-alt"></i></button>`
+        : '';
+      html += `<div class="shift-cell filled" style="background:${myColor};cursor:${isFuture ? 'pointer' : 'default'};" ${isFuture ? `onclick="openSwapRequestModal('${emp.id}','${d}')"` : ''}><div class="shift-time">${shift.startTime}</div><div class="shift-sub">→ ${shift.endTime}</div>${swapBtn}</div>`;
+    }
   });
   html += '</div>';
   grid.innerHTML = html;
@@ -2101,6 +2160,125 @@ window.rejectLeave = async function(id) {
   const leave = state.leaves.find(l => l.id === id); if (!leave) return;
   await fsUpdate('leaves', id, { status: 'rejected' });
   leave.status = 'rejected'; renderLeave(); renderMyLeave(); showToast('❌ Rejected', 'info');
+};
+
+// SWAP REQUESTS
+function renderMySwapRequests() {
+  const list = $('mySwapRequestsList'); if (!list) return;
+  const emp = myEmployeeRecord();
+  if (!emp) { list.innerHTML = '<div style="padding:20px;text-align:center;color:#7b8fb0">No employee record.</div>'; return; }
+  const myReqs = state.swapRequests.filter(r => r.fromEmployeeId === emp.id).sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+  if (myReqs.length === 0) { list.innerHTML = '<div style="padding:20px;text-align:center;color:#7b8fb0">No swap requests sent.</div>'; return; }
+  list.innerHTML = myReqs.map(r => {
+    const statusClass = r.status === 'pending' ? 'badge-amber' : r.status === 'accepted' ? 'badge-green' : 'badge-red';
+    return `<div class="swap-request-row">
+      <div>
+        <div class="who">To: ${escapeHtml(r.toEmployeeName)}</div>
+        <div class="what">My shift: ${r.fromShiftDate} (${r.fromShiftStart}–${r.fromShiftEnd})</div>
+        <div class="what">Their shift: ${r.toShiftDate} (${r.toShiftStart}–${r.toShiftEnd})</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="badge ${statusClass}">${r.status}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderIncomingSwapRequests() {
+  const list = $('incomingSwapRequestsList'); if (!list) return;
+  const emp = myEmployeeRecord();
+  if (!emp) { list.innerHTML = '<div style="padding:20px;text-align:center;color:#7b8fb0">No employee record.</div>'; return; }
+  const incoming = state.swapRequests.filter(r => r.toEmployeeId === emp.id && r.status === 'pending').sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+  if (incoming.length === 0) { list.innerHTML = '<div style="padding:20px;text-align:center;color:#7b8fb0">No incoming requests.</div>'; return; }
+  list.innerHTML = incoming.map(r => `<div class="swap-request-row">
+    <div>
+      <div class="who">From: ${escapeHtml(r.fromEmployeeName)}</div>
+      <div class="what">They want your shift: ${r.toShiftDate} (${r.toShiftStart}–${r.toShiftEnd})</div>
+      <div class="what">In exchange for their shift: ${r.fromShiftDate} (${r.fromShiftStart}–${r.fromShiftEnd})</div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-primary btn-sm" onclick="acceptSwapRequest('${r.id}')"><i class="fas fa-check"></i> Accept</button>
+      <button class="btn btn-danger btn-sm" onclick="rejectSwapRequest('${r.id}')"><i class="fas fa-times"></i> Reject</button>
+    </div>
+  </div>`).join('');
+}
+
+window.acceptSwapRequest = async function(id) {
+  const req = state.swapRequests.find(r => r.id === id); if (!req) return;
+  try {
+    await fsUpdate('swapRequests', id, { status: 'accepted' });
+    req.status = 'accepted';
+    renderIncomingSwapRequests(); renderMySwapRequests();
+    showToast('✅ Swap accepted', 'success');
+  } catch (err) { showToast('❌ ' + err.message, 'error'); }
+};
+
+window.rejectSwapRequest = async function(id) {
+  const req = state.swapRequests.find(r => r.id === id); if (!req) return;
+  try {
+    await fsUpdate('swapRequests', id, { status: 'rejected' });
+    req.status = 'rejected';
+    renderIncomingSwapRequests(); renderMySwapRequests();
+    showToast('❌ Swap rejected', 'info');
+  } catch (err) { showToast('❌ ' + err.message, 'error'); }
+};
+
+// INITIATE SWAP (from My Schedule)
+window.openSwapRequestModal = function(colleagueId, dateStr) {
+  const me = myEmployeeRecord(); if (!me) { showToast('⚠️ No employee record', 'info'); return; }
+  const myShift = getShiftFor(me.id, dateStr);
+  if (!myShift || myShift.isOff || myShift.isAbsent) { showToast('⚠️ You have no shift on that day', 'info'); return; }
+  const today = new Date().toISOString().slice(0, 10);
+  if (dateStr <= today) { showToast('⚠️ Only future shifts can be swapped', 'info'); return; }
+  const colleague = state.employees.find(e => e.id === colleagueId);
+  if (!colleague) { showToast('⚠️ Colleague not found', 'info'); return; }
+  const colleagueShift = getShiftFor(colleagueId, dateStr);
+  if (!colleagueShift || colleagueShift.isOff || colleagueShift.isAbsent) { showToast('⚠️ Colleague has no shift on that day', 'info'); return; }
+  $('swapMyShiftId').value = myShift.id || '';
+  $('swapMyDate').value = dateStr;
+  $('swapColleagueDate').value = dateStr;
+  $('swapMyShiftInfo').textContent = `${dayLabel(dateStr)} ${dateStr}: ${myShift.startTime}–${myShift.endTime}`;
+  const sel = $('swapColleagueSelect');
+  const colleagues = myEmployees().filter(e => e.id !== me.id && isCashier(e));
+  sel.innerHTML = '<option value="">-- Choose --</option>' + colleagues.map(c => `<option value="${c.id}">${escapeHtml(c.name)}</option>`).join('');
+  if (colleagues.length === 0) { showToast('⚠️ No colleagues available', 'info'); return; }
+  $('swapColleagueShiftSelect').innerHTML = '<option value="">-- Choose colleague first --</option>';
+  openModal('swapRequestModal');
+};
+
+window.onSwapColleagueChange = function() {
+  const colleagueId = $('swapColleagueSelect').value;
+  const dateStr = $('swapColleagueDate').value;
+  const sel = $('swapColleagueShiftSelect');
+  if (!colleagueId) { sel.innerHTML = '<option value="">-- Choose colleague first --</option>'; return; }
+  const shift = getShiftFor(colleagueId, dateStr);
+  if (!shift || shift.isOff || shift.isAbsent) { sel.innerHTML = '<option value="">No shift available</option>'; return; }
+  sel.innerHTML = `<option value="${shift.id || 'none'}">${shift.startTime}–${shift.endTime}</option>`;
+};
+
+window.submitSwapRequest = async function() {
+  const fromEmployeeId = myEmployeeRecord()?.id;
+  const fromShiftDate = $('swapMyDate').value;
+  const toEmployeeId = $('swapColleagueSelect').value;
+  const toShiftDate = $('swapColleagueDate').value;
+  if (!fromEmployeeId || !toEmployeeId) { showToast('⚠️ Select a colleague', 'info'); return; }
+  const fromShift = getShiftFor(fromEmployeeId, fromShiftDate);
+  const toShift = getShiftFor(toEmployeeId, toShiftDate);
+  if (!fromShift || !toShift || fromShift.isOff || fromShift.isAbsent || toShift.isOff || toShift.isAbsent) { showToast('⚠️ Invalid shift data', 'info'); return; }
+  const me = state.employees.find(e => e.id === fromEmployeeId);
+  const colleague = state.employees.find(e => e.id === toEmployeeId);
+  const data = {
+    fromEmployeeId, fromEmployeeName: me.name, fromShiftDate, fromShiftStart: fromShift.startTime, fromShiftEnd: fromShift.endTime,
+    toEmployeeId, toEmployeeName: colleague.name, toShiftDate, toShiftStart: toShift.startTime, toShiftEnd: toShift.endTime,
+    status: 'pending', createdAt: new Date().toISOString()
+  };
+  try {
+    const newId = await fsAdd('swapRequests', data);
+    state.swapRequests.push({ id: newId, ...data });
+    closeModal('swapRequestModal');
+    renderMySwapRequests();
+    showToast('📨 Swap request sent', 'success');
+  } catch (err) { showToast('❌ ' + err.message, 'error'); }
 };
 
 // ADMIN: LOCATIONS
