@@ -1033,7 +1033,7 @@ body *{visibility:hidden !important}
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-analytics.js";
-import { getFirestore, collection, getDocs, addDoc, doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, addDoc, doc, setDoc, deleteDoc, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCwzxVaapurlh2hlUqwE53cI72QWZgTeg0",
@@ -1232,7 +1232,8 @@ window.showUserDashboard = function() {
     $('panel-' + firstVisible.dataset.tab).classList.add('active');
   }
 
-  startLiveClock(); refreshMyClockStatus(); renderMyAttendance(); renderMyLeave(); renderMyPayslips();
+  startLiveClock(); startAttendanceListener(); refreshMyClockStatus(); renderMyAttendance(); renderMyLeave(); renderMyPayslips();
+  syncMyAttendance().then(() => { refreshMyClockStatus(); renderMyAttendance(); });
   if (isManager()) {
     renderTable(); updateStats(); renderAttendance(); renderLeave(); renderPayrollTable();
     renderManagerBranches(); renderManagerUsers(); populateReportEmployeeFilter();
@@ -1268,6 +1269,7 @@ window.logout = function() {
   state.currentUser = null;
   clearSession();
   stopLiveClock();
+  stopAttendanceListener();
   document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
   $('appDashboard').style.display = 'none';
   $('adminDashboard').style.display = 'none';
@@ -1291,7 +1293,7 @@ window.switchDashTab = function(tab, btn) {
   if (tab === 'users' && isManager()) renderManagerUsers();
   if (tab === 'myleave') renderMyLeave();
   if (tab === 'mypayslips') renderMyPayslips();
-  if (tab === 'clock') { refreshMyClockStatus(); renderMyAttendance(); }
+  if (tab === 'clock') { refreshMyClockStatus(); renderMyAttendance(); syncMyAttendance().then(() => { refreshMyClockStatus(); renderMyAttendance(); }); }
   if (tab === 'swaps') { renderMySwapRequests(); renderIncomingSwapRequests(); }
 };
 
@@ -1312,10 +1314,14 @@ window.switchAdminTab = function(tab, btn) {
 
 // LIVE CLOCK
 let clockInterval = null;
+let lastClockDay = null;
 function startLiveClock() {
   stopLiveClock();
+  lastClockDay = localDateISO();
   const upd = () => {
     const now = new Date();
+    const dayNow = localDateISO(now);
+    if (dayNow !== lastClockDay) { lastClockDay = dayNow; refreshMyClockStatus(); renderMyAttendance(); }
     if ($('liveClock')) $('liveClock').textContent = now.toTimeString().slice(0, 8);
     if ($('clockGreeting') && state.currentUser) {
       const h = now.getHours();
@@ -1348,64 +1354,149 @@ function addDays(d, n) { const x = new Date(d); x.setDate(x.getDate() + n); retu
 function dayLabel(dateStr) { return new Date(dateStr + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'short' }); }
 function getShiftFor(empId, dateStr) { return state.schedules.find(s => s.employeeId === empId && s.date === dateStr); }
 
+// ===== ATTENDANCE SYNC & OPEN-SHIFT HELPERS =====
+// Local (not UTC) calendar date, so "today" is correct in the user's timezone
+function localDateISO(d) {
+  d = d || new Date();
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+function localTimeHM(d) { return (d || new Date()).toTimeString().slice(0, 5); }
+
+// The employee's open shift (clocked in, not yet clocked out) on ANY date.
+// A shift stays open across midnight until the user clocks out.
+function findOpenRecord(empId) {
+  const open = state.attendance.filter(a => a.employeeId === empId && a.clockIn && !a.clockOut);
+  if (!open.length) return null;
+  open.sort((a, b) => (b.date + (b.clockIn || '')).localeCompare(a.date + (a.clockIn || '')));
+  return open[0];
+}
+function shiftStartMs(rec) { return new Date(rec.date + 'T' + rec.clockIn + ':00').getTime(); }
+function fmtClockOut(a) {
+  if (!a.clockOut) return null;
+  return (a.clockOutDate && a.clockOutDate !== a.date) ? `${a.clockOut} <small style="color:#7b8fb0">(${a.clockOutDate})</small>` : a.clockOut;
+}
+
+// Fetch this employee's attendance straight from the server and merge into state
+async function syncMyAttendance() {
+  const emp = myEmployeeRecord(); if (!emp || !db) return;
+  try {
+    const snap = await getDocs(query(collection(db, 'attendance'), where('employeeId', '==', emp.id)));
+    const fresh = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    state.attendance = state.attendance.filter(a => a.employeeId !== emp.id).concat(fresh);
+  } catch (e) { /* offline: keep what we have */ }
+}
+
+// Live listener: keeps attendance current without page refresh (other tabs/devices/manager force clock-outs)
+let attendanceUnsub = null;
+function startAttendanceListener() {
+  if (attendanceUnsub || !db) return;
+  try {
+    attendanceUnsub = onSnapshot(collection(db, 'attendance'), snap => {
+      if (snap.metadata.hasPendingWrites && clockActionBusy) return;
+      state.attendance = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      if (state.currentUser && $('appDashboard').style.display !== 'none') {
+        refreshMyClockStatus(); renderMyAttendance();
+        if (isManager() && $('panel-attendance') && $('panel-attendance').classList.contains('active')) renderAttendance();
+      }
+    }, () => { attendanceUnsub = null; });
+  } catch (e) { attendanceUnsub = null; }
+}
+function stopAttendanceListener() { if (attendanceUnsub) { attendanceUnsub(); attendanceUnsub = null; } }
+let clockActionBusy = false;
+
+// Re-sync when the user comes back to the tab/app, regains connection, or restores from back/forward cache
+async function resyncClockUI() {
+  if (!state.currentUser || $('appDashboard').style.display === 'none') return;
+  await syncMyAttendance();
+  refreshMyClockStatus(); renderMyAttendance();
+}
+document.addEventListener('visibilitychange', () => { if (!document.hidden) resyncClockUI(); });
+window.addEventListener('focus', resyncClockUI);
+window.addEventListener('online', resyncClockUI);
+window.addEventListener('pageshow', e => { if (e.persisted) resyncClockUI(); });
+
 // CLOCK IN / OUT
 window.selfClockIn = async function() {
   if (clockInLock) { showToast('⚠️ Processing...', 'info'); return; }
   const emp = myEmployeeRecord();
   if (!emp) { showToast('⚠️ No employee record linked', 'info'); return; }
-  const today = new Date().toISOString().slice(0, 10);
-  const existing = state.attendance.find(a => a.employeeId === emp.id && a.date === today);
-  if (existing && existing.clockIn && !existing.clockOut) {
-    showToast(`⚠️ Already clocked in at ${existing.clockIn}`, 'error');
-    return;
-  }
-  clockInLock = true;
-  const inBtn = $('bigClockInBtn');
+  clockInLock = true; clockActionBusy = true;
+  const inBtn = $('bigClockInBtn'), outBtn = $('bigClockOutBtn');
   if (inBtn) { inBtn.disabled = true; inBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...'; }
-  const now = new Date().toTimeString().slice(0, 5);
-  const device = detectDevice();
+  if (outBtn) outBtn.disabled = true;
   try {
-    const data = { employeeId: emp.id, employeeName: emp.name, date: today, clockIn: now, clockOut: null, status: 'present', clockInDevice: device, hours: 0, createdAt: new Date().toISOString() };
+    // Always check the server first so a shift opened elsewhere (or before a refresh) is never duplicated
+    await syncMyAttendance();
+    const open = findOpenRecord(emp.id);
+    if (open) {
+      refreshMyClockStatus();
+      showToast(`⚠️ Already clocked in since ${open.date} ${open.clockIn}. Clock out first.`, 'error');
+      return;
+    }
+    const nowD = new Date();
+    const today = localDateISO(nowD), now = localTimeHM(nowD);
+    const device = detectDevice();
+    const data = { employeeId: emp.id, employeeName: emp.name, date: today, clockIn: now, clockOut: null, status: 'present', clockInDevice: device, hours: 0, createdAt: nowD.toISOString() };
     const newId = await fsAdd('attendance', data);
     state.attendance.push({ id: newId, ...data });
-    refreshMyClockStatus(); renderMyAttendance(); if (isManager()) renderAttendance();
+    renderMyAttendance(); if (isManager()) renderAttendance();
     showToast(`✅ Clocked in at ${now}`, 'success');
   } catch (err) { showToast('❌ ' + err.message, 'error'); }
   finally {
-    clockInLock = false;
-    if (inBtn) { inBtn.disabled = false; inBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Clock In'; }
+    clockInLock = false; clockActionBusy = false;
+    if (inBtn) inBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Clock In';
+    refreshMyClockStatus();
   }
 };
 
 window.selfClockOut = async function() {
+  if (clockInLock) { showToast('⚠️ Processing...', 'info'); return; }
   const emp = myEmployeeRecord();
   if (!emp) { showToast('⚠️ No employee record linked', 'info'); return; }
-  const today = new Date().toISOString().slice(0, 10);
-  const now = new Date().toTimeString().slice(0, 5);
-  const record = state.attendance.find(a => a.employeeId === emp.id && a.date === today && a.clockIn && !a.clockOut);
-  if (!record) { showToast('⚠️ Clock in first', 'info'); return; }
-  const [h1, m1] = record.clockIn.split(':').map(Number);
-  const [h2, m2] = now.split(':').map(Number);
-  const hours = Math.max(0, ((h2 * 60 + m2) - (h1 * 60 + m1)) / 60);
+  clockInLock = true; clockActionBusy = true;
+  const inBtn = $('bigClockInBtn'), outBtn = $('bigClockOutBtn');
+  if (outBtn) { outBtn.disabled = true; outBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...'; }
+  if (inBtn) inBtn.disabled = true;
   try {
-    await fsUpdate('attendance', record.id, { clockOut: now, hours: Math.round(hours * 100) / 100, clockOutDevice: detectDevice() });
-    record.clockOut = now;
-    record.hours = Math.round(hours * 100) / 100;
-    refreshMyClockStatus(); renderMyAttendance(); if (isManager()) renderAttendance();
+    await syncMyAttendance();
+    // Finds the open shift on ANY date, so clocking out works after midnight / day change
+    const record = findOpenRecord(emp.id);
+    if (!record) { showToast('⚠️ No open clock-in found', 'info'); return; }
+    const nowD = new Date();
+    const now = localTimeHM(nowD), outDate = localDateISO(nowD);
+    const hours = Math.round(Math.max(0, (nowD.getTime() - shiftStartMs(record)) / 3600000) * 100) / 100;
+    const upd = { clockOut: now, clockOutDate: outDate, hours, clockOutDevice: detectDevice() };
+    await fsUpdate('attendance', record.id, upd);
+    Object.assign(record, upd);
+    renderMyAttendance(); if (isManager()) renderAttendance();
     showToast(`✅ Clocked out (${hours.toFixed(1)}h)`, 'success');
   } catch (err) { showToast('❌ ' + err.message, 'error'); }
+  finally {
+    clockInLock = false; clockActionBusy = false;
+    if (outBtn) outBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Clock Out';
+    refreshMyClockStatus();
+  }
 };
 
 function refreshMyClockStatus() {
   const emp = myEmployeeRecord();
   const statusEl = $('clockStatusText'), inBtn = $('bigClockInBtn'), outBtn = $('bigClockOutBtn');
   if (!statusEl) return;
+  if (clockInLock) return; // a clock action is in progress; it refreshes when done
   if (!emp) { statusEl.textContent = 'No employee record linked.'; inBtn.disabled = true; outBtn.disabled = true; return; }
-  const today = new Date().toISOString().slice(0, 10);
-  const record = state.attendance.find(a => a.employeeId === emp.id && a.date === today);
-  if (!record || !record.clockIn) { statusEl.textContent = 'Ready to start?'; inBtn.disabled = false; outBtn.disabled = true; }
-  else if (!record.clockOut) { statusEl.textContent = `Clocked in at ${record.clockIn}. Don't forget to clock out!`; inBtn.disabled = true; outBtn.disabled = false; }
-  else { statusEl.textContent = `Completed today: ${record.clockIn} → ${record.clockOut} (${record.hours}h)`; inBtn.disabled = false; outBtn.disabled = true; }
+  const today = localDateISO();
+  const open = findOpenRecord(emp.id);
+  if (open) {
+    const since = open.date === today ? `Clocked in at ${open.clockIn}` : `Clocked in since ${open.date} at ${open.clockIn}`;
+    statusEl.textContent = `${since}. Don't forget to clock out!`;
+    inBtn.disabled = true; outBtn.disabled = false;
+    return;
+  }
+  const done = state.attendance.filter(a => a.employeeId === emp.id && a.clockIn && a.clockOut && (a.date === today || a.clockOutDate === today))
+    .sort((a, b) => (b.date + b.clockIn).localeCompare(a.date + a.clockIn))[0];
+  if (!done) statusEl.textContent = 'Ready to start?';
+  else statusEl.textContent = `Completed: ${done.clockIn} → ${done.clockOut} (${done.hours}h)`;
+  inBtn.disabled = false; outBtn.disabled = true;
 }
 
 function renderMyAttendance() {
@@ -1414,7 +1505,7 @@ function renderMyAttendance() {
   if (!emp) { tbody.innerHTML = '<tr class="empty-row"><td colspan="5">No employee record.</td></tr>'; return; }
   const records = state.attendance.filter(a => a.employeeId === emp.id).sort((a, b) => b.date.localeCompare(a.date)).slice(0, 30);
   if (records.length === 0) { tbody.innerHTML = '<tr class="empty-row"><td colspan="5">No attendance yet.</td></tr>'; return; }
-  tbody.innerHTML = records.map(a => `<tr><td>${a.date}</td><td>${a.clockIn || '—'}</td><td>${a.clockOut || '—'}</td><td>${a.hours ? a.hours.toFixed(1) + 'h' : '—'}</td><td><span class="status-pill status-present">${a.status}</span></td></tr>`).join('');
+  tbody.innerHTML = records.map(a => `<tr><td>${a.date}</td><td>${a.clockIn || '—'}</td><td>${fmtClockOut(a) || '—'}</td><td>${a.hours ? a.hours.toFixed(1) + 'h' : '—'}</td><td><span class="status-pill status-present">${a.status}</span></td></tr>`).join('');
 }
 
 // MANAGER: EMPLOYEES
@@ -1664,7 +1755,7 @@ $('managerCreateUserForm').addEventListener('submit', async e => {
 function renderAttendance() {
   const empIds = myEmployees().map(e => e.id);
   const myAtt = state.attendance.filter(a => empIds.includes(a.employeeId));
-  const today = new Date().toISOString().slice(0, 10);
+  const today = localDateISO();
   const tr = myAtt.filter(a => a.date === today);
   const present = tr.filter(a => a.clockIn).length;
   const late = tr.filter(a => a.status === 'late').length;
@@ -1689,7 +1780,7 @@ function renderAttendance() {
       <td>${a.date}</td>
       <td>${escapeHtml(a.employeeName || '—')}</td>
       <td>${a.clockIn || '—'}</td>
-      <td>${a.clockOut || '<span style="color:#d64545;font-weight:800">open</span>'}</td>
+      <td>${fmtClockOut(a) || '<span style="color:#d64545;font-weight:800">open</span>'}</td>
       <td>${a.hours ? a.hours.toFixed(1) + 'h' : '—'}</td>
       <td><span class="status-pill ${sc}">${a.status}</span></td>
       <td style="text-align:center"><div style="display:flex;gap:4px;justify-content:center">${forceBtn}${delBtn}</div></td>
@@ -1724,12 +1815,14 @@ window.submitForceClockOut = async function() {
   const [h1, m1] = record.clockIn.split(':').map(Number);
   const [h2, m2] = timeVal.split(':').map(Number);
   let hours = ((h2 * 60 + m2) - (h1 * 60 + m1)) / 60;
-  if (hours < 0) hours += 24;
+  let coDate = dateStr;
+  if (hours < 0) { hours += 24; coDate = localDateISO(addDays(new Date(dateStr + 'T00:00:00'), 1)); }
   hours = Math.round(hours * 100) / 100;
   const device = detectDevice();
   try {
     await fsUpdate('attendance', record.id, {
       clockOut: timeVal,
+      clockOutDate: coDate,
       hours,
       clockOutDevice: device,
       clockOutBy: state.currentUser ? state.currentUser.username : 'manager',
@@ -1737,6 +1830,7 @@ window.submitForceClockOut = async function() {
       forceClockOut: true
     });
     record.clockOut = timeVal;
+    record.clockOutDate = coDate;
     record.hours = hours;
     record.clockOutDevice = device;
     record.clockOutBy = state.currentUser ? state.currentUser.username : 'manager';
