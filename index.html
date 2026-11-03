@@ -827,6 +827,14 @@ body *{visibility:hidden !important}
           <div class="form-group"><label>Cycle</label><select id="empAllowanceCycle"><option value="daily">Per Day</option><option value="weekly">Per Week</option><option value="monthly">Per Month</option></select></div>
         </div>
         <div class="form-group"><label>Other Monthly Deductions (UGX)</label><input type="number" id="empOtherDeductions" min="0" step="1" value="0"></div>
+        <div class="form-row">
+          <div class="form-group"><label>NSSF Applicable</label><select id="empNssfApplicable"><option value="yes">Yes</option><option value="no">No</option></select></div>
+          <div class="form-group"><label>NSSF %</label><input type="number" id="empNssfPercent" min="0" max="100" step="0.1" value="5"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>PAYE Applicable</label><select id="empPayeApplicable"><option value="yes">Yes</option><option value="no">No</option></select></div>
+          <div class="form-group"><label>PAYE % (0 = standard bands)</label><input type="number" id="empPayePercent" min="0" max="100" step="0.1" value="0"></div>
+        </div>
         <div class="modal-actions">
           <button type="button" class="btn btn-outline" onclick="closeModal('employeeModal')">Cancel</button>
           <button type="submit" class="btn btn-primary" id="saveEmployeeBtn"><i class="fas fa-save"></i> Save</button>
@@ -856,6 +864,14 @@ body *{visibility:hidden !important}
           <div class="form-group"><label>Cycle</label><select id="editAllowanceCycle"><option value="daily">Per Day</option><option value="weekly">Per Week</option><option value="monthly">Per Month</option></select></div>
         </div>
         <div class="form-group"><label>Other Monthly Deductions (UGX)</label><input type="number" id="editOtherDeductions" min="0" step="1" value="0"></div>
+        <div class="form-row">
+          <div class="form-group"><label>NSSF Applicable</label><select id="editNssfApplicable"><option value="yes">Yes</option><option value="no">No</option></select></div>
+          <div class="form-group"><label>NSSF %</label><input type="number" id="editNssfPercent" min="0" max="100" step="0.1" value="5"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>PAYE Applicable</label><select id="editPayeApplicable"><option value="yes">Yes</option><option value="no">No</option></select></div>
+          <div class="form-group"><label>PAYE % (0 = standard bands)</label><input type="number" id="editPayePercent" min="0" max="100" step="0.1" value="0"></div>
+        </div>
         <div class="modal-actions">
           <button type="button" class="btn btn-outline" onclick="closeModal('editModal')">Cancel</button>
           <button type="submit" class="btn btn-primary" id="updateEmployeeBtn"><i class="fas fa-save"></i> Update</button>
@@ -1645,8 +1661,12 @@ $('employeeForm').addEventListener('submit', async e => {
     const allowances = Number($('empAllowance').value) || 0;
     const allowanceCycle = $('empAllowanceCycle').value;
     const otherDeductions = Number($('empOtherDeductions').value) || 0;
+    const nssfApplicable = $('empNssfApplicable').value === 'yes';
+    const nssfPercent = $('empNssfPercent').value === '' ? 5 : Number($('empNssfPercent').value) || 0;
+    const payeApplicable = $('empPayeApplicable').value === 'yes';
+    const payePercent = Number($('empPayePercent').value) || 0;
     if (!name || !role || !department || !locationId || baseSalary <= 0) { showToast('⚠️ Fill required fields', 'info'); btn.disabled = false; return; }
-    const empData = { name, role, department, locationId, companyId: myCompanyId(), baseSalary, allowances, allowanceCycle, otherDeductions, avatarColor: getAvatarColor(name), createdAt: new Date().toISOString() };
+    const empData = { name, role, department, locationId, companyId: myCompanyId(), baseSalary, allowances, allowanceCycle, otherDeductions, nssfApplicable, nssfPercent, payeApplicable, payePercent, avatarColor: getAvatarColor(name), createdAt: new Date().toISOString() };
     const newId = await fsAdd('employees', empData);
     state.employees.push({ id: newId, ...empData });
     renderTable($('searchInput').value); updateStats();
@@ -1667,6 +1687,10 @@ window.editEmployee = function(id) {
   $('editAllowance').value = emp.allowances;
   $('editAllowanceCycle').value = emp.allowanceCycle || 'monthly';
   $('editOtherDeductions').value = emp.otherDeductions || 0;
+  $('editNssfApplicable').value = emp.nssfApplicable === false ? 'no' : 'yes';
+  $('editNssfPercent').value = emp.nssfPercent !== undefined ? emp.nssfPercent : 5;
+  $('editPayeApplicable').value = emp.payeApplicable === false ? 'no' : 'yes';
+  $('editPayePercent').value = emp.payePercent || 0;
   openModal('editModal');
 };
 
@@ -1678,7 +1702,11 @@ $('editForm').addEventListener('submit', async e => {
     name: $('editName').value.trim(), role: $('editRole').value.trim(), department: $('editDepartment').value,
     locationId: $('editLocation').value, baseSalary: Number($('editSalary').value) || 0,
     allowances: Number($('editAllowance').value) || 0, allowanceCycle: $('editAllowanceCycle').value,
-    otherDeductions: Number($('editOtherDeductions').value) || 0
+    otherDeductions: Number($('editOtherDeductions').value) || 0,
+    nssfApplicable: $('editNssfApplicable').value === 'yes',
+    nssfPercent: $('editNssfPercent').value === '' ? 5 : Number($('editNssfPercent').value) || 0,
+    payeApplicable: $('editPayeApplicable').value === 'yes',
+    payePercent: Number($('editPayePercent').value) || 0
   };
   try {
     await fsUpdate('employees', id, updates);
