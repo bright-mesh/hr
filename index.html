@@ -392,6 +392,100 @@ tr:last-child td{border-bottom:none}
 .user-avatar{width:40px;height:40px;font-size:.9rem}
 #appDashboard{padding-bottom:40px}
 }
+
+/* ===== GROUPED NAVIGATION ===== */
+.app-shell{display:block}
+.app-main{min-width:0}
+.dashboard-tabs{display:flex;align-items:stretch;gap:0;padding:2px 16px 14px;overflow-x:auto;scrollbar-width:none;scroll-snap-type:x proximity}
+.nav-group{display:flex;flex-direction:column;gap:7px;flex-shrink:0;padding:0 14px;border-left:1.5px solid var(--border-soft);scroll-snap-align:start}
+.nav-group:first-child{padding-left:0;border-left:none}
+.nav-group:last-child{padding-right:0}
+.nav-group-title{display:flex;align-items:center;gap:6px;font-size:.62rem;font-weight:800;letter-spacing:.9px;text-transform:uppercase;color:#7b8fb0;padding-left:6px}
+.nav-group-title i{color:var(--primary-light);font-size:.68rem}
+.nav-items{display:flex;gap:6px}
+@media(min-width:640px){.dashboard-tabs{padding:2px 24px 14px}}
+@media(min-width:900px){
+.app-shell{display:grid;grid-template-columns:252px minmax(0,1fr);gap:26px;align-items:start;padding:6px 32px 0;max-width:1640px;margin:0 auto}
+.dashboard-tabs{flex-direction:column;position:sticky;top:calc(100px + var(--safe-top));max-height:calc(100vh - 124px);overflow-y:auto;overflow-x:hidden;background:#fff;border:1px solid rgba(212,230,220,.7);border-radius:24px;padding:16px 12px;box-shadow:var(--shadow-md);gap:4px}
+.nav-group{border-left:none;padding:0 0 12px;margin-bottom:4px;border-bottom:1px solid #edf4f0;gap:4px}
+.nav-group:last-child{border-bottom:none;padding-bottom:0;margin-bottom:0}
+.nav-group-title{padding:6px 10px 4px}
+.nav-items{flex-direction:column;gap:2px}
+.dash-tab{width:100%;border:none;background:transparent;border-radius:12px;padding:10px 12px;font-size:.86rem;font-weight:600;justify-content:flex-start;gap:12px;color:var(--text-mid)}
+.dash-tab i{width:20px;text-align:center;font-size:.92rem;color:var(--primary-light)}
+.dash-tab:hover{background:#f0f9f4}
+.dash-tab.active{background:linear-gradient(105deg,#1e6b4b,#2d9c6e);color:#fff;box-shadow:0 10px 18px -10px rgba(30,107,75,.6)}
+.dash-tab.active i{color:#fff}
+.app-main .tab-panel{padding:0}
+}
+
+/* ===== TRAINING / SCHEDULE EXTRAS ===== */
+.badge-purple{background:#efe9ff;color:#5b3fb5;border-color:#d6c8f7}
+.shift-cell.training-day{background:linear-gradient(135deg,#7c5cd6,#9b7de8);border:1.5px solid #6a4bc4;color:#fff;box-shadow:0 4px 8px -2px rgba(91,63,181,.35)}
+.shift-cell.not-started{background:repeating-linear-gradient(45deg,#f3f6f4,#f3f6f4 6px,#eaf0ec 6px,#eaf0ec 12px);border:1.5px dashed #d4e6dc;color:#9fb0a7;font-weight:600;font-size:.62rem;cursor:not-allowed}
+.start-flag{position:absolute;top:3px;left:4px;font-size:.52rem;background:#fff;color:#1e6b4b;border-radius:6px;padding:1px 4px;box-shadow:0 1px 3px rgba(0,0,0,.2);z-index:2}
+.sched-legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.legend-chip{display:inline-flex;align-items:center;gap:6px;font-size:.68rem;font-weight:700;color:var(--text-mid);background:#fff;border:1px solid var(--border-soft);padding:4px 10px;border-radius:40px}
+.legend-dot{width:10px;height:10px;border-radius:4px;flex-shrink:0}
+
+/* ===== EMPLOYEE RECORDS ===== */
+.rec-hero{background:linear-gradient(135deg,#14573c,#2d9c6e);border-radius:22px;padding:20px;color:#fff;margin-bottom:16px;box-shadow:0 20px 40px -18px rgba(30,107,75,.5);position:relative;overflow:hidden}
+.rec-hero::after{content:'';position:absolute;right:-40px;top:-50px;width:190px;height:190px;border-radius:50%;background:rgba(255,255,255,.08)}
+.rec-hero h2{font-size:1.15rem;font-weight:800;display:flex;align-items:center;gap:10px;margin-bottom:4px;position:relative;z-index:1}
+.rec-hero p{font-size:.82rem;opacity:.9;font-weight:500;margin-bottom:16px;max-width:540px;position:relative;z-index:1}
+.rec-hero-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;position:relative;z-index:1}
+.rec-hero-stat{background:rgba(255,255,255,.14);border-radius:14px;padding:10px 12px}
+.rec-hero-stat .num{font-size:1.4rem;font-weight:800;line-height:1.1}
+.rec-hero-stat .lbl{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;opacity:.9;margin-top:3px}
+.rec-filters{display:flex;gap:8px;flex:1 1 100%;flex-wrap:wrap}
+.rec-select{padding:10px 36px 10px 14px;border-radius:40px;border:1.5px solid var(--border-soft);font-weight:600;font-size:.82rem;color:var(--text-dark);flex:1 1 140px;-webkit-appearance:none;appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233d6652'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E") no-repeat right 12px center/18px;outline:none}
+.rec-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:16px}
+.rec-card{background:#fff;border-radius:20px;padding:16px;border:1.5px solid var(--border-soft);box-shadow:var(--shadow-sm);cursor:pointer;transition:transform .15s,box-shadow .15s,border-color .15s}
+.rec-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);border-color:#b2e3d2}
+.rec-card-top{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.rec-card-id{flex:1;min-width:0}
+.rec-name{font-weight:800;font-size:.95rem;color:var(--text-dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rec-role{font-size:.75rem;color:var(--text-light);font-weight:600}
+.rec-avatar{width:46px;height:46px;border-radius:15px;font-size:1rem}
+.rec-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.rec-mini{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding-top:12px;border-top:1px solid #e4efe8}
+.rec-mini span{display:block;font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:#7b8fb0;margin-bottom:2px}
+.rec-mini strong{font-size:.78rem;color:var(--text-dark);font-weight:800;word-break:break-word}
+.rec-profile{display:flex;align-items:center;gap:14px;padding:16px;border-radius:18px;background:linear-gradient(135deg,#f0f9f4,#e6f5ee);border:1px solid #b8d9c8;margin-bottom:14px}
+.rec-profile .avatar{width:58px;height:58px;border-radius:18px;font-size:1.2rem}
+.rec-profile h3{font-size:1.1rem;font-weight:800;color:var(--text-dark);line-height:1.2}
+.rec-profile p{font-size:.8rem;color:var(--text-mid);font-weight:600;margin:2px 0 8px}
+.rec-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.rec-tile{background:#fff;border:1.5px solid var(--border-soft);border-radius:14px;padding:10px;text-align:center}
+.rec-tile span{display:block;font-size:.58rem;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:#7b8fb0}
+.rec-tile strong{display:block;font-size:.88rem;font-weight:800;color:var(--primary);margin-top:3px;word-break:break-word}
+.rec-section{background:#fff;border:1.5px solid var(--border-soft);border-radius:16px;padding:14px;margin-bottom:12px}
+.rec-section h4{font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--text-mid);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.rec-section h4 i{color:var(--primary-light)}
+.rec-row{display:flex;justify-content:space-between;gap:14px;padding:7px 0;border-bottom:1px solid #eef5f1;font-size:.83rem}
+.rec-row:last-child{border-bottom:none}
+.rec-row span{color:#62759b;font-weight:600}
+.rec-row strong{color:var(--text-dark);font-weight:700;text-align:right;word-break:break-word}
+.rec-mtiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.rec-mtile{background:#f7fdfa;border-radius:12px;padding:9px 6px;text-align:center}
+.rec-mtile b{display:block;font-size:1.1rem;font-weight:800;color:var(--text-dark)}
+.rec-mtile span{font-size:.58rem;font-weight:800;text-transform:uppercase;letter-spacing:.3px;color:#7b8fb0}
+.rec-mini-table{width:100%;min-width:0;white-space:normal}
+.rec-mini-table th,.rec-mini-table td{padding:7px 6px;font-size:.78rem}
+@media(min-width:640px){
+.rec-hero-stats{grid-template-columns:repeat(4,1fr)}
+.rec-filters{flex:0 0 auto;flex-wrap:nowrap}
+.rec-select{flex:0 0 170px}
+.rec-grid{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+.rec-hero{padding:24px 28px}
+.rec-mtiles{grid-template-columns:repeat(6,1fr)}
+}
+@media print{
+#recordModal,#recordModal *{visibility:visible !important}
+#recordModal{position:absolute !important;left:0;top:0;width:100%;background:#fff;display:block !important}
+#recordModal .modal{box-shadow:none !important;border-radius:0 !important;max-height:none !important;max-width:100% !important}
+#recordModal .modal-actions,#recordModal .modal-close{display:none !important}
+}
 @media print{
 body *{visibility:hidden !important}
 #payslipModal,#payslipModal *{visibility:visible !important}
@@ -525,21 +619,44 @@ body *{visibility:hidden !important}
     <div class="info"><strong id="companyName">Company</strong><span id="companyLocations">0 branches</span></div>
   </div>
 
+  <div class="app-shell">
   <div class="dashboard-tabs" id="dashboardTabs">
-    <button class="dash-tab active" data-role="all" data-tab="clock"><i class="fas fa-fingerprint"></i> My Clock</button>
-    <button class="dash-tab" data-role="manager" data-tab="employees"><i class="fas fa-users"></i> Employees</button>
-    <button class="dash-tab" data-role="manager" data-tab="branches"><i class="fas fa-map-marker-alt"></i> Branches</button>
-    <button class="dash-tab" data-role="manager" data-tab="users"><i class="fas fa-user-plus"></i> Users</button>
-    <button class="dash-tab" data-role="manager" data-tab="schedule"><i class="fas fa-calendar-week"></i> Schedule</button>
-    <button class="dash-tab" data-role="manager" data-tab="attendance"><i class="fas fa-clock"></i> Attendance</button>
-    <button class="dash-tab" data-role="all" data-tab="reports"><i class="fas fa-chart-line"></i> Reports</button>
-    <button class="dash-tab" data-role="manager" data-tab="payroll"><i class="fas fa-file-invoice-dollar"></i> Payroll</button>
-    <button class="dash-tab" data-role="manager" data-tab="leave"><i class="fas fa-umbrella-beach"></i> Leave</button>
-    <button class="dash-tab" data-role="all" data-tab="myschedule"><i class="fas fa-calendar-alt"></i> My Schedule</button>
-    <button class="dash-tab" data-role="all" data-tab="swaps"><i class="fas fa-exchange-alt"></i> Swaps</button>
-    <button class="dash-tab" data-role="all" data-tab="myleave"><i class="fas fa-calendar-plus"></i> My Leave</button>
-    <button class="dash-tab" data-role="all" data-tab="mypayslips"><i class="fas fa-receipt"></i> Payslips</button>
+    <div class="nav-group" data-group="me">
+      <div class="nav-group-title"><i class="fas fa-user-circle"></i> My Workspace</div>
+      <div class="nav-items">
+        <button class="dash-tab active" data-role="all" data-tab="clock"><i class="fas fa-fingerprint"></i> My Clock</button>
+        <button class="dash-tab" data-role="all" data-tab="myschedule"><i class="fas fa-calendar-alt"></i> My Schedule</button>
+        <button class="dash-tab" data-role="all" data-tab="swaps"><i class="fas fa-exchange-alt"></i> Swaps</button>
+        <button class="dash-tab" data-role="all" data-tab="myleave"><i class="fas fa-calendar-plus"></i> My Leave</button>
+        <button class="dash-tab" data-role="all" data-tab="mypayslips"><i class="fas fa-receipt"></i> Payslips</button>
+      </div>
+    </div>
+    <div class="nav-group" data-group="people">
+      <div class="nav-group-title"><i class="fas fa-users"></i> People</div>
+      <div class="nav-items">
+        <button class="dash-tab" data-role="manager" data-tab="employees"><i class="fas fa-users"></i> Employees</button>
+        <button class="dash-tab" data-role="manager" data-tab="records"><i class="fas fa-address-card"></i> Employee Records</button>
+        <button class="dash-tab" data-role="manager" data-tab="users"><i class="fas fa-user-plus"></i> Logins</button>
+        <button class="dash-tab" data-role="manager" data-tab="branches"><i class="fas fa-map-marker-alt"></i> Branches</button>
+      </div>
+    </div>
+    <div class="nav-group" data-group="time">
+      <div class="nav-group-title"><i class="fas fa-business-time"></i> Time &amp; Shifts</div>
+      <div class="nav-items">
+        <button class="dash-tab" data-role="manager" data-tab="schedule"><i class="fas fa-calendar-week"></i> Schedule</button>
+        <button class="dash-tab" data-role="manager" data-tab="attendance"><i class="fas fa-clock"></i> Attendance</button>
+        <button class="dash-tab" data-role="manager" data-tab="leave"><i class="fas fa-umbrella-beach"></i> Leave</button>
+      </div>
+    </div>
+    <div class="nav-group" data-group="money">
+      <div class="nav-group-title"><i class="fas fa-chart-pie"></i> Payroll &amp; Insights</div>
+      <div class="nav-items">
+        <button class="dash-tab" data-role="manager" data-tab="payroll"><i class="fas fa-file-invoice-dollar"></i> Payroll</button>
+        <button class="dash-tab" data-role="all" data-tab="reports"><i class="fas fa-chart-line"></i> Reports</button>
+      </div>
+    </div>
   </div>
+  <div class="app-main">
 
   <!-- CLOCK -->
   <div class="tab-panel active" id="panel-clock">
@@ -575,6 +692,31 @@ body *{visibility:hidden !important}
       </div>
     </div>
     <div class="table-card"><table><thead><tr><th>Employee</th><th>Dept</th><th>Branch</th><th>Base</th><th>Allowance</th><th>Statutory</th><th style="text-align:center">Actions</th></tr></thead><tbody id="tableBody"></tbody></table></div>
+  </div>
+
+  <!-- EMPLOYEE RECORDS -->
+  <div class="tab-panel" id="panel-records">
+    <div class="rec-hero">
+      <h2><i class="fas fa-address-card"></i> Employee Records</h2>
+      <p>The complete file on every employee: job, pay, statutory settings, this month's attendance, leave and payroll history.</p>
+      <div class="rec-hero-stats">
+        <div class="rec-hero-stat"><div class="num" id="recStatTotal">0</div><div class="lbl">All records</div></div>
+        <div class="rec-hero-stat"><div class="num" id="recStatActive">0</div><div class="lbl">Active now</div></div>
+        <div class="rec-hero-stat"><div class="num" id="recStatUpcoming">0</div><div class="lbl">Starting soon</div></div>
+        <div class="rec-hero-stat"><div class="num" id="recStatFormer">0</div><div class="lbl">Former</div></div>
+      </div>
+    </div>
+    <div class="toolbar">
+      <div class="search-box"><i class="fas fa-search"></i><input type="text" id="recSearch" placeholder="Search name, role, department..."></div>
+      <div class="rec-filters">
+        <select class="rec-select" id="recBranch"><option value="">All branches</option></select>
+        <select class="rec-select" id="recStatus">
+          <option value="">All statuses</option><option value="active">Active</option><option value="upcoming">Starting soon</option>
+          <option value="terminated">Terminated</option><option value="resigned">Resigned</option><option value="deceased">Deceased</option>
+        </select>
+      </div>
+    </div>
+    <div class="rec-grid" id="recordsGrid"></div>
   </div>
 
   <!-- BRANCHES -->
@@ -618,7 +760,14 @@ body *{visibility:hidden !important}
       </div>
       <div style="background:#e6f0ff;border:1.5px solid #c2d6f5;border-radius:12px;padding:12px 14px;margin-bottom:14px;font-size:.78rem;color:#1e4b8a;font-weight:600;line-height:1.6">
         <i class="fas fa-info-circle" style="margin-right:6px"></i>
-        Tap a cell to assign a shift, mark <strong>off</strong>, or tag <strong>ABSENT</strong>. Use <strong>"18:00-08:00"</strong> for cross-night shifts.
+        Tap a cell, then type a time like <strong>08:00-16:00</strong> (use <strong>"18:00-08:00"</strong> for cross-night), or a shortcut: <strong>off</strong>, <strong>abs</strong> (absent) or <strong>trn</strong> (training).
+      </div>
+      <div class="sched-legend">
+        <span class="legend-chip"><span class="legend-dot" style="background:#1e6b4b"></span> Shift</span>
+        <span class="legend-chip"><span class="legend-dot" style="background:#ffd8a8"></span> OFF</span>
+        <span class="legend-chip"><span class="legend-dot" style="background:#ff0000"></span> ABSENT · deducted</span>
+        <span class="legend-chip"><span class="legend-dot" style="background:#7c5cd6"></span> TRAINING · no pay effect</span>
+        <span class="legend-chip"><span class="legend-dot" style="background:#e3ebe6"></span> Not started</span>
       </div>
       <div class="schedule-grid-wrapper"><div id="scheduleGridContainer"></div></div>
     </div>
@@ -742,6 +891,8 @@ body *{visibility:hidden !important}
       <div class="table-card"><table style="min-width:600px"><thead><tr><th>Month</th><th>Gross</th><th>NSSF</th><th>PAYE</th><th>Net</th><th style="text-align:center">View</th></tr></thead><tbody id="myPayslipsBody"></tbody></table></div>
     </div>
   </div>
+  </div><!-- /app-main -->
+  </div><!-- /app-shell -->
 </div>
 
 <!-- ADMIN DASHBOARD -->
@@ -821,7 +972,10 @@ body *{visibility:hidden !important}
           <div class="form-group"><label>Department *</label><select id="empDepartment" required><option value="">Select</option><option>Front End</option><option>Produce</option><option>Meat &amp; Seafood</option><option>Bakery</option><option>Deli</option><option>Dairy &amp; Frozen</option><option>Grocery</option><option>Customer Service</option><option>Inventory</option><option>Floral</option><option>Security</option><option>Management</option></select></div>
           <div class="form-group"><label>Branch *</label><select id="empLocation" required><option value="">Select</option></select></div>
         </div>
-        <div class="form-group"><label>Base Salary (UGX) *</label><input type="number" id="empSalary" placeholder="e.g. 500000" min="0" step="1" required></div>
+        <div class="form-row">
+          <div class="form-group"><label>Base Salary (UGX) *</label><input type="number" id="empSalary" placeholder="e.g. 500000" min="0" step="1" required></div>
+          <div class="form-group"><label>Start Date</label><input type="date" id="empStartDate"><small style="font-size:.7rem;color:#7b8fb0;display:block;margin-top:4px">Salary is pro-rated from this date to month end.</small></div>
+        </div>
         <div class="form-row">
           <div class="form-group"><label>Allowance (UGX)</label><input type="number" id="empAllowance" placeholder="e.g. 4000" min="0" step="1" value="0"></div>
           <div class="form-group"><label>Cycle</label><select id="empAllowanceCycle"><option value="daily">Per Day</option><option value="weekly">Per Week</option><option value="monthly">Per Month</option></select></div>
@@ -858,7 +1012,10 @@ body *{visibility:hidden !important}
           <div class="form-group"><label>Department *</label><select id="editDepartment" required><option value="">Select</option><option>Front End</option><option>Produce</option><option>Meat &amp; Seafood</option><option>Bakery</option><option>Deli</option><option>Dairy &amp; Frozen</option><option>Grocery</option><option>Customer Service</option><option>Inventory</option><option>Floral</option><option>Security</option><option>Management</option></select></div>
           <div class="form-group"><label>Branch *</label><select id="editLocation" required></select></div>
         </div>
-        <div class="form-group"><label>Base Salary (UGX) *</label><input type="number" id="editSalary" min="0" step="1" required></div>
+        <div class="form-row">
+          <div class="form-group"><label>Base Salary (UGX) *</label><input type="number" id="editSalary" min="0" step="1" required></div>
+          <div class="form-group"><label>Start Date</label><input type="date" id="editStartDate"><small style="font-size:.7rem;color:#7b8fb0;display:block;margin-top:4px">Salary is pro-rated from this date to month end.</small></div>
+        </div>
         <div class="form-row">
           <div class="form-group"><label>Allowance (UGX)</label><input type="number" id="editAllowance" min="0" step="1" value="0"></div>
           <div class="form-group"><label>Cycle</label><select id="editAllowanceCycle"><option value="daily">Per Day</option><option value="weekly">Per Week</option><option value="monthly">Per Month</option></select></div>
@@ -1027,6 +1184,14 @@ body *{visibility:hidden !important}
         <div class="modal-actions"><button type="button" class="btn btn-outline" onclick="closeModal('managerCreateUserModal')">Cancel</button><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Create</button></div>
       </form>
     </div>
+  </div>
+</div>
+
+<!-- EMPLOYEE RECORD MODAL -->
+<div class="modal-overlay" id="recordModal">
+  <div class="modal" style="max-width:760px">
+    <div class="modal-header"><h2><i class="fas fa-address-card"></i> Employee Record</h2><button class="modal-close" onclick="closeModal('recordModal')"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body" id="recordBody"></div>
   </div>
 </div>
 
@@ -1288,6 +1453,9 @@ window.showUserDashboard = function() {
     else if (r === 'manager') tab.style.display = (role === 'manager' || role === 'admin') ? 'flex' : 'none';
   });
 
+  document.querySelectorAll('#dashboardTabs .nav-group').forEach(g => {
+    g.style.display = [...g.querySelectorAll('.dash-tab')].some(t => t.style.display !== 'none') ? '' : 'none';
+  });
   const firstVisible = [...document.querySelectorAll('#dashboardTabs .dash-tab')].find(t => t.style.display !== 'none');
   if (firstVisible) {
     document.querySelectorAll('.dash-tab').forEach(t => t.classList.remove('active'));
@@ -1348,6 +1516,8 @@ window.switchDashTab = function(tab, btn) {
   btn.classList.add('active');
   $('panel-' + tab).classList.add('active');
   if (tab === 'schedule' && isManager()) renderScheduleGrid();
+  if (tab === 'records' && isManager()) renderRecords();
+  try { btn.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' }); } catch (err) {}
   if (tab === 'myschedule') renderMySchedule();
   if (tab === 'attendance' && isManager()) renderAttendance();
   if (tab === 'reports') { populateReportEmployeeFilter(); renderReport(); }
@@ -1594,6 +1764,25 @@ function isEmployeeActiveForMonth(emp, monthStr) {
   const parts = String(emp.statusDate).split('-').map(Number);
   return (year * 12 + month) <= (parts[0] * 12 + parts[1]);
 }
+// ---- Start date helpers ----
+// Before the start month the employee is not on payroll; in the start month salary is pro-rated from the start day.
+function hasStartedByMonth(emp, monthStr) {
+  if (!emp || !emp.startDate) return true;
+  const { month, year } = parsePayrollMonth(monthStr);
+  const p = String(emp.startDate).split('-').map(Number);
+  return (year * 12 + month) >= (p[0] * 12 + p[1]);
+}
+function hasStartedOn(emp, ds) { return !emp || !emp.startDate || ds >= emp.startDate; }
+function prorationFor(emp, month, year) {
+  const dim = new Date(year, month, 0).getDate();
+  if (emp && emp.startDate) {
+    const [sy, sm, sd] = String(emp.startDate).split('-').map(Number);
+    if (sy === year && sm === month && sd > 1) return { days: dim - sd + 1, dim, prorated: true };
+  }
+  return { days: dim, dim, prorated: false };
+}
+function isPayrollEligible(emp, monthStr) { return isEmployeeActiveForMonth(emp, monthStr) && hasStartedByMonth(emp, monthStr); }
+
 function formatStatusDate(iso) {
   if (!iso) return '';
   return new Date(iso + 'T00:00:00').toLocaleDateString('en-UG', { day: 'numeric', month: 'short', year: 'numeric' });
@@ -1608,6 +1797,7 @@ function updateStats() {
 }
 
 function renderTable(filterText = '') {
+  renderRecords();
   const showFormer = $('showFormerEmployees') && $('showFormerEmployees').checked;
   const emps = myEmployees().filter(e => showFormer || isEmployeeActiveForMonth(e, currentMonthStr()));
   const q = (filterText || '').trim().toLowerCase();
@@ -1620,7 +1810,7 @@ function renderTable(filterText = '') {
     const loc = emp.locationId ? getLocationName(emp.locationId) : '—';
     const cycleSuffix = '/' + cycleLabel(emp.allowanceCycle);
     return `<tr>
-      <td><div class="employee-info"><div class="avatar" style="background:${color}20;color:${color}">${initials}</div><div><div class="emp-name">${escapeHtml(emp.name)}</div><div class="emp-role">${escapeHtml(emp.role)}</div>${emp.status && emp.status !== 'active' ? `<span class="badge badge-red" style="font-size:.62rem;margin-top:3px">${STATUS_LABELS[emp.status] || emp.status}${emp.statusDate ? ' · ' + formatStatusDate(emp.statusDate) : ''}</span>` : ''}</div></div></td>
+      <td><div class="employee-info"><div class="avatar" style="background:${color}20;color:${color}">${initials}</div><div><div class="emp-name">${escapeHtml(emp.name)}</div><div class="emp-role">${escapeHtml(emp.role)}${emp.startDate ? ' · since ' + formatStatusDate(emp.startDate) : ''}</div>${emp.status && emp.status !== 'active' ? `<span class="badge badge-red" style="font-size:.62rem;margin-top:3px">${STATUS_LABELS[emp.status] || emp.status}${emp.statusDate ? ' · ' + formatStatusDate(emp.statusDate) : ''}</span>` : ''}</div></div></td>
       <td><span class="${getDeptBadgeClass(emp.department)}">${escapeHtml(emp.department)}</span></td>
       <td>${escapeHtml(loc)}</td>
       <td class="salary-cell">${formatUGX(emp.baseSalary)}</td>
@@ -1665,8 +1855,9 @@ $('employeeForm').addEventListener('submit', async e => {
     const nssfPercent = $('empNssfPercent').value === '' ? 5 : Number($('empNssfPercent').value) || 0;
     const payeApplicable = $('empPayeApplicable').value === 'yes';
     const payePercent = Number($('empPayePercent').value) || 0;
+    const startDate = $('empStartDate').value || '';
     if (!name || !role || !department || !locationId || baseSalary <= 0) { showToast('⚠️ Fill required fields', 'info'); btn.disabled = false; return; }
-    const empData = { name, role, department, locationId, companyId: myCompanyId(), baseSalary, allowances, allowanceCycle, otherDeductions, nssfApplicable, nssfPercent, payeApplicable, payePercent, avatarColor: getAvatarColor(name), createdAt: new Date().toISOString() };
+    const empData = { name, role, department, locationId, companyId: myCompanyId(), baseSalary, allowances, allowanceCycle, otherDeductions, nssfApplicable, nssfPercent, payeApplicable, payePercent, startDate, avatarColor: getAvatarColor(name), createdAt: new Date().toISOString() };
     const newId = await fsAdd('employees', empData);
     state.employees.push({ id: newId, ...empData });
     renderTable($('searchInput').value); updateStats();
@@ -1684,6 +1875,7 @@ window.editEmployee = function(id) {
   $('editDepartment').value = emp.department;
   populateEmployeeLocationDropdown('editLocation', emp.locationId || '');
   $('editSalary').value = emp.baseSalary;
+  $('editStartDate').value = emp.startDate || '';
   $('editAllowance').value = emp.allowances;
   $('editAllowanceCycle').value = emp.allowanceCycle || 'monthly';
   $('editOtherDeductions').value = emp.otherDeductions || 0;
@@ -1706,12 +1898,13 @@ $('editForm').addEventListener('submit', async e => {
     nssfApplicable: $('editNssfApplicable').value === 'yes',
     nssfPercent: $('editNssfPercent').value === '' ? 5 : Number($('editNssfPercent').value) || 0,
     payeApplicable: $('editPayeApplicable').value === 'yes',
-    payePercent: Number($('editPayePercent').value) || 0
+    payePercent: Number($('editPayePercent').value) || 0,
+    startDate: $('editStartDate').value || ''
   };
   try {
     await fsUpdate('employees', id, updates);
     Object.assign(emp, updates);
-    renderTable($('searchInput').value); updateStats();
+    renderTable($('searchInput').value); updateStats(); renderPayrollTable(); renderScheduleGrid();
     closeModal('editModal'); showToast('✏️ Updated', 'success');
   } catch (err) { showToast('❌ ' + err.message, 'error'); }
 });
@@ -1771,6 +1964,131 @@ window.deleteEmployee = async function(id) {
 
 $('searchInput').addEventListener('input', e => renderTable(e.target.value));
 $('showFormerEmployees').addEventListener('change', () => renderTable($('searchInput').value));
+
+// MANAGER: EMPLOYEE RECORDS
+function empEffectiveStatus(emp) {
+  const today = localDateISO();
+  if (emp.status && emp.status !== 'active') return { key: emp.status, label: STATUS_LABELS[emp.status] || emp.status, cls: 'badge-red' };
+  if (emp.startDate && emp.startDate > today) return { key: 'upcoming', label: 'Starts ' + formatStatusDate(emp.startDate), cls: 'badge-blue' };
+  return { key: 'active', label: 'Active', cls: 'badge-green' };
+}
+function tenureText(emp) {
+  if (!emp.startDate) return '—';
+  const today = localDateISO();
+  if (emp.startDate > today) {
+    const n = Math.ceil((new Date(emp.startDate + 'T00:00:00') - new Date(today + 'T00:00:00')) / 86400000);
+    return `Starts in ${n} day${n === 1 ? '' : 's'}`;
+  }
+  let end = today;
+  if (emp.status && emp.status !== 'active' && emp.statusDate && emp.statusDate < today) end = emp.statusDate;
+  const a = new Date(emp.startDate + 'T00:00:00'), b = new Date(end + 'T00:00:00');
+  let months = (b.getFullYear() - a.getFullYear()) * 12 + (b.getMonth() - a.getMonth());
+  if (b.getDate() < a.getDate()) months--;
+  if (months < 0) months = 0;
+  if (months >= 12) { const y = Math.floor(months / 12), m = months % 12; return `${y} yr${y > 1 ? 's' : ''}${m ? ' ' + m + ' mo' : ''}`; }
+  if (months >= 1) return `${months} mo`;
+  const d = Math.max(1, Math.floor((b - a) / 86400000) + 1);
+  return `${d} day${d === 1 ? '' : 's'}`;
+}
+
+function renderRecords() {
+  const grid = $('recordsGrid'); if (!grid) return;
+  const all = myEmployees().slice().sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+  const bSel = $('recBranch');
+  if (bSel) { const cur = bSel.value; bSel.innerHTML = '<option value="">All branches</option>' + myLocations().map(l => `<option value="${l.id}">${escapeHtml(l.name)}</option>`).join(''); bSel.value = cur; }
+  let active = 0, upcoming = 0, former = 0;
+  all.forEach(e => { const k = empEffectiveStatus(e).key; if (k === 'active') active++; else if (k === 'upcoming') upcoming++; else former++; });
+  $('recStatTotal').textContent = all.length; $('recStatActive').textContent = active;
+  $('recStatUpcoming').textContent = upcoming; $('recStatFormer').textContent = former;
+  const q = ($('recSearch').value || '').trim().toLowerCase();
+  const branch = $('recBranch').value, st = $('recStatus').value;
+  const list = all.filter(e => {
+    if (branch && e.locationId !== branch) return false;
+    if (st && empEffectiveStatus(e).key !== st) return false;
+    return !q || [e.name, e.role, e.department].some(v => (v || '').toLowerCase().includes(q));
+  });
+  if (list.length === 0) { grid.innerHTML = `<div class="admin-card" style="grid-column:1/-1;text-align:center;color:#7b8fb0;font-weight:600">${all.length === 0 ? 'No employees yet.' : 'No records match your filters.'}</div>`; return; }
+  grid.innerHTML = list.map(e => {
+    const color = e.avatarColor || getAvatarColor(e.name), st = empEffectiveStatus(e);
+    return `<div class="rec-card" onclick="openRecord('${e.id}')">
+      <div class="rec-card-top">
+        <div class="avatar rec-avatar" style="background:${color}20;color:${color}">${getInitials(e.name)}</div>
+        <div class="rec-card-id"><div class="rec-name">${escapeHtml(e.name)}</div><div class="rec-role">${escapeHtml(e.role || '—')}</div></div>
+        <span class="badge ${st.cls}" style="font-size:.64rem">${escapeHtml(st.label)}</span>
+      </div>
+      <div class="rec-chips"><span class="${getDeptBadgeClass(e.department)}">${escapeHtml(e.department || '—')}</span><span class="badge"><i class="fas fa-map-marker-alt" style="font-size:.6rem"></i> ${escapeHtml(e.locationId ? getLocationName(e.locationId) : '—')}</span></div>
+      <div class="rec-mini">
+        <div><span>Start date</span><strong>${e.startDate ? formatStatusDate(e.startDate) : 'Not set'}</strong></div>
+        <div><span>Tenure</span><strong>${tenureText(e)}</strong></div>
+        <div><span>Base salary</span><strong>${formatUGX(e.baseSalary)}</strong></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+window.openRecord = function(id) {
+  const e = state.employees.find(x => x.id === id); if (!e) return;
+  const color = e.avatarColor || getAvatarColor(e.name), st = empEffectiveStatus(e);
+  const row = (l, v) => `<div class="rec-row"><span>${l}</span><strong>${v}</strong></div>`;
+  const sec = (icon, title, body) => `<div class="rec-section"><h4><i class="fas ${icon}"></i> ${title}</h4>${body}</div>`;
+  const now = new Date(), y = now.getFullYear(), m = now.getMonth() + 1;
+  const pref = `${y}-${String(m).padStart(2, '0')}-`;
+  const sch = state.schedules.filter(s => s.employeeId === e.id && (s.date || '').startsWith(pref));
+  const att = state.attendance.filter(a => a.employeeId === e.id && (a.date || '').startsWith(pref));
+  const tile = (n, l) => `<div class="rec-mtile"><b>${n}</b><span>${l}</span></div>`;
+  const monthTiles = [
+    tile(sch.filter(x => !x.isOff && !x.isAbsent && !x.isTraining).length, 'Shifts'),
+    tile(sch.filter(x => x.isOff).length, 'Off days'),
+    tile(sch.filter(x => x.isAbsent).length, 'Absent'),
+    tile(sch.filter(x => x.isTraining).length, 'Training'),
+    tile(att.filter(a => a.clockIn).length, 'Clocked in'),
+    tile(att.filter(a => a.status === 'late').length, 'Late')
+  ].join('');
+  const leaves = state.leaves.filter(l => l.employeeId === e.id).sort((a, b) => (b.startDate || '').localeCompare(a.startDate || ''));
+  const approvedDays = leaves.filter(l => l.status === 'approved' && (l.startDate || '').startsWith(String(y))).reduce((t, l) => t + (Number(l.days) || 0), 0);
+  const leaveRows = leaves.slice(0, 4).map(l => `<tr><td>${escapeHtml(l.type)}</td><td>${l.startDate} → ${l.endDate}</td><td>${l.days}</td><td><span class="status-pill status-${l.status === 'approved' ? 'present' : l.status === 'rejected' ? 'absent' : 'late'}">${l.status}</span></td></tr>`).join('');
+  const pays = state.payrolls.filter(p => p.employeeId === e.id).sort((a, b) => { const A = parsePayrollMonth(a.month), B = parsePayrollMonth(b.month); return (B.year * 12 + B.month) - (A.year * 12 + A.month); }).slice(0, 6);
+  const payRows = pays.map(p => `<tr><td><strong>${formatPayrollMonth(p.month)}</strong>${p.proratedDays ? ` <span class="badge badge-purple" style="font-size:.6rem">${p.proratedDays}/${p.daysInMonth} days</span>` : ''}</td><td>${formatUGX(p.gross)}</td><td class="salary-cell" style="color:#1e6b4b">${formatUGX(calcPayrollNet(p))}</td></tr>`).join('');
+  const user = state.users.find(u => u.employeeId === e.id);
+  const allowance = (Number(e.allowances) || 0) > 0 ? `${formatUGX(e.allowances)} / ${cycleLabel(e.allowanceCycle)}` : 'None';
+  const nssf = e.nssfApplicable === false ? 'Not applicable' : `Yes · ${e.nssfPercent !== undefined ? e.nssfPercent : 5}%`;
+  const paye = e.payeApplicable === false ? 'Not applicable' : (Number(e.payePercent) > 0 ? `Yes · flat ${e.payePercent}%` : 'Yes · standard bands');
+  const statusExtra = e.status && e.status !== 'active' ? row('Status effective', e.statusDate ? formatStatusDate(e.statusDate) : '—') + (e.statusNote ? row('Status note', escapeHtml(e.statusNote)) : '') : '';
+  $('recordBody').innerHTML = `
+    <div class="rec-profile">
+      <div class="avatar" style="background:${color}20;color:${color}">${getInitials(e.name)}</div>
+      <div style="min-width:0"><h3>${escapeHtml(e.name)}</h3><p>${escapeHtml(e.role || '—')} · ${escapeHtml(e.department || '—')}</p><span class="badge ${st.cls}">${escapeHtml(st.label)}</span></div>
+    </div>
+    <div class="rec-tiles">
+      <div class="rec-tile"><span>Start date</span><strong>${e.startDate ? formatStatusDate(e.startDate) : 'Not set'}</strong></div>
+      <div class="rec-tile"><span>Tenure</span><strong>${tenureText(e)}</strong></div>
+      <div class="rec-tile"><span>Base salary</span><strong>${formatUGX(e.baseSalary)}</strong></div>
+    </div>
+    ${sec('fa-id-badge', 'Job details',
+      row('Full name', escapeHtml(e.name)) + row('Job role', escapeHtml(e.role || '—')) + row('Department', escapeHtml(e.department || '—')) +
+      row('Branch', escapeHtml(e.locationId ? getLocationName(e.locationId) : '—')) + row('Company', escapeHtml(e.companyId ? getCompanyName(e.companyId) : '—')) +
+      row('Start date', e.startDate ? formatStatusDate(e.startDate) : 'Not set') + row('Tenure', tenureText(e)) +
+      row('Status', escapeHtml(st.label)) + statusExtra +
+      row('Record created', e.createdAt ? formatStatusDate(String(e.createdAt).slice(0, 10)) : '—'))}
+    ${sec('fa-coins', 'Pay & statutory',
+      row('Base salary (monthly)', formatUGX(e.baseSalary)) + row('Daily rate (÷ 30)', formatUGX(Math.round((Number(e.baseSalary) || 0) / 30))) +
+      row('Allowance (separate)', allowance) + row('Other monthly deductions', formatUGX(e.otherDeductions || 0)) +
+      row('NSSF', nssf) + row('PAYE', paye))}
+    ${sec('fa-calendar-check', 'This month at a glance', `<div class="rec-mtiles">${monthTiles}</div>`)}
+    ${sec('fa-user-lock', 'Login account', user ? row('Username', escapeHtml(user.username)) + row('Display name', escapeHtml(user.fullName || '—')) : '<p style="font-size:.82rem;color:#7b8fb0">No login created for this employee.</p>')}
+    ${sec('fa-umbrella-beach', 'Leave', row('Approved leave days (' + y + ')', approvedDays) + (leaveRows ? `<div class="table-card" style="margin:8px 0 0;box-shadow:none"><table class="rec-mini-table"><thead><tr><th>Type</th><th>Dates</th><th>Days</th><th>Status</th></tr></thead><tbody>${leaveRows}</tbody></table></div>` : ''))}
+    ${sec('fa-file-invoice-dollar', 'Payroll history', payRows ? `<div class="table-card" style="margin:0;box-shadow:none"><table class="rec-mini-table"><thead><tr><th>Month</th><th>Gross</th><th>Net</th></tr></thead><tbody>${payRows}</tbody></table></div>` : '<p style="font-size:.82rem;color:#7b8fb0">No payroll generated for this employee yet.</p>')}
+    <div class="modal-actions">
+      <button type="button" class="btn btn-outline" onclick="closeModal('recordModal')">Close</button>
+      <button type="button" class="btn btn-outline" onclick="window.print()"><i class="fas fa-print"></i> Print</button>
+      <button type="button" class="btn btn-outline" onclick="closeModal('recordModal');openStatusModal('${e.id}')"><i class="fas fa-user-clock"></i> Status</button>
+      <button type="button" class="btn btn-primary" onclick="closeModal('recordModal');editEmployee('${e.id}')"><i class="fas fa-pen"></i> Edit</button>
+    </div>`;
+  openModal('recordModal');
+};
+$('recSearch').addEventListener('input', renderRecords);
+$('recBranch').addEventListener('change', renderRecords);
+$('recStatus').addEventListener('change', renderRecords);
 
 // MANAGER: BRANCHES
 function renderManagerBranches() {
@@ -2037,17 +2355,18 @@ window.renderReport = function() {
       const record = state.attendance.find(a => a.employeeId === emp.id && a.date === ds);
       const isOff = shift && shift.isOff;
       const isAbsent = shift && shift.isAbsent;
+      const isTraining = shift && shift.isTraining;
       const onLeave = state.leaves.some(l => l.employeeId === emp.id && l.status === 'approved' && l.startDate <= ds && l.endDate >= ds);
-      if (isOff || onLeave) continue;
+      if (isOff || isTraining || onLeave || !hasStartedOn(emp, ds)) continue; // training carries no weight
       const att = record && record.clockIn ? 100 : 0;
       const punct = record && record.clockIn ? (record.status === 'late' ? 70 : 100) : 0;
       let full = 0;
       if (record && record.clockIn && record.clockOut) {
-        const schedH = shift && !shift.isOff && !shift.isAbsent ? computeShiftHours(shift.startTime, shift.endTime) : 8;
+        const schedH = shift && !shift.isOff && !shift.isAbsent && !shift.isTraining ? computeShiftHours(shift.startTime, shift.endTime) : 8;
         full = record.hours >= schedH ? 100 : Math.round((record.hours / schedH) * 100);
       }
       const overall = Math.round((att + punct + full) / 3);
-      rows.push({ date: ds, emp, sched: shift && !shift.isOff && !shift.isAbsent ? `${shift.startTime}–${shift.endTime}` : '—', in: record && record.clockIn ? record.clockIn : '—', out: record && record.clockOut ? record.clockOut : '—', att, punct, full, overall, isAbsent });
+      rows.push({ date: ds, emp, sched: shift && !shift.isOff && !shift.isAbsent && !shift.isTraining ? `${shift.startTime}–${shift.endTime}` : '—', in: record && record.clockIn ? record.clockIn : '—', out: record && record.clockOut ? record.clockOut : '—', att, punct, full, overall, isAbsent });
     }
   }
   rows.sort((a, b) => b.date.localeCompare(a.date));
@@ -2080,8 +2399,9 @@ function calcAbsenceDeduction(emp, month, year) {
     const ds = `${year}-${String(month).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
     const today = new Date().toISOString().slice(0, 10);
     if (ds > today) continue;
+    if (!hasStartedOn(emp, ds)) continue; // days before the start date never count
     const shift = state.schedules.find(s => s.employeeId === emp.id && s.date === ds);
-    if (!shift || shift.isOff) continue;
+    if (!shift || shift.isOff || shift.isTraining) continue; // training carries no weight
     const onLeave = state.leaves.some(l => l.employeeId === emp.id && l.status === 'approved' && l.startDate <= ds && l.endDate >= ds);
     if (onLeave) continue;
     if (shift.isAbsent) absentCount++;
@@ -2136,13 +2456,15 @@ function markSavedPayrollMonths() {
 window.generatePayroll = async function() {
   const monthStr = $('payrollMonth').value;
   const { month, year } = parsePayrollMonth(monthStr);
-  const emps = myEmployees().filter(e => isEmployeeActiveForMonth(e, monthStr));
+  const emps = myEmployees().filter(e => isPayrollEligible(e, monthStr));
   if (emps.length === 0) { $('payrollTableBody').innerHTML = '<tr class="empty-row"><td colspan="11">No employees.</td></tr>'; return; }
   const already = emps.some(e => findPayroll(e.id, monthStr));
   if (already && !confirm(`Payroll for ${formatPayrollMonth(monthStr)} was already generated. Regenerate it?\n\nDeductions you added with "Update" will be kept.`)) return;
   try {
     await Promise.all(emps.map(emp => {
-      const gross = Number(emp.baseSalary) || 0;
+      const pr = prorationFor(emp, month, year);
+      const fullBase = Number(emp.baseSalary) || 0;
+      const gross = pr.prorated ? Math.round(fullBase * pr.days / pr.dim) : fullBase; // first month: start date to month end
       const nssf = calcNssf(emp, gross);
       const paye = calcPaye(emp, gross - nssf);
       const other = Number(emp.otherDeductions) || 0;
@@ -2153,6 +2475,7 @@ window.generatePayroll = async function() {
         employeeId: emp.id, employeeName: emp.name, month: monthStr,
         baseSalary: emp.baseSalary, gross, nssf, paye, otherDeductions: other,
         absenceDays: abs.chargeable, absenceDeduction: abs.amount,
+        proratedDays: pr.prorated ? pr.days : 0, daysInMonth: pr.dim, startDate: emp.startDate || '',
         adjustments: prev ? (prev.adjustments || []) : [],
         companyId: emp.companyId || null,
         generatedAt: prev ? (prev.generatedAt || nowIso) : nowIso,
@@ -2170,7 +2493,7 @@ window.generatePayroll = async function() {
 window.renderPayrollTable = renderPayrollTable; // needed so the inline onchange on the month dropdown can find it (script is a module)
 function renderPayrollTable() {
   const monthStr = $('payrollMonth').value;
-  const emps = myEmployees().filter(e => isEmployeeActiveForMonth(e, monthStr)); const empIds = emps.map(e => e.id);
+  const emps = myEmployees().filter(e => isPayrollEligible(e, monthStr)); const empIds = emps.map(e => e.id);
   const existing = state.payrolls.filter(p => p.month === monthStr && empIds.includes(p.employeeId));
   const tbody = $('payrollTableBody'); if (!tbody) return;
   markSavedPayrollMonths();
@@ -2183,7 +2506,7 @@ function renderPayrollTable() {
       <td><strong>${escapeHtml(p.employeeName)}</strong></td>
       <td>${formatUGX(p.baseSalary)}</td>
       <td style="color:#7b8fb0">${formatUGX(allow.amount)}/${cycleLabel(allow.cycle)}</td>
-      <td class="salary-cell">${formatUGX(p.gross)}</td>
+      <td class="salary-cell">${formatUGX(p.gross)}${p.proratedDays ? `<div style="font-size:.62rem;font-weight:700;color:#7c5cd6">${p.proratedDays}/${p.daysInMonth} days</div>` : ''}</td>
       <td style="color:#d64545">-${formatUGX(p.nssf)}</td>
       <td style="color:#d64545">-${formatUGX(p.paye)}</td>
       <td style="color:#d64545">-${formatUGX(p.otherDeductions || 0)}</td>
@@ -2294,6 +2617,7 @@ window.viewPayslipFor = function(empId, monthStr) {
     </div>
     <div style="background:#f7fdfa;border-radius:14px;padding:14px;margin-bottom:12px">
       <div style="display:flex;justify-content:space-between;padding:4px 0"><span>Base Salary</span><strong>${formatUGX(p.baseSalary)}</strong></div>
+      ${p.proratedDays ? `<div style="display:flex;justify-content:space-between;padding:4px 0;color:#5b3fb5"><span>Pro-rated (${p.proratedDays} of ${p.daysInMonth} days${p.startDate ? ' from ' + formatStatusDate(p.startDate) : ''})</span><strong>${formatUGX(p.gross)}</strong></div>` : ''}
     </div>
     <div style="background:#f0f9f4;border:1px solid #b8d9c8;border-radius:14px;padding:12px 14px;margin-bottom:12px;font-size:.8rem;color:#3d6652">
       <div style="display:flex;justify-content:space-between;padding:3px 0"><span>Allowance (separate)</span><strong>${formatUGX(allow.amount)} / ${cycleLabel(allow.cycle)}</strong></div>
@@ -2369,14 +2693,19 @@ window.renderScheduleGrid = function() {
   days.forEach(d => html += `<div class="head">${dayLabel(d)}<br>${new Date(d + 'T00:00:00').getDate()}</div>`);
   cashiers.forEach(c => {
     const color = getCashierColor(c);
-    html += `<div class="row-label"><span class="avatar-sm" style="background:${color}20;color:${color}">${getInitials(c.name)}</span><span>${escapeHtml(c.name.split(' ')[0])}<br><span style="font-size:.58rem;font-weight:600;color:#7b8fb0">${escapeHtml(c.role || '')}</span>${c.status && c.status !== 'active' ? `<br><span style="font-size:.58rem;font-weight:700;color:#d64545">${STATUS_LABELS[c.status] || ''}</span>` : ''}</span></div>`;
+    const startsLater = c.startDate && c.startDate > days[0];
+    html += `<div class="row-label"><span class="avatar-sm" style="background:${color}20;color:${color}">${getInitials(c.name)}</span><span>${escapeHtml(c.name.split(' ')[0])}<br><span style="font-size:.58rem;font-weight:600;color:#7b8fb0">${escapeHtml(c.role || '')}</span>${c.status && c.status !== 'active' ? `<br><span style="font-size:.58rem;font-weight:700;color:#d64545">${STATUS_LABELS[c.status] || ''}</span>` : ''}${startsLater ? `<br><span style="font-size:.58rem;font-weight:700;color:#2d9c6e">Starts ${formatStatusDate(c.startDate)}</span>` : ''}</span></div>`;
     days.forEach(d => {
       const shift = getShiftFor(c.id, d);
       if (!activeOn(c, d)) { html += '<div class="shift-cell empty" style="opacity:.35;cursor:not-allowed;pointer-events:none" title="No longer employed">—</div>'; return; }
-      if (!shift) html += `<div class="shift-cell empty" onclick="openShiftEditor('${c.id}','${d}')">+ Add</div>`;
-      else if (shift.isAbsent) html += `<div class="shift-cell absent-day" onclick="openShiftEditor('${c.id}','${d}')"><button class="shift-delete-btn" onclick="event.stopPropagation();deleteShift('${c.id}','${d}')"><i class="fas fa-times"></i></button><div class="shift-time">ABSENT</div></div>`;
-      else if (shift.isOff) html += `<div class="shift-cell off-day" onclick="openShiftEditor('${c.id}','${d}')"><button class="shift-delete-btn" onclick="event.stopPropagation();deleteShift('${c.id}','${d}')"><i class="fas fa-times"></i></button><div class="shift-time">OFF</div></div>`;
-      else html += `<div class="shift-cell filled" style="background:${color}" onclick="openShiftEditor('${c.id}','${d}')"><button class="shift-delete-btn" onclick="event.stopPropagation();deleteShift('${c.id}','${d}')"><i class="fas fa-times"></i></button><div class="shift-time">${shift.startTime}</div><div class="shift-sub">→ ${shift.endTime}</div></div>`;
+      if (!hasStartedOn(c, d)) { html += `<div class="shift-cell not-started" title="Starts ${formatStatusDate(c.startDate)}">Not started</div>`; return; }
+      const flag = c.startDate === d ? '<span class="start-flag" title="First day of work"><i class="fas fa-flag"></i></span>' : '';
+      const del = `<button class="shift-delete-btn" onclick="event.stopPropagation();deleteShift('${c.id}','${d}')"><i class="fas fa-times"></i></button>`;
+      if (!shift) html += `<div class="shift-cell empty" onclick="openShiftEditor('${c.id}','${d}')">${flag}+ Add</div>`;
+      else if (shift.isAbsent) html += `<div class="shift-cell absent-day" onclick="openShiftEditor('${c.id}','${d}')">${flag}${del}<div class="shift-time">ABSENT</div></div>`;
+      else if (shift.isTraining) html += `<div class="shift-cell training-day" onclick="openShiftEditor('${c.id}','${d}')">${flag}${del}<div class="shift-time" style="font-size:.7rem">TRAINING</div><div class="shift-sub">no pay effect</div></div>`;
+      else if (shift.isOff) html += `<div class="shift-cell off-day" onclick="openShiftEditor('${c.id}','${d}')">${flag}${del}<div class="shift-time">OFF</div></div>`;
+      else html += `<div class="shift-cell filled" style="background:${color}" onclick="openShiftEditor('${c.id}','${d}')">${flag}${del}<div class="shift-time">${shift.startTime}</div><div class="shift-sub">→ ${shift.endTime}</div></div>`;
     });
   });
   html += '</div>';
@@ -2385,20 +2714,27 @@ window.renderScheduleGrid = function() {
 
 window.openShiftEditor = function(empId, dateStr) {
   const emp = state.employees.find(e => e.id === empId); if (!emp) return;
+  if (!hasStartedOn(emp, dateStr)) { showToast(`⚠️ ${emp.name} starts on ${formatStatusDate(emp.startDate)}`, 'info'); return; }
   const existing = getShiftFor(empId, dateStr);
-  let cur = 'none';
-  if (existing) { if (existing.isAbsent) cur = 'absent'; else if (existing.isOff) cur = 'off'; else cur = `${existing.startTime}–${existing.endTime}`; }
-  const choice = prompt(`Shift for ${emp.name} on ${dateStr}\n\nEnter:\n  • "off" for off-day\n  • "absent" for absent day\n  • HH:MM\n  • HH:MM-HH:MM\n\nCurrent: ${cur}`, existing ? (existing.isAbsent ? 'absent' : existing.isOff ? 'off' : `${existing.startTime}-${existing.endTime}`) : '08:00-16:00');
+  let cur = 'none', def = '08:00-16:00';
+  if (existing) {
+    if (existing.isAbsent) cur = def = 'abs';
+    else if (existing.isTraining) cur = def = 'trn';
+    else if (existing.isOff) cur = def = 'off';
+    else { cur = `${existing.startTime}–${existing.endTime}`; def = `${existing.startTime}-${existing.endTime}`; }
+  }
+  const choice = prompt(`Shift for ${emp.name} on ${dateStr}\n\nType one of:\n  • off  → day off\n  • abs  → absent (salary deducted)\n  • trn  → training (no effect on salary)\n  • HH:MM  or  HH:MM-HH:MM\n\nCurrent: ${cur}`, def);
   if (choice === null) return;
-  const t = choice.trim().toLowerCase();
-  let isOff = false, isAbsent = false, startTime = '08:00', endTime = '16:00';
-  if (t === 'off') isOff = true;
-  else if (t === 'absent') isAbsent = true;
-  else if (/^\d{1,2}:\d{2}$/.test(choice.trim())) { startTime = choice.trim().padStart(5, '0'); const [h, m] = startTime.split(':').map(Number); const eh = (h + 8) % 24; endTime = `${String(eh).padStart(2, '0')}:${String(m).padStart(2, '0')}`; }
-  else if (/^\d{1,2}:\d{2}\s*-\s*\d{1,2}:\d{2}$/.test(choice.trim())) { const [s, e] = choice.trim().split('-').map(x => x.trim().padStart(5, '0')); startTime = s; endTime = e; }
-  else { showToast('⚠️ Invalid format', 'info'); return; }
+  const raw = choice.trim(), t = raw.toLowerCase();
+  let isOff = false, isAbsent = false, isTraining = false, startTime = '08:00', endTime = '16:00';
+  if (['off', 'o'].includes(t)) isOff = true;
+  else if (['abs', 'absent'].includes(t)) isAbsent = true;
+  else if (['trn', 'training', 'tr'].includes(t)) isTraining = true;
+  else if (/^\d{1,2}:\d{2}$/.test(raw)) { startTime = raw.padStart(5, '0'); const [h, m] = startTime.split(':').map(Number); const eh = (h + 8) % 24; endTime = `${String(eh).padStart(2, '0')}:${String(m).padStart(2, '0')}`; }
+  else if (/^\d{1,2}:\d{2}\s*-\s*\d{1,2}:\d{2}$/.test(raw)) { const [a, b] = raw.split('-').map(x => x.trim().padStart(5, '0')); startTime = a; endTime = b; }
+  else { showToast('⚠️ Invalid format. Use off, abs, trn or a time like 08:00-16:00', 'info'); return; }
   const idx = state.schedules.findIndex(s => s.employeeId === empId && s.date === dateStr);
-  const entry = { employeeId: empId, employeeName: emp.name, date: dateStr, startTime, endTime, isOff, isAbsent, companyId: myCompanyId(), _dirty: true };
+  const entry = { employeeId: empId, employeeName: emp.name, date: dateStr, startTime, endTime, isOff, isAbsent, isTraining, companyId: myCompanyId(), _dirty: true };
   if (idx >= 0) state.schedules[idx] = { ...state.schedules[idx], ...entry };
   else state.schedules.push({ id: 'temp_' + Date.now() + '_' + empId + '_' + dateStr, ...entry });
   renderScheduleGrid();
@@ -2457,7 +2793,9 @@ window.renderMySchedule = function() {
   days.forEach(d => {
     const shift = getShiftFor(emp.id, d);
     const isFuture = d > today;
-    if (!shift) html += `<div class="shift-cell empty">—</div>`;
+    if (!hasStartedOn(emp, d)) html += `<div class="shift-cell not-started" title="Starts ${formatStatusDate(emp.startDate)}">Not started</div>`;
+    else if (!shift) html += `<div class="shift-cell empty">—</div>`;
+    else if (shift.isTraining) html += `<div class="shift-cell training-day"><div class="shift-time" style="font-size:.7rem">TRAINING</div></div>`;
     else if (shift.isAbsent) html += `<div class="shift-cell absent-day"><div class="shift-time">ABSENT</div></div>`;
     else if (shift.isOff) html += `<div class="shift-cell off-day"><div class="shift-time">OFF</div></div>`;
     else {
@@ -2585,13 +2923,13 @@ window.rejectSwapRequest = async function(id) {
 window.openSwapRequestModal = function(colleagueId, dateStr) {
   const me = myEmployeeRecord(); if (!me) { showToast('⚠️ No employee record', 'info'); return; }
   const myShift = getShiftFor(me.id, dateStr);
-  if (!myShift || myShift.isOff || myShift.isAbsent) { showToast('⚠️ You have no shift on that day', 'info'); return; }
+  if (!myShift || myShift.isOff || myShift.isAbsent || myShift.isTraining) { showToast('⚠️ You have no shift on that day', 'info'); return; }
   const today = new Date().toISOString().slice(0, 10);
   if (dateStr <= today) { showToast('⚠️ Only future shifts can be swapped', 'info'); return; }
   const colleague = state.employees.find(e => e.id === colleagueId);
   if (!colleague) { showToast('⚠️ Colleague not found', 'info'); return; }
   const colleagueShift = getShiftFor(colleagueId, dateStr);
-  if (!colleagueShift || colleagueShift.isOff || colleagueShift.isAbsent) { showToast('⚠️ Colleague has no shift on that day', 'info'); return; }
+  if (!colleagueShift || colleagueShift.isOff || colleagueShift.isAbsent || colleagueShift.isTraining) { showToast('⚠️ Colleague has no shift on that day', 'info'); return; }
   $('swapMyShiftId').value = myShift.id || '';
   $('swapMyDate').value = dateStr;
   $('swapColleagueDate').value = dateStr;
@@ -2610,7 +2948,7 @@ window.onSwapColleagueChange = function() {
   const sel = $('swapColleagueShiftSelect');
   if (!colleagueId) { sel.innerHTML = '<option value="">-- Choose colleague first --</option>'; return; }
   const shift = getShiftFor(colleagueId, dateStr);
-  if (!shift || shift.isOff || shift.isAbsent) { sel.innerHTML = '<option value="">No shift available</option>'; return; }
+  if (!shift || shift.isOff || shift.isAbsent || shift.isTraining) { sel.innerHTML = '<option value="">No shift available</option>'; return; }
   sel.innerHTML = `<option value="${shift.id || 'none'}">${shift.startTime}–${shift.endTime}</option>`;
 };
 
@@ -2622,7 +2960,7 @@ window.submitSwapRequest = async function() {
   if (!fromEmployeeId || !toEmployeeId) { showToast('⚠️ Select a colleague', 'info'); return; }
   const fromShift = getShiftFor(fromEmployeeId, fromShiftDate);
   const toShift = getShiftFor(toEmployeeId, toShiftDate);
-  if (!fromShift || !toShift || fromShift.isOff || fromShift.isAbsent || toShift.isOff || toShift.isAbsent) { showToast('⚠️ Invalid shift data', 'info'); return; }
+  if (!fromShift || !toShift || fromShift.isOff || fromShift.isAbsent || fromShift.isTraining || toShift.isOff || toShift.isAbsent || toShift.isTraining) { showToast('⚠️ Invalid shift data', 'info'); return; }
   const me = state.employees.find(e => e.id === fromEmployeeId);
   const colleague = state.employees.find(e => e.id === toEmployeeId);
   const data = {
