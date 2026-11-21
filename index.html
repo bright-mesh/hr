@@ -486,6 +486,18 @@ tr:last-child td{border-bottom:none}
 #recordModal .modal{box-shadow:none !important;border-radius:0 !important;max-height:none !important;max-width:100% !important}
 #recordModal .modal-actions,#recordModal .modal-close{display:none !important}
 }
+/* ===== WARNINGS ===== */
+.warn-hero{background:linear-gradient(135deg,#a55c00,#d68b2c);border-radius:22px;padding:20px;color:#fff;margin-bottom:16px;box-shadow:0 20px 40px -18px rgba(165,92,0,.45);position:relative;overflow:hidden}
+.warn-hero::after{content:'';position:absolute;right:-40px;top:-50px;width:190px;height:190px;border-radius:50%;background:rgba(255,255,255,.1)}
+.warn-hero h2{font-size:1.15rem;font-weight:800;display:flex;align-items:center;gap:10px;margin-bottom:4px;position:relative;z-index:1}
+.warn-hero p{font-size:.82rem;opacity:.92;font-weight:500;margin-bottom:16px;max-width:540px;position:relative;z-index:1}
+.warn-item{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid #eef5f1}
+.warn-item:last-child{border-bottom:none}
+.warn-item .wi-main{flex:1;min-width:0}
+.warn-item .wi-title{font-weight:800;font-size:.86rem;color:var(--text-dark);word-break:break-word}
+.warn-item .wi-meta{font-size:.7rem;color:#7b8fb0;font-weight:600;margin-top:2px}
+.warn-item .wi-text{font-size:.78rem;color:#3d5a4b;margin-top:5px;white-space:pre-wrap;word-break:break-word}
+.form-group textarea.warn-text{min-height:90px;resize:vertical}
 @media print{
 body *{visibility:hidden !important}
 #payslipModal,#payslipModal *{visibility:visible !important}
@@ -653,6 +665,7 @@ body *{visibility:hidden !important}
       <div class="nav-items">
         <button class="dash-tab" data-role="manager" data-tab="payroll"><i class="fas fa-file-invoice-dollar"></i> Payroll</button>
         <button class="dash-tab" data-role="all" data-tab="reports"><i class="fas fa-chart-line"></i> Reports</button>
+        <button class="dash-tab" data-role="manager" data-tab="warnings"><i class="fas fa-exclamation-triangle"></i> Warnings</button>
       </div>
     </div>
   </div>
@@ -717,6 +730,28 @@ body *{visibility:hidden !important}
       </div>
     </div>
     <div class="rec-grid" id="recordsGrid"></div>
+  </div>
+
+  <!-- WARNINGS -->
+  <div class="tab-panel" id="panel-warnings">
+    <div class="warn-hero">
+      <h2><i class="fas fa-exclamation-triangle"></i> Employee Warnings</h2>
+      <p>Issue, update and remove warnings. Everything recorded here also appears in each employee's record.</p>
+      <div class="rec-hero-stats">
+        <div class="rec-hero-stat"><div class="num" id="warnStatTotal">0</div><div class="lbl">Total warnings</div></div>
+        <div class="rec-hero-stat"><div class="num" id="warnStatEmps">0</div><div class="lbl">Employees warned</div></div>
+        <div class="rec-hero-stat"><div class="num" id="warnStatMonth">0</div><div class="lbl">This month</div></div>
+        <div class="rec-hero-stat"><div class="num" id="warnStatFinal">0</div><div class="lbl">Final warnings</div></div>
+      </div>
+    </div>
+    <div class="toolbar">
+      <div class="search-box"><i class="fas fa-search"></i><input type="text" id="warnSearch" placeholder="Search employee or subject..."></div>
+      <div class="rec-filters">
+        <select class="rec-select" id="warnLevelFilter"><option value="">All levels</option><option value="verbal">Verbal</option><option value="written1">First written</option><option value="written2">Second written</option><option value="final">Final warning</option></select>
+        <button class="btn btn-primary" onclick="openWarningModal()"><i class="fas fa-plus-circle"></i> Issue Warning</button>
+      </div>
+    </div>
+    <div class="table-card"><table style="min-width:820px"><thead><tr><th>Date</th><th>Employee</th><th>Level</th><th>Subject</th><th>Issued by</th><th style="text-align:center">Actions</th></tr></thead><tbody id="warningsTableBody"></tbody></table></div>
   </div>
 
   <!-- BRANCHES -->
@@ -1195,6 +1230,29 @@ body *{visibility:hidden !important}
   </div>
 </div>
 
+<!-- WARNING MODAL -->
+<div class="modal-overlay" id="warningModal">
+  <div class="modal" style="max-width:560px">
+    <div class="modal-header"><h2><i class="fas fa-exclamation-triangle"></i> <span id="warningModalTitle">Issue Warning</span></h2><button class="modal-close" onclick="closeModal('warningModal')"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body">
+      <form id="warningForm" onsubmit="return saveWarning(event)">
+        <input type="hidden" id="warnEditId">
+        <div class="form-group"><label>Employee *</label><select id="warnEmployee" required></select></div>
+        <div class="form-row">
+          <div class="form-group"><label>Date *</label><input type="date" id="warnDate" required></div>
+          <div class="form-group"><label>Level *</label><select id="warnLevel" required><option value="verbal">Verbal warning</option><option value="written1">First written warning</option><option value="written2">Second written warning</option><option value="final">Final warning</option></select></div>
+        </div>
+        <div class="form-group"><label>Subject *</label><input type="text" id="warnSubject" maxlength="120" placeholder="e.g. Late coming, Unauthorised absence" required></div>
+        <div class="form-group"><label>Details / action expected</label><textarea class="warn-text" id="warnDetails" maxlength="800" placeholder="What happened and what must change"></textarea></div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-outline" onclick="closeModal('warningModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="warnSaveBtn"><i class="fas fa-save"></i> Save Warning</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 <!-- FORCE CLOCK OUT MODAL -->
 <div class="modal-overlay" id="forceClockOutModal">
   <div class="modal" style="max-width:540px">
@@ -1517,6 +1575,7 @@ window.switchDashTab = function(tab, btn) {
   $('panel-' + tab).classList.add('active');
   if (tab === 'schedule' && isManager()) renderScheduleGrid();
   if (tab === 'records' && isManager()) renderRecords();
+  if (tab === 'warnings' && isManager()) renderWarnings();
   try { btn.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' }); } catch (err) {}
   if (tab === 'myschedule') renderMySchedule();
   if (tab === 'attendance' && isManager()) renderAttendance();
@@ -2016,7 +2075,7 @@ function renderRecords() {
         <div class="rec-card-id"><div class="rec-name">${escapeHtml(e.name)}</div><div class="rec-role">${escapeHtml(e.role || '—')}</div></div>
         <span class="badge ${st.cls}" style="font-size:.64rem">${escapeHtml(st.label)}</span>
       </div>
-      <div class="rec-chips"><span class="${getDeptBadgeClass(e.department)}">${escapeHtml(e.department || '—')}</span><span class="badge"><i class="fas fa-map-marker-alt" style="font-size:.6rem"></i> ${escapeHtml(e.locationId ? getLocationName(e.locationId) : '—')}</span></div>
+      <div class="rec-chips"><span class="${getDeptBadgeClass(e.department)}">${escapeHtml(e.department || '—')}</span><span class="badge"><i class="fas fa-map-marker-alt" style="font-size:.6rem"></i> ${escapeHtml(e.locationId ? getLocationName(e.locationId) : '—')}</span>${(e.warnings || []).length ? `<span class="badge badge-red"><i class="fas fa-exclamation-triangle" style="font-size:.6rem"></i> ${(e.warnings || []).length} warning${(e.warnings || []).length > 1 ? 's' : ''}</span>` : ''}</div>
       <div class="rec-mini">
         <div><span>Start date</span><strong>${e.startDate ? formatStatusDate(e.startDate) : 'Not set'}</strong></div>
         <div><span>Tenure</span><strong>${tenureText(e)}</strong></div>
@@ -2049,6 +2108,8 @@ window.openRecord = function(id) {
   const leaveRows = leaves.slice(0, 4).map(l => `<tr><td>${escapeHtml(l.type)}</td><td>${l.startDate} → ${l.endDate}</td><td>${l.days}</td><td><span class="status-pill status-${l.status === 'approved' ? 'present' : l.status === 'rejected' ? 'absent' : 'late'}">${l.status}</span></td></tr>`).join('');
   const pays = state.payrolls.filter(p => p.employeeId === e.id).sort((a, b) => { const A = parsePayrollMonth(a.month), B = parsePayrollMonth(b.month); return (B.year * 12 + B.month) - (A.year * 12 + A.month); }).slice(0, 6);
   const payRows = pays.map(p => `<tr><td><strong>${formatPayrollMonth(p.month)}</strong>${p.proratedDays ? ` <span class="badge badge-purple" style="font-size:.6rem">${p.proratedDays}/${p.daysInMonth} days</span>` : ''}</td><td>${formatUGX(p.gross)}</td><td class="salary-cell" style="color:#1e6b4b">${formatUGX(calcPayrollNet(p))}</td></tr>`).join('');
+  const warns = (e.warnings || []).slice().sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+  const warnHtml = warns.length ? warns.map(w => `<div class="warn-item"><div class="wi-main"><div class="wi-title">${escapeHtml(w.subject)}</div><div class="wi-meta">${formatStatusDate(w.date)}${w.issuedBy ? ' · by ' + escapeHtml(w.issuedBy) : ''}</div>${w.details ? `<div class="wi-text">${escapeHtml(w.details)}</div>` : ''}</div><div>${warnBadge(w.level)}</div></div>`).join('') : '<p style="font-size:.82rem;color:#7b8fb0">No warnings on record.</p>';
   const user = state.users.find(u => u.employeeId === e.id);
   const allowance = (Number(e.allowances) || 0) > 0 ? `${formatUGX(e.allowances)} / ${cycleLabel(e.allowanceCycle)}` : 'None';
   const nssf = e.nssfApplicable === false ? 'Not applicable' : `Yes · ${e.nssfPercent !== undefined ? e.nssfPercent : 5}%`;
@@ -2077,6 +2138,7 @@ window.openRecord = function(id) {
     ${sec('fa-calendar-check', 'This month at a glance', `<div class="rec-mtiles">${monthTiles}</div>`)}
     ${sec('fa-user-lock', 'Login account', user ? row('Username', escapeHtml(user.username)) + row('Display name', escapeHtml(user.fullName || '—')) : '<p style="font-size:.82rem;color:#7b8fb0">No login created for this employee.</p>')}
     ${sec('fa-umbrella-beach', 'Leave', row('Approved leave days (' + y + ')', approvedDays) + (leaveRows ? `<div class="table-card" style="margin:8px 0 0;box-shadow:none"><table class="rec-mini-table"><thead><tr><th>Type</th><th>Dates</th><th>Days</th><th>Status</th></tr></thead><tbody>${leaveRows}</tbody></table></div>` : ''))}
+    ${sec('fa-exclamation-triangle', 'Warnings' + (warns.length ? ` (${warns.length})` : ''), warnHtml + '<div class="modal-actions" style="margin-top:10px;padding-top:10px"><button type="button" class="btn btn-outline btn-sm" onclick="closeModal(\'recordModal\');openWarningModal(\'' + e.id + '\')"><i class="fas fa-plus"></i> Issue warning</button></div>')}
     ${sec('fa-file-invoice-dollar', 'Payroll history', payRows ? `<div class="table-card" style="margin:0;box-shadow:none"><table class="rec-mini-table"><thead><tr><th>Month</th><th>Gross</th><th>Net</th></tr></thead><tbody>${payRows}</tbody></table></div>` : '<p style="font-size:.82rem;color:#7b8fb0">No payroll generated for this employee yet.</p>')}
     <div class="modal-actions">
       <button type="button" class="btn btn-outline" onclick="closeModal('recordModal')">Close</button>
@@ -2089,6 +2151,92 @@ window.openRecord = function(id) {
 $('recSearch').addEventListener('input', renderRecords);
 $('recBranch').addEventListener('change', renderRecords);
 $('recStatus').addEventListener('change', renderRecords);
+
+// MANAGER: WARNINGS (stored on each employee document as `warnings`)
+const WARN_LEVELS = { verbal: ['Verbal', 'badge-blue'], written1: ['First written', 'badge-amber'], written2: ['Second written', 'badge-amber'], final: ['Final warning', 'badge-red'] };
+function warnBadge(level) { const l = WARN_LEVELS[level] || [level || '—', 'badge']; return `<span class="badge ${l[1]}">${escapeHtml(l[0])}</span>`; }
+function allWarnings() {
+  const out = [];
+  myEmployees().forEach(e => (e.warnings || []).forEach(w => out.push({ ...w, emp: e })));
+  return out.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+}
+window.renderWarnings = function() {
+  const tbody = $('warningsTableBody'); if (!tbody) return;
+  const all = allWarnings();
+  const pref = localDateISO().slice(0, 7);
+  $('warnStatTotal').textContent = all.length;
+  $('warnStatEmps').textContent = new Set(all.map(w => w.emp.id)).size;
+  $('warnStatMonth').textContent = all.filter(w => (w.date || '').startsWith(pref)).length;
+  $('warnStatFinal').textContent = all.filter(w => w.level === 'final').length;
+  const q = ($('warnSearch').value || '').trim().toLowerCase(), lv = $('warnLevelFilter').value;
+  const list = all.filter(w => (!lv || w.level === lv) && (!q || (w.emp.name || '').toLowerCase().includes(q) || (w.subject || '').toLowerCase().includes(q)));
+  if (list.length === 0) { tbody.innerHTML = `<tr class="empty-row"><td colspan="6">${all.length === 0 ? 'No warnings recorded. Click "Issue Warning" to add one.' : 'No warnings match your filters.'}</td></tr>`; return; }
+  tbody.innerHTML = list.map(w => `<tr>
+    <td>${formatStatusDate(w.date)}</td>
+    <td><strong>${escapeHtml(w.emp.name)}</strong><div class="emp-role">${escapeHtml(w.emp.role || '')}</div></td>
+    <td>${warnBadge(w.level)}</td>
+    <td style="white-space:normal;min-width:200px"><strong>${escapeHtml(w.subject)}</strong>${w.details ? `<div class="emp-role" style="white-space:normal">${escapeHtml(w.details.length > 90 ? w.details.slice(0, 90) + '…' : w.details)}</div>` : ''}</td>
+    <td>${escapeHtml(w.issuedBy || '—')}</td>
+    <td style="text-align:center"><div class="action-icons" style="justify-content:center">
+      <button class="icon-btn" onclick="openWarningModal('${w.emp.id}','${w.id}')" title="Edit"><i class="fas fa-pen"></i></button>
+      <button class="icon-btn danger" onclick="deleteWarning('${w.emp.id}','${w.id}')" title="Delete"><i class="fas fa-trash-alt"></i></button>
+    </div></td>
+  </tr>`).join('');
+};
+window.openWarningModal = function(empId, warnId) {
+  const emps = myEmployees().slice().sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+  if (emps.length === 0) { showToast('Add employees first', 'info'); return; }
+  $('warnEmployee').innerHTML = '<option value="">Select employee</option>' + emps.map(e => `<option value="${e.id}">${escapeHtml(e.name)}</option>`).join('');
+  $('warningForm').reset();
+  $('warnEditId').value = warnId || '';
+  $('warnDate').value = localDateISO();
+  $('warningModalTitle').textContent = warnId ? 'Update Warning' : 'Issue Warning';
+  if (empId) $('warnEmployee').value = empId;
+  if (warnId) {
+    const emp = state.employees.find(e => e.id === empId), w = emp && (emp.warnings || []).find(x => x.id === warnId);
+    if (!w) return;
+    $('warnEmployee').value = empId; $('warnEmployee').dataset.orig = empId;
+    $('warnDate').value = w.date || ''; $('warnLevel').value = w.level || 'verbal';
+    $('warnSubject').value = w.subject || ''; $('warnDetails').value = w.details || '';
+  } else delete $('warnEmployee').dataset.orig;
+  $('warnEmployee').disabled = !!warnId;
+  openModal('warningModal');
+};
+window.saveWarning = async function(e) {
+  e.preventDefault();
+  const empId = $('warnEmployee').value || $('warnEmployee').dataset.orig;
+  const emp = state.employees.find(x => x.id === empId); if (!emp) { showToast('Select an employee', 'error'); return false; }
+  const editId = $('warnEditId').value;
+  const data = { date: $('warnDate').value, level: $('warnLevel').value, subject: $('warnSubject').value.trim(), details: $('warnDetails').value.trim() };
+  if (!data.date || !data.subject) { showToast('Enter the date and subject', 'error'); return false; }
+  const list = emp.warnings || [];
+  const next = editId
+    ? list.map(w => w.id === editId ? { ...w, ...data, updatedAt: new Date().toISOString() } : w)
+    : [...list, { id: 'w' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), ...data, issuedBy: state.currentUser ? (state.currentUser.fullName || state.currentUser.username) : '', createdAt: new Date().toISOString() }];
+  const btn = $('warnSaveBtn'); btn.disabled = true;
+  try {
+    await fsUpdate('employees', empId, { warnings: next });
+    emp.warnings = next;
+    renderWarnings(); renderRecords();
+    closeModal('warningModal');
+    showToast(editId ? '✏️ Warning updated' : '⚠️ Warning recorded', 'success');
+  } catch (err) { console.error(err); showToast('❌ Could not save warning', 'error'); }
+  btn.disabled = false;
+  return false;
+};
+window.deleteWarning = async function(empId, warnId) {
+  const emp = state.employees.find(x => x.id === empId); if (!emp) return;
+  const w = (emp.warnings || []).find(x => x.id === warnId); if (!w) return;
+  if (!confirm(`Delete this warning for ${emp.name} ("${w.subject}")?`)) return;
+  const next = emp.warnings.filter(x => x.id !== warnId);
+  try {
+    await fsUpdate('employees', empId, { warnings: next });
+    emp.warnings = next; renderWarnings(); renderRecords();
+    showToast('🗑️ Warning removed', 'info');
+  } catch (err) { console.error(err); showToast('❌ Could not delete warning', 'error'); }
+};
+$('warnSearch').addEventListener('input', renderWarnings);
+$('warnLevelFilter').addEventListener('change', renderWarnings);
 
 // MANAGER: BRANCHES
 function renderManagerBranches() {
