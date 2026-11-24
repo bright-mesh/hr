@@ -486,6 +486,11 @@ tr:last-child td{border-bottom:none}
 #recordModal .modal{box-shadow:none !important;border-radius:0 !important;max-height:none !important;max-width:100% !important}
 #recordModal .modal-actions,#recordModal .modal-close{display:none !important}
 }
+/* ===== PENALTIES ===== */
+.pen-hero{background:linear-gradient(135deg,#8f2323,#d64545);border-radius:22px;padding:20px;color:#fff;margin-bottom:16px;box-shadow:0 20px 40px -18px rgba(143,35,35,.45);position:relative;overflow:hidden}
+.pen-hero::after{content:'';position:absolute;right:-40px;top:-50px;width:190px;height:190px;border-radius:50%;background:rgba(255,255,255,.1)}
+.pen-hero h2{font-size:1.15rem;font-weight:800;display:flex;align-items:center;gap:10px;margin-bottom:4px;position:relative;z-index:1}
+.pen-hero p{font-size:.82rem;opacity:.92;font-weight:500;margin-bottom:16px;max-width:560px;position:relative;z-index:1}
 /* ===== WARNINGS ===== */
 .warn-hero{background:linear-gradient(135deg,#a55c00,#d68b2c);border-radius:22px;padding:20px;color:#fff;margin-bottom:16px;box-shadow:0 20px 40px -18px rgba(165,92,0,.45);position:relative;overflow:hidden}
 .warn-hero::after{content:'';position:absolute;right:-40px;top:-50px;width:190px;height:190px;border-radius:50%;background:rgba(255,255,255,.1)}
@@ -666,6 +671,7 @@ body *{visibility:hidden !important}
         <button class="dash-tab" data-role="manager" data-tab="payroll"><i class="fas fa-file-invoice-dollar"></i> Payroll</button>
         <button class="dash-tab" data-role="all" data-tab="reports"><i class="fas fa-chart-line"></i> Reports</button>
         <button class="dash-tab" data-role="manager" data-tab="warnings"><i class="fas fa-exclamation-triangle"></i> Warnings</button>
+        <button class="dash-tab" data-role="manager" data-tab="penalties"><i class="fas fa-gavel"></i> Penalties</button>
       </div>
     </div>
   </div>
@@ -752,6 +758,28 @@ body *{visibility:hidden !important}
       </div>
     </div>
     <div class="table-card"><table style="min-width:820px"><thead><tr><th>Date</th><th>Employee</th><th>Level</th><th>Subject</th><th>Issued by</th><th style="text-align:center">Actions</th></tr></thead><tbody id="warningsTableBody"></tbody></table></div>
+  </div>
+
+  <!-- PENALTIES -->
+  <div class="tab-panel" id="panel-penalties">
+    <div class="pen-hero">
+      <h2><i class="fas fa-gavel"></i> Penalties</h2>
+      <p>Record a penalty amount for an employee. It is deducted automatically from their salary when payroll for the chosen month is generated.</p>
+      <div class="rec-hero-stats">
+        <div class="rec-hero-stat"><div class="num" id="penStatCount">0</div><div class="lbl">Penalties</div></div>
+        <div class="rec-hero-stat"><div class="num" id="penStatTotal" style="font-size:1.05rem">UGX 0</div><div class="lbl">Total amount</div></div>
+        <div class="rec-hero-stat"><div class="num" id="penStatPending">0</div><div class="lbl">Waiting for payroll</div></div>
+        <div class="rec-hero-stat"><div class="num" id="penStatApplied">0</div><div class="lbl">Deducted</div></div>
+      </div>
+    </div>
+    <div class="toolbar">
+      <div class="search-box"><i class="fas fa-search"></i><input type="text" id="penSearch" placeholder="Search employee or reason..."></div>
+      <div class="rec-filters">
+        <select class="rec-select" id="penStatusFilter"><option value="">All</option><option value="pending">Waiting for payroll</option><option value="applied">Deducted</option></select>
+        <button class="btn btn-primary" onclick="openPenaltyModal()"><i class="fas fa-plus-circle"></i> Add Penalty</button>
+      </div>
+    </div>
+    <div class="table-card"><table style="min-width:900px"><thead><tr><th>Date</th><th>Employee</th><th>Reason</th><th>Payroll month</th><th>Amount</th><th>Status</th><th style="text-align:center">Actions</th></tr></thead><tbody id="penaltiesTableBody"></tbody></table></div>
   </div>
 
   <!-- BRANCHES -->
@@ -851,16 +879,13 @@ body *{visibility:hidden !important}
     <div class="admin-card">
       <div class="admin-card-header"><h3><i class="fas fa-file-invoice-dollar"></i> Monthly Payroll</h3></div>
       <div class="payroll-toolbar" style="margin-bottom:16px">
-        <select id="payrollMonth" onchange="renderPayrollTable()">
-          <option value="10-2026">October 2026</option><option value="11-2026">November 2026</option><option value="12-2026">December 2026</option>
-          <option value="1-2026">January 2026</option><option value="2-2026">February 2026</option><option value="3-2026">March 2026</option>
-          <option value="4-2026">April 2026</option><option value="5-2026">May 2026</option><option value="6-2026">June 2026</option>
-          <option value="7-2026">July 2026</option><option value="8-2026">August 2026</option><option value="9-2026">September 2026</option>
-        </select>
+        <select id="payrollMonth" onchange="renderPayrollTable()"></select>
         <button class="btn btn-primary btn-sm" onclick="generatePayroll()"><i class="fas fa-calculator"></i> Generate</button>
         <button class="btn btn-danger btn-sm" onclick="clearPayrollMonth()"><i class="fas fa-trash-alt"></i> Clear</button>
+        <select id="payUnscheduled" onchange="setPayUnscheduledPolicy(this.value)" title="How days with no shift, OFF, TRN, ABS or approved leave are treated when payroll is generated"><option value="unpaid">Days with no schedule: not paid</option><option value="paid">Days with no schedule: paid</option></select>
       </div>
-      <div class="table-card"><table><thead><tr><th>Employee</th><th>Base</th><th>Allow</th><th>Gross</th><th>NSSF</th><th>PAYE</th><th>Custom</th><th>Absent</th><th>Adjust.</th><th>Net</th><th style="text-align:center">Actions</th></tr></thead><tbody id="payrollTableBody"></tbody></table></div>
+      <div id="payrollNotes"></div>
+      <div class="table-card"><table><thead><tr><th>Employee</th><th>Base</th><th>Allow</th><th>Gross</th><th>NSSF</th><th>PAYE</th><th>Custom</th><th>Absent</th><th>Penalty</th><th>Adjust.</th><th>Net</th><th style="text-align:center">Actions</th></tr></thead><tbody id="payrollTableBody"></tbody></table></div>
     </div>
   </div>
 
@@ -903,7 +928,7 @@ body *{visibility:hidden !important}
       <form id="leaveForm">
         <div class="form-row">
           <div class="form-group"><label>Leave Type</label><select id="leaveType" required><option value="annual">Annual Leave</option><option value="sick">Sick Leave</option><option value="maternity">Maternity Leave</option><option value="compassionate">Compassionate Leave</option></select></div>
-          <div class="form-group"><label>Number of Days</label><input type="number" id="leaveDays" min="1" value="1" required></div>
+          <div class="form-group"><label>Number of Days (automatic)</label><input type="number" id="leaveDays" min="1" value="1" readonly style="background:#f3f7f5"></div>
         </div>
         <div class="form-row">
           <div class="form-group"><label>Start Date</label><input type="date" id="leaveStart" required></div>
@@ -1253,6 +1278,32 @@ body *{visibility:hidden !important}
   </div>
 </div>
 
+<!-- PENALTY MODAL -->
+<div class="modal-overlay" id="penaltyModal">
+  <div class="modal" style="max-width:560px">
+    <div class="modal-header"><h2><i class="fas fa-gavel"></i> <span id="penaltyModalTitle">Add Penalty</span></h2><button class="modal-close" onclick="closeModal('penaltyModal')"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body">
+      <form id="penaltyForm" onsubmit="return savePenalty(event)">
+        <input type="hidden" id="penEditId">
+        <div class="form-group"><label>Employee *</label><select id="penEmployee" required></select></div>
+        <div class="form-row">
+          <div class="form-group"><label>Amount to deduct (UGX) *</label><input type="number" id="penAmount" min="1" step="1" placeholder="e.g. 20000" required></div>
+          <div class="form-group"><label>Deduct in payroll of *</label><input type="month" id="penMonth" required></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Date *</label><input type="date" id="penDate" required></div>
+          <div class="form-group"><label>Linked warning</label><select id="penWarning"><option value="">None</option></select></div>
+        </div>
+        <div class="form-group"><label>Reason *</label><input type="text" id="penReason" maxlength="120" placeholder="e.g. Till shortage, damaged stock" required></div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-outline" onclick="closeModal('penaltyModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="penSaveBtn"><i class="fas fa-save"></i> Save Penalty</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 <!-- FORCE CLOCK OUT MODAL -->
 <div class="modal-overlay" id="forceClockOutModal">
   <div class="modal" style="max-width:540px">
@@ -1350,6 +1401,7 @@ const state = {
 };
 
 let clockInLock = false;
+const LATE_GRACE_MIN = 10; // minutes after shift start before a clock-in counts as late
 
 // HELPERS
 const $ = id => document.getElementById(id);
@@ -1576,6 +1628,7 @@ window.switchDashTab = function(tab, btn) {
   if (tab === 'schedule' && isManager()) renderScheduleGrid();
   if (tab === 'records' && isManager()) renderRecords();
   if (tab === 'warnings' && isManager()) renderWarnings();
+  if (tab === 'penalties' && isManager()) renderPenalties();
   try { btn.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' }); } catch (err) {}
   if (tab === 'myschedule') renderMySchedule();
   if (tab === 'attendance' && isManager()) renderAttendance();
@@ -1646,13 +1699,13 @@ function isCashier(emp) {
 function getCashiers() { return myEmployees().slice().sort((a, b) => (a.name || '').localeCompare(b.name || '')); } // every employee can be scheduled, whatever their role
 function getCashierColor(emp) { return emp.avatarColor || getAvatarColor(emp.id || emp.name); }
 function getWeekStart(dateStr) {
-  const d = dateStr ? new Date(dateStr) : new Date();
+  const d = dateStr ? new Date(dateStr + 'T00:00:00') : new Date(); // parse as LOCAL date (a bare date string is read as UTC)
   const day = d.getDay() || 7;
   if (day !== 1) d.setDate(d.getDate() - (day - 1));
   d.setHours(0, 0, 0, 0);
   return d;
 }
-function formatDateISO(d) { return d.toISOString().slice(0, 10); }
+function formatDateISO(d) { return localDateISO(d); } // local calendar date (toISOString is UTC and shifts days east of Greenwich, e.g. Uganda UTC+3)
 function addDays(d, n) { const x = new Date(d); x.setDate(x.getDate() + n); return x; }
 function dayLabel(dateStr) { return new Date(dateStr + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'short' }); }
 function getShiftFor(empId, dateStr) { return state.schedules.find(s => s.employeeId === empId && s.date === dateStr); }
@@ -1739,11 +1792,19 @@ window.selfClockIn = async function() {
     const nowD = new Date();
     const today = localDateISO(nowD), now = localTimeHM(nowD);
     const device = detectDevice();
-    const data = { employeeId: emp.id, employeeName: emp.name, date: today, clockIn: now, clockOut: null, status: 'present', clockInDevice: device, hours: 0, createdAt: nowD.toISOString() };
+    // Late = clocked in more than LATE_GRACE_MIN minutes after the shift scheduled for today
+    let status = 'present', lateMinutes = 0;
+    const todayShift = getShiftFor(emp.id, today);
+    if (todayShift && !todayShift.isOff && !todayShift.isAbsent && !todayShift.isTraining && todayShift.startTime) {
+      const [sh, sm] = todayShift.startTime.split(':').map(Number);
+      const diff = nowD.getHours() * 60 + nowD.getMinutes() - (sh * 60 + sm);
+      if (diff > LATE_GRACE_MIN) { status = 'late'; lateMinutes = diff; }
+    }
+    const data = { employeeId: emp.id, employeeName: emp.name, date: today, clockIn: now, clockOut: null, status, lateMinutes, clockInDevice: device, hours: 0, createdAt: nowD.toISOString() };
     const newId = await fsAdd('attendance', data);
     state.attendance.push({ id: newId, ...data });
     renderMyAttendance(); if (isManager()) renderAttendance();
-    showToast(`✅ Clocked in at ${now}`, 'success');
+    showToast(status === 'late' ? `⏰ Clocked in at ${now} (${lateMinutes} min late)` : `✅ Clocked in at ${now}`, status === 'late' ? 'info' : 'success');
   } catch (err) { showToast('❌ ' + err.message, 'error'); }
   finally {
     clockInLock = false; clockActionBusy = false;
@@ -1832,14 +1893,6 @@ function hasStartedByMonth(emp, monthStr) {
   return (year * 12 + month) >= (p[0] * 12 + p[1]);
 }
 function hasStartedOn(emp, ds) { return !emp || !emp.startDate || ds >= emp.startDate; }
-function prorationFor(emp, month, year) {
-  const dim = new Date(year, month, 0).getDate();
-  if (emp && emp.startDate) {
-    const [sy, sm, sd] = String(emp.startDate).split('-').map(Number);
-    if (sy === year && sm === month && sd > 1) return { days: dim - sd + 1, dim, prorated: true };
-  }
-  return { days: dim, dim, prorated: false };
-}
 function isPayrollEligible(emp, monthStr) { return isEmployeeActiveForMonth(emp, monthStr) && hasStartedByMonth(emp, monthStr); }
 
 function formatStatusDate(iso) {
@@ -1919,7 +1972,7 @@ $('employeeForm').addEventListener('submit', async e => {
     const empData = { name, role, department, locationId, companyId: myCompanyId(), baseSalary, allowances, allowanceCycle, otherDeductions, nssfApplicable, nssfPercent, payeApplicable, payePercent, startDate, avatarColor: getAvatarColor(name), createdAt: new Date().toISOString() };
     const newId = await fsAdd('employees', empData);
     state.employees.push({ id: newId, ...empData });
-    renderTable($('searchInput').value); updateStats();
+    renderTable($('searchInput').value); updateStats(); renderPayrollTable(); renderScheduleGrid();
     closeModal('employeeModal');
     showToast(`✨ ${name} saved`, 'success');
   } catch (err) { showToast('❌ ' + err.message, 'error'); }
@@ -2002,7 +2055,7 @@ window.saveEmployeeStatus = async function(e) {
   try {
     await fsUpdate('employees', id, updates);
     Object.assign(emp, updates);
-    renderTable($('searchInput').value); updateStats(); renderPayrollTable();
+    renderTable($('searchInput').value); updateStats(); renderPayrollTable(); renderScheduleGrid();
     closeModal('statusModal');
     showToast(status === 'active' ? '✅ Employee set to Active' : `✅ Marked ${STATUS_LABELS[status]} effective ${formatStatusDate(updates.statusDate)}`, 'success');
   } catch (err) { showToast('❌ ' + err.message, 'error'); }
@@ -2012,11 +2065,11 @@ window.saveEmployeeStatus = async function(e) {
 
 window.deleteEmployee = async function(id) {
   const emp = state.employees.find(e => e.id === id); if (!emp) return;
-  if (!confirm(`Delete ${emp.name}?`)) return;
+  if (!confirm(`Delete ${emp.name}?\n\nThis removes the employee record, including their warnings and penalties. If they have left the business, use "Update status" instead so payroll history stays correct.`)) return;
   try {
     await fsDelete('employees', id);
     state.employees = state.employees.filter(e => e.id !== id);
-    renderTable($('searchInput').value); updateStats();
+    renderTable($('searchInput').value); updateStats(); renderPayrollTable(); renderScheduleGrid(); renderWarnings(); renderPenalties();
     showToast('🗑️ Removed', 'info');
   } catch (err) { showToast('❌ ' + err.message, 'error'); }
 };
@@ -2110,6 +2163,8 @@ window.openRecord = function(id) {
   const payRows = pays.map(p => `<tr><td><strong>${formatPayrollMonth(p.month)}</strong>${p.proratedDays ? ` <span class="badge badge-purple" style="font-size:.6rem">${p.proratedDays}/${p.daysInMonth} days</span>` : ''}</td><td>${formatUGX(p.gross)}</td><td class="salary-cell" style="color:#1e6b4b">${formatUGX(calcPayrollNet(p))}</td></tr>`).join('');
   const warns = (e.warnings || []).slice().sort((a, b) => (b.date || '').localeCompare(a.date || ''));
   const warnHtml = warns.length ? warns.map(w => `<div class="warn-item"><div class="wi-main"><div class="wi-title">${escapeHtml(w.subject)}</div><div class="wi-meta">${formatStatusDate(w.date)}${w.issuedBy ? ' · by ' + escapeHtml(w.issuedBy) : ''}</div>${w.details ? `<div class="wi-text">${escapeHtml(w.details)}</div>` : ''}</div><div>${warnBadge(w.level)}</div></div>`).join('') : '<p style="font-size:.82rem;color:#7b8fb0">No warnings on record.</p>';
+  const pens = (e.penalties || []).slice().sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+  const penHtml = pens.length ? pens.map(x => { const ap = penaltyApplied(e, x); return `<div class="warn-item"><div class="wi-main"><div class="wi-title">${escapeHtml(x.reason)}</div><div class="wi-meta">${formatStatusDate(x.date)} · payroll ${formatPayrollMonth(x.month)}</div></div><div style="text-align:right"><strong style="color:#d64545;font-size:.85rem">-${formatUGX(x.amount)}</strong><div><span class="badge ${ap ? 'badge-green' : 'badge-amber'}" style="font-size:.6rem">${ap ? 'Deducted' : 'Waiting for payroll'}</span></div></div></div>`; }).join('') + `<div class="rec-row"><span>Total penalties</span><strong style="color:#d64545">-${formatUGX(pens.reduce((t, x) => t + (Number(x.amount) || 0), 0))}</strong></div>` : '<p style="font-size:.82rem;color:#7b8fb0">No penalties on record.</p>';
   const user = state.users.find(u => u.employeeId === e.id);
   const allowance = (Number(e.allowances) || 0) > 0 ? `${formatUGX(e.allowances)} / ${cycleLabel(e.allowanceCycle)}` : 'None';
   const nssf = e.nssfApplicable === false ? 'Not applicable' : `Yes · ${e.nssfPercent !== undefined ? e.nssfPercent : 5}%`;
@@ -2132,13 +2187,14 @@ window.openRecord = function(id) {
       row('Status', escapeHtml(st.label)) + statusExtra +
       row('Record created', e.createdAt ? formatStatusDate(String(e.createdAt).slice(0, 10)) : '—'))}
     ${sec('fa-coins', 'Pay & statutory',
-      row('Base salary (monthly)', formatUGX(e.baseSalary)) + row('Daily rate (÷ 30)', formatUGX(Math.round((Number(e.baseSalary) || 0) / 30))) +
+      row('Base salary (monthly)', formatUGX(e.baseSalary)) + row('Daily rate (÷ days in month)', formatUGX(Math.round((Number(e.baseSalary) || 0) / new Date(y, m, 0).getDate()))) +
       row('Allowance (separate)', allowance) + row('Other monthly deductions', formatUGX(e.otherDeductions || 0)) +
       row('NSSF', nssf) + row('PAYE', paye))}
     ${sec('fa-calendar-check', 'This month at a glance', `<div class="rec-mtiles">${monthTiles}</div>`)}
     ${sec('fa-user-lock', 'Login account', user ? row('Username', escapeHtml(user.username)) + row('Display name', escapeHtml(user.fullName || '—')) : '<p style="font-size:.82rem;color:#7b8fb0">No login created for this employee.</p>')}
     ${sec('fa-umbrella-beach', 'Leave', row('Approved leave days (' + y + ')', approvedDays) + (leaveRows ? `<div class="table-card" style="margin:8px 0 0;box-shadow:none"><table class="rec-mini-table"><thead><tr><th>Type</th><th>Dates</th><th>Days</th><th>Status</th></tr></thead><tbody>${leaveRows}</tbody></table></div>` : ''))}
     ${sec('fa-exclamation-triangle', 'Warnings' + (warns.length ? ` (${warns.length})` : ''), warnHtml + '<div class="modal-actions" style="margin-top:10px;padding-top:10px"><button type="button" class="btn btn-outline btn-sm" onclick="closeModal(\'recordModal\');openWarningModal(\'' + e.id + '\')"><i class="fas fa-plus"></i> Issue warning</button></div>')}
+    ${sec('fa-gavel', 'Penalties' + (pens.length ? ` (${pens.length})` : ''), penHtml + '<div class="modal-actions" style="margin-top:10px;padding-top:10px"><button type="button" class="btn btn-outline btn-sm" onclick="closeModal(\'recordModal\');openPenaltyModal(\'' + e.id + '\')"><i class="fas fa-plus"></i> Add penalty</button></div>')}
     ${sec('fa-file-invoice-dollar', 'Payroll history', payRows ? `<div class="table-card" style="margin:0;box-shadow:none"><table class="rec-mini-table"><thead><tr><th>Month</th><th>Gross</th><th>Net</th></tr></thead><tbody>${payRows}</tbody></table></div>` : '<p style="font-size:.82rem;color:#7b8fb0">No payroll generated for this employee yet.</p>')}
     <div class="modal-actions">
       <button type="button" class="btn btn-outline" onclick="closeModal('recordModal')">Close</button>
@@ -2175,9 +2231,10 @@ window.renderWarnings = function() {
     <td>${formatStatusDate(w.date)}</td>
     <td><strong>${escapeHtml(w.emp.name)}</strong><div class="emp-role">${escapeHtml(w.emp.role || '')}</div></td>
     <td>${warnBadge(w.level)}</td>
-    <td style="white-space:normal;min-width:200px"><strong>${escapeHtml(w.subject)}</strong>${w.details ? `<div class="emp-role" style="white-space:normal">${escapeHtml(w.details.length > 90 ? w.details.slice(0, 90) + '…' : w.details)}</div>` : ''}</td>
+    <td style="white-space:normal;min-width:200px"><strong>${escapeHtml(w.subject)}</strong>${(w.emp.penalties || []).filter(x => x.warningId === w.id).map(x => ` <span class="badge badge-red" style="font-size:.6rem">Penalty ${formatUGX(x.amount)}</span>`).join('')}${w.details ? `<div class="emp-role" style="white-space:normal">${escapeHtml(w.details.length > 90 ? w.details.slice(0, 90) + '…' : w.details)}</div>` : ''}</td>
     <td>${escapeHtml(w.issuedBy || '—')}</td>
     <td style="text-align:center"><div class="action-icons" style="justify-content:center">
+      <button class="icon-btn" onclick="openPenaltyModal('${w.emp.id}','','${w.id}')" title="Add penalty for this warning"><i class="fas fa-gavel"></i></button>
       <button class="icon-btn" onclick="openWarningModal('${w.emp.id}','${w.id}')" title="Edit"><i class="fas fa-pen"></i></button>
       <button class="icon-btn danger" onclick="deleteWarning('${w.emp.id}','${w.id}')" title="Delete"><i class="fas fa-trash-alt"></i></button>
     </div></td>
@@ -2237,6 +2294,133 @@ window.deleteWarning = async function(empId, warnId) {
 };
 $('warnSearch').addEventListener('input', renderWarnings);
 $('warnLevelFilter').addEventListener('change', renderWarnings);
+
+// MANAGER: PENALTIES (stored on each employee as `penalties`; deducted by generatePayroll)
+function penaltiesForMonth(emp, monthStr) {
+  return (emp.penalties || []).filter(x => x.month === monthStr).map(x => ({ id: x.id, reason: x.reason, amount: Number(x.amount) || 0 }));
+}
+function penaltyApplied(emp, pen) {
+  const p = findPayroll(emp.id, pen.month);
+  return !!(p && (p.penalties || []).some(x => x.id === pen.id));
+}
+async function syncPenaltiesToPayroll(emp, monthStr) {
+  const p = findPayroll(emp.id, monthStr); if (!p) return;
+  const pens = penaltiesForMonth(emp, monthStr);
+  await savePayroll({ ...p, penalties: pens, penaltyDeduction: pens.reduce((t, x) => t + x.amount, 0), updatedAt: new Date().toISOString() });
+}
+function monthInputToKey(v) { const [y, m] = v.split('-').map(Number); return `${m}-${y}`; }
+function monthKeyToInput(k) { const { month, year } = parsePayrollMonth(k); return `${year}-${String(month).padStart(2, '0')}`; }
+function allPenalties() {
+  const out = [];
+  myEmployees().forEach(e => (e.penalties || []).forEach(x => out.push({ ...x, emp: e })));
+  return out.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+}
+window.renderPenalties = function() {
+  const tbody = $('penaltiesTableBody'); if (!tbody) return;
+  const all = allPenalties();
+  const applied = all.filter(x => penaltyApplied(x.emp, x));
+  $('penStatCount').textContent = all.length;
+  $('penStatTotal').textContent = formatUGX(all.reduce((t, x) => t + (Number(x.amount) || 0), 0));
+  $('penStatApplied').textContent = applied.length;
+  $('penStatPending').textContent = all.length - applied.length;
+  const q = ($('penSearch').value || '').trim().toLowerCase(), st = $('penStatusFilter').value;
+  const list = all.filter(x => {
+    const ap = penaltyApplied(x.emp, x);
+    if (st === 'applied' && !ap) return false;
+    if (st === 'pending' && ap) return false;
+    return !q || (x.emp.name || '').toLowerCase().includes(q) || (x.reason || '').toLowerCase().includes(q);
+  });
+  if (list.length === 0) { tbody.innerHTML = `<tr class="empty-row"><td colspan="7">${all.length === 0 ? 'No penalties yet. Click "Add Penalty" to record one.' : 'No penalties match your filters.'}</td></tr>`; return; }
+  tbody.innerHTML = list.map(x => {
+    const ap = penaltyApplied(x.emp, x);
+    const w = x.warningId ? (x.emp.warnings || []).find(k => k.id === x.warningId) : null;
+    return `<tr>
+      <td>${formatStatusDate(x.date)}</td>
+      <td><strong>${escapeHtml(x.emp.name)}</strong><div class="emp-role">${escapeHtml(x.emp.role || '')}</div></td>
+      <td style="white-space:normal;min-width:180px"><strong>${escapeHtml(x.reason)}</strong>${w ? `<div class="emp-role" style="white-space:normal">Warning: ${escapeHtml(w.subject)}</div>` : ''}</td>
+      <td>${formatPayrollMonth(x.month)}</td>
+      <td class="salary-cell" style="color:#d64545">-${formatUGX(x.amount)}</td>
+      <td><span class="badge ${ap ? 'badge-green' : 'badge-amber'}">${ap ? 'Deducted' : 'Waiting for payroll'}</span></td>
+      <td style="text-align:center"><div class="action-icons" style="justify-content:center">
+        <button class="icon-btn" onclick="openPenaltyModal('${x.emp.id}','${x.id}')" title="Edit"><i class="fas fa-pen"></i></button>
+        <button class="icon-btn danger" onclick="deletePenalty('${x.emp.id}','${x.id}')" title="Delete"><i class="fas fa-trash-alt"></i></button>
+      </div></td>
+    </tr>`;
+  }).join('');
+};
+function fillPenaltyWarnings(empId, selected) {
+  const emp = state.employees.find(e => e.id === empId);
+  $('penWarning').innerHTML = '<option value="">None</option>' + ((emp && emp.warnings) || []).slice().sort((a, b) => (b.date || '').localeCompare(a.date || '')).map(w => `<option value="${w.id}">${formatStatusDate(w.date)} — ${escapeHtml(w.subject)}</option>`).join('');
+  $('penWarning').value = selected || '';
+}
+window.openPenaltyModal = function(empId, penId, warnId) {
+  const emps = myEmployees().slice().sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+  if (emps.length === 0) { showToast('Add employees first', 'info'); return; }
+  $('penEmployee').innerHTML = '<option value="">Select employee</option>' + emps.map(e => `<option value="${e.id}">${escapeHtml(e.name)}</option>`).join('');
+  $('penaltyForm').reset();
+  $('penEditId').value = penId || '';
+  $('penDate').value = localDateISO(); $('penMonth').value = localDateISO().slice(0, 7);
+  $('penaltyModalTitle').textContent = penId ? 'Update Penalty' : 'Add Penalty';
+  $('penEmployee').disabled = false; delete $('penEmployee').dataset.orig;
+  if (empId) $('penEmployee').value = empId;
+  fillPenaltyWarnings(empId, warnId);
+  if (penId) {
+    const emp = state.employees.find(e => e.id === empId), x = emp && (emp.penalties || []).find(k => k.id === penId);
+    if (!x) return;
+    $('penAmount').value = x.amount; $('penReason').value = x.reason || ''; $('penDate').value = x.date || '';
+    $('penMonth').value = monthKeyToInput(x.month); fillPenaltyWarnings(empId, x.warningId);
+    $('penEmployee').dataset.orig = empId; $('penEmployee').disabled = true;
+  }
+  openModal('penaltyModal');
+};
+$('penEmployee').addEventListener('change', () => fillPenaltyWarnings($('penEmployee').value, ''));
+window.savePenalty = async function(ev) {
+  ev.preventDefault();
+  const empId = $('penEmployee').value || $('penEmployee').dataset.orig;
+  const emp = state.employees.find(x => x.id === empId); if (!emp) { showToast('Select an employee', 'error'); return false; }
+  const amount = Math.round(Number($('penAmount').value));
+  if (!(amount > 0)) { showToast('Enter an amount greater than 0', 'error'); return false; }
+  if (!$('penMonth').value) { showToast('Choose the payroll month', 'error'); return false; }
+  const editId = $('penEditId').value;
+  const data = { date: $('penDate').value, month: monthInputToKey($('penMonth').value), amount, reason: $('penReason').value.trim(), warningId: $('penWarning').value || '' };
+  const list = emp.penalties || [];
+  const old = editId ? list.find(x => x.id === editId) : null;
+  const next = editId
+    ? list.map(x => x.id === editId ? { ...x, ...data, updatedAt: new Date().toISOString() } : x)
+    : [...list, { id: 'p' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), ...data, issuedBy: state.currentUser ? (state.currentUser.fullName || state.currentUser.username) : '', createdAt: new Date().toISOString() }];
+  const btn = $('penSaveBtn'); btn.disabled = true;
+  try {
+    await fsUpdate('employees', empId, { penalties: next });
+    emp.penalties = next;
+    const months = [...new Set([data.month, old && old.month].filter(Boolean))].filter(m => findPayroll(empId, m));
+    if (months.length && confirm(`Payroll for ${months.map(formatPayrollMonth).join(' and ')} was already generated for ${emp.name}.\n\nUpdate it now with this penalty?\n\nOK = update payroll now\nCancel = it will apply the next time payroll is generated`)) {
+      for (const m of months) await syncPenaltiesToPayroll(emp, m);
+      renderPayrollTable();
+    }
+    renderPenalties(); renderRecords(); renderWarnings();
+    closeModal('penaltyModal');
+    showToast(editId ? '✏️ Penalty updated' : '⚖️ Penalty recorded', 'success');
+  } catch (err) { console.error(err); showToast('❌ Could not save penalty', 'error'); }
+  btn.disabled = false;
+  return false;
+};
+window.deletePenalty = async function(empId, penId) {
+  const emp = state.employees.find(x => x.id === empId); if (!emp) return;
+  const x = (emp.penalties || []).find(k => k.id === penId); if (!x) return;
+  if (!confirm(`Delete the ${formatUGX(x.amount)} penalty for ${emp.name} ("${x.reason}")?`)) return;
+  const next = emp.penalties.filter(k => k.id !== penId);
+  try {
+    await fsUpdate('employees', empId, { penalties: next });
+    emp.penalties = next;
+    if (findPayroll(empId, x.month) && confirm(`Payroll for ${formatPayrollMonth(x.month)} was already generated for ${emp.name}.\n\nRemove this penalty from that payroll too?`)) {
+      await syncPenaltiesToPayroll(emp, x.month); renderPayrollTable();
+    }
+    renderPenalties(); renderRecords(); renderWarnings();
+    showToast('🗑️ Penalty removed', 'info');
+  } catch (err) { console.error(err); showToast('❌ Could not delete penalty', 'error'); }
+};
+$('penSearch').addEventListener('input', renderPenalties);
+$('penStatusFilter').addEventListener('change', renderPenalties);
 
 // MANAGER: BRANCHES
 function renderManagerBranches() {
@@ -2377,7 +2561,19 @@ function renderAttendance() {
   const onLeave = myLeaves.filter(l => l.status === 'approved' && l.startDate <= today && l.endDate >= today).length;
   $('presentToday').textContent = present;
   $('lateToday').textContent = late;
-  $('absentToday').textContent = Math.max(0, myEmployees().length - present - onLeave);
+  // Absent today = scheduled to work (or marked absent), not on leave, and no clock-in once the shift start has passed
+  const nowD = new Date(), nowMin = nowD.getHours() * 60 + nowD.getMinutes();
+  let absentCount = 0;
+  myEmployees().filter(e => isEmployeeActiveForMonth(e, currentMonthStr()) && hasStartedOn(e, today)).forEach(e => {
+    if (myLeaves.some(l => l.employeeId === e.id && l.status === 'approved' && l.startDate <= today && l.endDate >= today)) return;
+    const sh = getShiftFor(e.id, today);
+    if (!sh || sh.isOff || sh.isTraining) return;
+    if (tr.some(a => a.employeeId === e.id && a.clockIn)) return;
+    if (sh.isAbsent) { absentCount++; return; }
+    const [h, m] = (sh.startTime || '00:00').split(':').map(Number);
+    if (nowMin > h * 60 + m + LATE_GRACE_MIN) absentCount++;
+  });
+  $('absentToday').textContent = absentCount;
   $('onLeaveToday').textContent = onLeave;
 
   const recent = [...myAtt].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 100);
@@ -2465,13 +2661,13 @@ window.deleteAttendanceEntry = async function(id) {
 // REPORTS
 function populateReportEmployeeFilter() {
   const sel = $('reportEmployeeFilter'); if (!sel) return;
-  const emps = myEmployees().sort((a, b) => a.name.localeCompare(b.name));
+  const emps = myEmployees().slice().sort((a, b) => (a.name || '').localeCompare(b.name || ''));
   sel.innerHTML = '<option value="">All Employees</option>' + emps.map(e => `<option value="${e.id}">${escapeHtml(e.name)}</option>`).join('');
 }
 function initReportDates() {
   const fromEl = $('reportDateFrom'), toEl = $('reportDateTo');
-  if (!fromEl.value) { const d = new Date(); d.setDate(d.getDate() - 14); fromEl.value = d.toISOString().slice(0, 10); }
-  if (!toEl.value) toEl.value = new Date().toISOString().slice(0, 10);
+  if (!fromEl.value) { const d = new Date(); d.setDate(d.getDate() - 14); fromEl.value = localDateISO(d); }
+  if (!toEl.value) toEl.value = localDateISO();
 }
 function computeShiftHours(start, end) {
   if (!start || !end) return 8;
@@ -2494,7 +2690,7 @@ window.renderReport = function() {
   const filteredEmps = empFilter ? emps.filter(e => e.id === empFilter) : emps;
   const rows = [];
   const startDate = new Date(from + 'T00:00:00'), endDate = new Date(to + 'T00:00:00');
-  const today = new Date().toISOString().slice(0, 10);
+  const today = localDateISO();
   for (const emp of filteredEmps) {
     for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
       const ds = formatDateISO(d);
@@ -2540,22 +2736,52 @@ function formatPayrollMonth(str) {
   const names = ['', 'January','February','March','April','May','June','July','August','September','October','November','December'];
   return `${names[month]} ${year}`;
 }
-function calcAbsenceDeduction(emp, month, year) {
-  const daysInMonth = new Date(year, month, 0).getDate();
-  let absentCount = 0;
-  for (let d = 1; d <= daysInMonth; d++) {
-    const ds = `${year}-${String(month).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-    const today = new Date().toISOString().slice(0, 10);
-    if (ds > today) continue;
-    if (!hasStartedOn(emp, ds)) continue; // days before the start date never count
-    const shift = state.schedules.find(s => s.employeeId === emp.id && s.date === ds);
-    if (!shift || shift.isOff || shift.isTraining) continue; // training carries no weight
-    const onLeave = state.leaves.some(l => l.employeeId === emp.id && l.status === 'approved' && l.startDate <= ds && l.endDate >= ds);
-    if (onLeave) continue;
-    if (shift.isAbsent) absentCount++;
+// ---- Pay days: employees are paid for the days they are employed AND scheduled (shift, OFF, training, approved leave).
+// Absent days are not paid. Days with no schedule are not paid either (switchable), except when nothing at all is scheduled
+// for the employee that month, or the day is still in the future. Daily rate = base salary / days in that month.
+function payUnscheduledPolicy() {
+  const c = myCompany(); if (c && c.payUnscheduledDays) return c.payUnscheduledDays;
+  try { return localStorage.getItem('hr_unsched_' + (myCompanyId() || 'all')) || 'unpaid'; } catch (e) { return 'unpaid'; }
+}
+window.setPayUnscheduledPolicy = async function(v) {
+  try { localStorage.setItem('hr_unsched_' + (myCompanyId() || 'all'), v); } catch (e) {}
+  const c = myCompany();
+  if (c) { try { await fsUpdate('companies', c.id, { payUnscheduledDays: v }); c.payUnscheduledDays = v; } catch (e) {} }
+  showToast(v === 'paid' ? 'Days with no schedule will be paid. Click Generate to apply.' : 'Days with no schedule will NOT be paid. Click Generate to apply.', 'info');
+  renderPayrollTable();
+};
+function computePayDays(emp, month, year) {
+  const dim = new Date(year, month, 0).getDate();
+  const pad = n => String(n).padStart(2, '0');
+  const prefix = `${year}-${pad(month)}-`, mKey = year * 12 + month;
+  let startDay = 1, endDay = dim;
+  if (emp.startDate) { const [sy, sm, sd] = String(emp.startDate).split('-').map(Number); if (sy * 12 + sm > mKey) startDay = dim + 1; else if (sy * 12 + sm === mKey) startDay = sd; }
+  if (emp.status && emp.status !== 'active' && emp.statusDate) { const [ey, em, ed] = String(emp.statusDate).split('-').map(Number); if (ey * 12 + em < mKey) endDay = 0; else if (ey * 12 + em === mKey) endDay = Math.min(endDay, ed); }
+  const today = localDateISO(), policy = payUnscheduledPolicy();
+  const sched = new Map(state.schedules.filter(x => x.employeeId === emp.id && (x.date || '').startsWith(prefix)).map(x => [x.date, x]));
+  const leaves = state.leaves.filter(l => l.employeeId === emp.id && l.status === 'approved');
+  const noScheduleAtAll = sched.size === 0;
+  const r = { dim, startDay, endDay, periodDays: Math.max(0, endDay - startDay + 1), worked: 0, off: 0, training: 0, leave: 0, absent: 0, unscheduled: 0, unpaidUnscheduled: 0, noScheduleAtAll };
+  for (let d = startDay; d <= endDay; d++) {
+    const ds = prefix + pad(d);
+    if (leaves.some(l => l.startDate <= ds && l.endDate >= ds)) { r.leave++; continue; }
+    const sh = sched.get(ds);
+    if (!sh) {
+      r.unscheduled++;
+      if (policy !== 'paid' && !noScheduleAtAll && ds <= today) r.unpaidUnscheduled++; // past days nobody scheduled
+      continue;
+    }
+    if (sh.isAbsent) r.absent++; else if (sh.isTraining) r.training++; else if (sh.isOff) r.off++; else r.worked++;
   }
-  const dailyRate = (Number(emp.baseSalary) || 0) / 30;
-  return { chargeable: absentCount, dailyRate: Math.round(dailyRate), amount: Math.round(dailyRate * absentCount) };
+  r.paidDays = r.periodDays - r.absent - r.unpaidUnscheduled;
+  return r;
+}
+function calcPayAmounts(emp, pd) {
+  const base = Number(emp.baseSalary) || 0;
+  const gross = Math.round(base * pd.periodDays / pd.dim);                       // salary for the days employed this month
+  const absenceDeduction = Math.min(gross, Math.round(base * pd.absent / pd.dim));
+  const unscheduledDeduction = Math.min(gross - absenceDeduction, Math.round(base * pd.unpaidUnscheduled / pd.dim));
+  return { gross, absenceDeduction, unscheduledDeduction, earned: gross - absenceDeduction - unscheduledDeduction };
 }
 function calcNssf(emp, gross) { if (emp.nssfApplicable === false) return 0; return Math.round(gross * ((emp.nssfPercent !== undefined ? emp.nssfPercent : 5) / 100)); }
 function calcPaye(emp, taxable) {
@@ -2575,7 +2801,7 @@ function payrollDocId(empId, monthStr) { return `${empId}_${monthStr}`; }
 function findPayroll(empId, monthStr) { return state.payrolls.find(x => x.employeeId === empId && x.month === monthStr); }
 function sumAdjustments(p) { return (p.adjustments || []).reduce((s, a) => s + (Number(a.amount) || 0), 0); }
 function calcPayrollNet(p) {
-  return (Number(p.gross) || 0) - (Number(p.nssf) || 0) - (Number(p.paye) || 0) - (Number(p.otherDeductions) || 0) - (Number(p.absenceDeduction) || 0) - sumAdjustments(p);
+  return (Number(p.gross) || 0) - (Number(p.nssf) || 0) - (Number(p.paye) || 0) - (Number(p.otherDeductions) || 0) - (Number(p.absenceDeduction) || 0) - (Number(p.unscheduledDeduction) || 0) - (Number(p.penaltyDeduction) || 0) - sumAdjustments(p);
 }
 function upsertPayrollState(pay) {
   const i = state.payrolls.findIndex(x => x.employeeId === pay.employeeId && x.month === pay.month);
@@ -2605,25 +2831,30 @@ window.generatePayroll = async function() {
   const monthStr = $('payrollMonth').value;
   const { month, year } = parsePayrollMonth(monthStr);
   const emps = myEmployees().filter(e => isPayrollEligible(e, monthStr));
-  if (emps.length === 0) { $('payrollTableBody').innerHTML = '<tr class="empty-row"><td colspan="11">No employees.</td></tr>'; return; }
+  if (emps.length === 0) { $('payrollTableBody').innerHTML = '<tr class="empty-row"><td colspan="12">No employees.</td></tr>'; return; }
   const already = emps.some(e => findPayroll(e.id, monthStr));
   if (already && !confirm(`Payroll for ${formatPayrollMonth(monthStr)} was already generated. Regenerate it?\n\nDeductions you added with "Update" will be kept.`)) return;
   try {
     await Promise.all(emps.map(emp => {
-      const pr = prorationFor(emp, month, year);
-      const fullBase = Number(emp.baseSalary) || 0;
-      const gross = pr.prorated ? Math.round(fullBase * pr.days / pr.dim) : fullBase; // first month: start date to month end
-      const nssf = calcNssf(emp, gross);
-      const paye = calcPaye(emp, gross - nssf);
+      const pd = computePayDays(emp, month, year);
+      const amt = calcPayAmounts(emp, pd);
+      const gross = amt.gross;
+      // NSSF and PAYE are worked out on what the employee actually earned (after unpaid days)
+      const nssf = calcNssf(emp, amt.earned);
+      const paye = calcPaye(emp, amt.earned - nssf);
       const other = Number(emp.otherDeductions) || 0;
-      const abs = calcAbsenceDeduction(emp, month, year);
+      const pens = penaltiesForMonth(emp, monthStr); // penalties set for this month are deducted automatically
       const prev = findPayroll(emp.id, monthStr);
       const nowIso = new Date().toISOString();
       return savePayroll({
         employeeId: emp.id, employeeName: emp.name, month: monthStr,
         baseSalary: emp.baseSalary, gross, nssf, paye, otherDeductions: other,
-        absenceDays: abs.chargeable, absenceDeduction: abs.amount,
-        proratedDays: pr.prorated ? pr.days : 0, daysInMonth: pr.dim, startDate: emp.startDate || '',
+        absenceDays: pd.absent, absenceDeduction: amt.absenceDeduction,
+        unscheduledDays: pd.unpaidUnscheduled, unscheduledDeduction: amt.unscheduledDeduction,
+        penalties: pens, penaltyDeduction: pens.reduce((t, x) => t + x.amount, 0),
+        proratedDays: pd.periodDays < pd.dim ? pd.periodDays : 0, daysInMonth: pd.dim, startDate: emp.startDate || '',
+        paidDays: pd.paidDays, workedDays: pd.worked, offDays: pd.off, trainingDays: pd.training, leaveDays: pd.leave,
+        noScheduleRecorded: !!(pd.noScheduleAtAll && pd.periodDays > 0), unscheduledPolicy: payUnscheduledPolicy(),
         adjustments: prev ? (prev.adjustments || []) : [],
         companyId: emp.companyId || null,
         generatedAt: prev ? (prev.generatedAt || nowIso) : nowIso,
@@ -2639,26 +2870,40 @@ window.generatePayroll = async function() {
 };
 
 window.renderPayrollTable = renderPayrollTable; // needed so the inline onchange on the month dropdown can find it (script is a module)
+function renderPayrollNotes(emps, monthStr) {
+  const box = $('payrollNotes'); if (!box) return;
+  const { month, year } = parsePayrollMonth(monthStr);
+  const policy = payUnscheduledPolicy();
+  const gaps = [], none = [];
+  emps.forEach(e => { const pd = computePayDays(e, month, year); if (pd.periodDays === 0) return; if (pd.noScheduleAtAll) none.push(e.name); else if (pd.unpaidUnscheduled > 0 || (policy === 'paid' && pd.unscheduled > 0)) gaps.push(`${e.name} (${policy === 'paid' ? pd.unscheduled : pd.unpaidUnscheduled})`); });
+  let html = '';
+  if (gaps.length) html += `<div style="background:#fff9ee;border:1.5px solid #ffd8a8;border-radius:12px;padding:10px 14px;margin-bottom:10px;font-size:.78rem;color:#7a4500;font-weight:600"><i class="fas fa-exclamation-triangle"></i> Days with no schedule${policy === 'paid' ? ' (paid)' : ' (NOT paid)'}: ${gaps.map(escapeHtml).join(', ')}. Mark each day as a shift, OFF, TRN or ABS in Schedule before paying.</div>`;
+  if (none.length) html += `<div style="background:#e6f0ff;border:1.5px solid #c2d6f5;border-radius:12px;padding:10px 14px;margin-bottom:10px;font-size:.78rem;color:#1e4b8a;font-weight:600"><i class="fas fa-info-circle"></i> No schedule recorded this month for ${none.map(escapeHtml).join(', ')}. They are paid for the full period until a schedule is entered.</div>`;
+  box.innerHTML = html;
+}
 function renderPayrollTable() {
   const monthStr = $('payrollMonth').value;
+  if ($('payUnscheduled')) $('payUnscheduled').value = payUnscheduledPolicy();
   const emps = myEmployees().filter(e => isPayrollEligible(e, monthStr)); const empIds = emps.map(e => e.id);
   const existing = state.payrolls.filter(p => p.month === monthStr && empIds.includes(p.employeeId));
   const tbody = $('payrollTableBody'); if (!tbody) return;
+  renderPayrollNotes(emps, monthStr);
   markSavedPayrollMonths();
-  if (existing.length === 0) { tbody.innerHTML = `<tr class="empty-row"><td colspan="11">No payroll generated for ${formatPayrollMonth(monthStr)}. Click Generate.</td></tr>`; return; }
+  if (existing.length === 0) { tbody.innerHTML = `<tr class="empty-row"><td colspan="12">No payroll generated for ${formatPayrollMonth(monthStr)}. Click Generate.</td></tr>`; return; }
   tbody.innerHTML = existing.map(p => {
     const emp = state.employees.find(e => e.id === p.employeeId);
     const allow = emp ? { amount: Number(emp.allowances) || 0, cycle: emp.allowanceCycle || 'monthly' } : { amount: 0, cycle: 'monthly' };
     const adj = sumAdjustments(p); const adjCount = (p.adjustments || []).length;
     return `<tr>
-      <td><strong>${escapeHtml(p.employeeName)}</strong></td>
+      <td><strong>${escapeHtml(p.employeeName)}</strong>${p.paidDays !== undefined ? `<div style="font-size:.62rem;font-weight:700;color:${p.noScheduleRecorded ? '#a55c00' : '#7b8fb0'}">Paid ${p.paidDays} of ${p.daysInMonth} days${p.noScheduleRecorded ? ' · no schedule' : ''}</div>` : ''}</td>
       <td>${formatUGX(p.baseSalary)}</td>
       <td style="color:#7b8fb0">${formatUGX(allow.amount)}/${cycleLabel(allow.cycle)}</td>
       <td class="salary-cell">${formatUGX(p.gross)}${p.proratedDays ? `<div style="font-size:.62rem;font-weight:700;color:#7c5cd6">${p.proratedDays}/${p.daysInMonth} days</div>` : ''}</td>
       <td style="color:#d64545">-${formatUGX(p.nssf)}</td>
       <td style="color:#d64545">-${formatUGX(p.paye)}</td>
       <td style="color:#d64545">-${formatUGX(p.otherDeductions || 0)}</td>
-      <td style="color:#d64545">-${formatUGX(p.absenceDeduction || 0)}</td>
+      <td style="color:#d64545">-${formatUGX((p.absenceDeduction || 0) + (p.unscheduledDeduction || 0))}${(p.absenceDays || p.unscheduledDays) ? `<div style="font-size:.6rem;font-weight:700;color:#7b8fb0">${p.absenceDays || 0} absent${p.unscheduledDays ? ' · ' + p.unscheduledDays + ' unscheduled' : ''}</div>` : ''}</td>
+      <td style="color:#d64545">-${formatUGX(p.penaltyDeduction || 0)}${(p.penalties || []).length ? ` <span class="badge badge-red" title="${(p.penalties || []).length} penalty(ies)">${(p.penalties || []).length}</span>` : ''}</td>
       <td style="color:#d64545">-${formatUGX(adj)}${adjCount ? ` <span class="badge badge-red" title="${adjCount} deduction(s)">${adjCount}</span>` : ''}</td>
       <td class="salary-cell" style="color:#1e6b4b">${formatUGX(calcPayrollNet(p))}</td>
       <td style="text-align:center"><div style="display:flex;gap:4px;justify-content:center">
@@ -2765,7 +3010,8 @@ window.viewPayslipFor = function(empId, monthStr) {
     </div>
     <div style="background:#f7fdfa;border-radius:14px;padding:14px;margin-bottom:12px">
       <div style="display:flex;justify-content:space-between;padding:4px 0"><span>Base Salary</span><strong>${formatUGX(p.baseSalary)}</strong></div>
-      ${p.proratedDays ? `<div style="display:flex;justify-content:space-between;padding:4px 0;color:#5b3fb5"><span>Pro-rated (${p.proratedDays} of ${p.daysInMonth} days${p.startDate ? ' from ' + formatStatusDate(p.startDate) : ''})</span><strong>${formatUGX(p.gross)}</strong></div>` : ''}
+      ${p.proratedDays ? `<div style="display:flex;justify-content:space-between;padding:4px 0;color:#5b3fb5"><span>Employed ${p.proratedDays} of ${p.daysInMonth} days${p.startDate ? ' (from ' + formatStatusDate(p.startDate) + ')' : ''}</span><strong>${formatUGX(p.gross)}</strong></div>` : ''}
+      ${p.paidDays !== undefined ? `<div style="display:flex;justify-content:space-between;padding:4px 0"><span>Days paid</span><strong>${p.paidDays} of ${p.daysInMonth}</strong></div><div style="font-size:.68rem;color:#7b8fb0;font-weight:600;padding:2px 0 0">Daily rate ${formatUGX(Math.round((Number(p.baseSalary) || 0) / p.daysInMonth))} · Worked ${p.workedDays || 0} · Off ${p.offDays || 0} · Training ${p.trainingDays || 0} · Leave ${p.leaveDays || 0} · Absent ${p.absenceDays || 0}${p.unscheduledDays ? ' · No schedule ' + p.unscheduledDays : ''}</div>` : ''}
     </div>
     <div style="background:#f0f9f4;border:1px solid #b8d9c8;border-radius:14px;padding:12px 14px;margin-bottom:12px;font-size:.8rem;color:#3d6652">
       <div style="display:flex;justify-content:space-between;padding:3px 0"><span>Allowance (separate)</span><strong>${formatUGX(allow.amount)} / ${cycleLabel(allow.cycle)}</strong></div>
@@ -2776,6 +3022,8 @@ window.viewPayslipFor = function(empId, monthStr) {
       <div style="display:flex;justify-content:space-between;padding:4px 0"><span>PAYE</span><strong style="color:#d64545">-${formatUGX(p.paye)}</strong></div>
       <div style="display:flex;justify-content:space-between;padding:4px 0"><span>Other</span><strong style="color:#d64545">-${formatUGX(p.otherDeductions || 0)}</strong></div>
       <div style="display:flex;justify-content:space-between;padding:4px 0"><span>Absence (${p.absenceDays || 0} days)</span><strong style="color:#d64545">-${formatUGX(p.absenceDeduction || 0)}</strong></div>
+      ${p.unscheduledDays ? `<div style="display:flex;justify-content:space-between;padding:4px 0"><span>No schedule (${p.unscheduledDays} days)</span><strong style="color:#d64545">-${formatUGX(p.unscheduledDeduction || 0)}</strong></div>` : ''}
+      ${(p.penalties || []).map(x => `<div style="display:flex;justify-content:space-between;gap:10px;padding:4px 0"><span style="word-break:break-word">Penalty: ${escapeHtml(x.reason)}</span><strong style="color:#d64545;white-space:nowrap">-${formatUGX(x.amount)}</strong></div>`).join('')}
       ${(p.adjustments || []).map(a => `<div style="display:flex;justify-content:space-between;gap:10px;padding:4px 0"><span style="word-break:break-word">${escapeHtml(a.description)}</span><strong style="color:#d64545;white-space:nowrap">-${formatUGX(a.amount)}</strong></div>`).join('')}
     </div>
     <div style="background:linear-gradient(105deg,#1e6b4b,#2d9c6e);border-radius:14px;padding:16px;color:#fff;display:flex;justify-content:space-between;align-items:center">
@@ -2934,7 +3182,7 @@ window.renderMySchedule = function() {
   const days = []; for (let i = 0; i < 7; i++) days.push(formatDateISO(addDays(startDate, i)));
   if (!emp) { grid.innerHTML = '<div style="padding:28px;text-align:center;color:#7b8fb0">No employee record linked.</div>'; return; }
   const myColor = getCashierColor(emp);
-  const today = new Date().toISOString().slice(0, 10);
+  const today = localDateISO();
   let html = '<div class="schedule-grid"><div class="head name-col">Day</div>';
   days.forEach(d => html += `<div class="head">${dayLabel(d)}<br>${new Date(d + 'T00:00:00').getDate()}</div>`);
   html += `<div class="row-label"><span class="avatar-sm" style="background:${myColor}20;color:${myColor}">${getInitials(emp.name)}</span><span>Me</span></div>`;
@@ -2958,6 +3206,13 @@ window.renderMySchedule = function() {
 };
 
 // LEAVE
+// The number of days is worked out from the dates (it used to be a typed box that was ignored)
+function updateLeaveDays() {
+  const a = $('leaveStart').value, b = $('leaveEnd').value;
+  $('leaveDays').value = a && b && b >= a ? Math.round((new Date(b) - new Date(a)) / 86400000) + 1 : 1;
+}
+$('leaveStart').addEventListener('change', updateLeaveDays);
+$('leaveEnd').addEventListener('change', updateLeaveDays);
 $('leaveForm').addEventListener('submit', async e => {
   e.preventDefault();
   const emp = myEmployeeRecord();
@@ -3048,12 +3303,26 @@ function renderIncomingSwapRequests() {
 }
 
 window.acceptSwapRequest = async function(id) {
-  const req = state.swapRequests.find(r => r.id === id); if (!req) return;
+  const req = state.swapRequests.find(r => r.id === id); if (!req || req.status !== 'pending') return;
+  const fromShift = getShiftFor(req.fromEmployeeId, req.fromShiftDate), toShift = getShiftFor(req.toEmployeeId, req.toShiftDate);
+  const usable = x => x && !x.isOff && !x.isAbsent && !x.isTraining;
   try {
+    // The schedule may have changed since the request was sent
+    if (!usable(fromShift) || !usable(toShift) || fromShift.startTime !== req.fromShiftStart || fromShift.endTime !== req.fromShiftEnd || toShift.startTime !== req.toShiftStart || toShift.endTime !== req.toShiftEnd) {
+      await fsUpdate('swapRequests', id, { status: 'cancelled' }); req.status = 'cancelled';
+      renderIncomingSwapRequests(); renderMySwapRequests();
+      showToast('⚠️ One of the shifts was changed, so this swap was cancelled', 'error');
+      return;
+    }
+    const a = { startTime: toShift.startTime, endTime: toShift.endTime }, b = { startTime: fromShift.startTime, endTime: fromShift.endTime };
+    if (fromShift.id && !String(fromShift.id).startsWith('temp_')) await fsUpdate('schedules', fromShift.id, a);
+    if (toShift.id && !String(toShift.id).startsWith('temp_')) await fsUpdate('schedules', toShift.id, b);
+    Object.assign(fromShift, a); Object.assign(toShift, b);
     await fsUpdate('swapRequests', id, { status: 'accepted' });
     req.status = 'accepted';
-    renderIncomingSwapRequests(); renderMySwapRequests();
-    showToast('✅ Swap accepted', 'success');
+    renderIncomingSwapRequests(); renderMySwapRequests(); renderMySchedule();
+    if (isManager()) renderScheduleGrid();
+    showToast('✅ Swap accepted and the schedule is updated', 'success');
   } catch (err) { showToast('❌ ' + err.message, 'error'); }
 };
 
@@ -3072,7 +3341,7 @@ window.openSwapRequestModal = function(colleagueId, dateStr) {
   const me = myEmployeeRecord(); if (!me) { showToast('⚠️ No employee record', 'info'); return; }
   const myShift = getShiftFor(me.id, dateStr);
   if (!myShift || myShift.isOff || myShift.isAbsent || myShift.isTraining) { showToast('⚠️ You have no shift on that day', 'info'); return; }
-  const today = new Date().toISOString().slice(0, 10);
+  const today = localDateISO();
   if (dateStr <= today) { showToast('⚠️ Only future shifts can be swapped', 'info'); return; }
   const colleague = state.employees.find(e => e.id === colleagueId);
   if (!colleague) { showToast('⚠️ Colleague not found', 'info'); return; }
@@ -3346,6 +3615,18 @@ document.querySelectorAll('.modal-overlay').forEach(o => {
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') { document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active')); document.body.style.overflow = ''; }
 });
+
+// Payroll months: January 2026 up to 12 months ahead, so the list never runs out; opens on the current month
+function buildPayrollMonthOptions() {
+  const sel = $('payrollMonth'); if (!sel) return;
+  const names = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const now = new Date(), endIdx = now.getFullYear() * 12 + now.getMonth() + 12;
+  let html = '';
+  for (let i = 2026 * 12; i <= endIdx; i++) { const y = Math.floor(i / 12), m = (i % 12) + 1; html += `<option value="${m}-${y}">${names[m - 1]} ${y}</option>`; }
+  sel.innerHTML = html;
+  sel.value = currentMonthStr();
+}
+buildPayrollMonthOptions();
 
 // INIT
 async function init() {
